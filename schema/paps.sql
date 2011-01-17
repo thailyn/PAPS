@@ -47,3 +47,11 @@ CREATE TABLE work_authors (
 INSERT INTO work_types (work_type) VALUES ('Textbook');
 INSERT INTO work_types (work_type) VALUES ('Book');
 INSERT INTO work_types (work_type) VALUES ('Paper');
+
+INSERT INTO works (work_type_id, title, subtitle, edition) VALUES (1, 'Artificial Intelligence', 'A Modern Approach', 2);
+
+INSERT INTO people (first_name, last_name) VALUES ('Stuart', 'Russell');
+INSERT INTO people (first_name, last_name) VALUES ('Peter', 'Norvig');
+
+INSERT INTO work_authors (work_id, person_id, author_position) VALUES (1, 1, 1);
+INSERT INTO work_authors (work_id, person_id, author_position) VALUES (1, 2, 2);
