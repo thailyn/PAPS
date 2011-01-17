@@ -56,7 +56,7 @@ sub end : ActionClass('RenderView') {}
 sub hello :Global {
     my ( $self, $c ) = @_;
 
-    $c->response->body("Hello, World!");
+    $c->stash(template => 'hello.tt');
 }
 
 =head1 AUTHOR
