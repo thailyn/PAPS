@@ -1,0 +1,244 @@
+/* -*- sql -*- */
+
+/* This file is for reference.  Some of the tables need to be modified
+  and others are imcomplete.  Also, the list of "created" tables will
+  not match what exists in the actual database. */
+
+/* CREATED TABLES */
+
+CREATE TABLE work_types (
+  work_type_id SERIAL PRIMARY KEY,
+  work_type varchar NOT NULL
+);
+
+CREATE TABLE works (
+  work_id SERIAL PRIMARY KEY,
+  work_type_id int NOT NULL REFERENCES work_types (work_type_id),
+  title varchar NOT NULL,
+  subtitle varchar,
+  num_references smallint,
+  doi_name varchar
+);
+
+CREATE TABLE works_maint (
+  work_maint_id SERIAL PRIMARY KEY,
+  work_id int NOT NULL REFERENCES works (work_id),
+  all_references_recorded boolean,
+  comments varchar
+);
+
+CREATE TABLE authors (
+  author_id SERIAL PRIMARY KEY,
+  first_name varchar,
+  middle_name varchar,
+  last_name varchar,
+  date_of_birth date
+);
+
+CREATE TABLE work_authors (
+  works_author_id SERIAL PRIMARY KEY,
+  work_id int NOT NULL REFERENCES works (work_id),
+  author_id int NOT NULL REFERENCES authors (author_id),
+  author_position smallint
+);
+
+CREATE TABLE work_references (
+  reference_id SERIAL PRIMARY KEY,
+  referencing_work_id int NOT NULL REFERENCES works (work_id),
+  referenced_work_id int REFERENCES works (work_id),
+  citation varchar,
+  citation_order smallint
+);
+ALTER TABLE work_references
+  ADD CONSTRAINT work_references_referencing_work_id_key UNIQUE(referencing_work_id, referenced_work_id, citation);
+ALTER TABLE work_references
+  ADD CONSTRAINT work_references_referencing_work_id_key1 UNIQUE(referencing_work_id, citation_order);
+
+CREATE TABLE sources (
+  source_id SERIAL PRIMARY KEY,
+  name varchar NOT NULL,
+  url varchar
+);
+
+CREATE TABLE work_sources (
+  work_source_id SERIAL PRIMARY KEY,
+  work_id int NOT NULL REFERENCES works (work_id),
+  source_id int NOT NULL REFERENCES sources (source_id),
+  url varchar
+);
+
+CREATE TABLE files (
+  file_id SERIAL PRIMARY KEY,
+  work_id int NOT NULL REFERENCES works (work_id),
+  source_id int REFERENCES sources (source_id),
+  file_type varchar NOT NULL,
+  file_size int,
+  encoding varchar,
+  url varchar,
+  path varchar,
+  contents varchar,
+  free_access boolean
+);
+ALTER TABLE files
+  ADD CONSTRAINT files_work_id_key UNIQUE(work_id, source_id, file_type);
+
+/* CUSTOM AGGREGATE FUNCTIONS */
+-- this concatenates text entries
+-- example usage:
+--   SELECT TRIM(', ' FROM (SELECT CONCAT(country_name||', ') FROM COUNTRY));
+-- not sure what all the different parameters do, but it works great
+-- got the function from 
+-- http://www.postgresql.org/docs/8.0/interactive/sql-createaggregate.html
+CREATE AGGREGATE concat (
+  BASETYPE = text,
+  SFUNC = textcat,
+  STYPE = text,
+  INITCOND = ''
+);
+
+
+/* CREATED VIEWS */
+-- lists the different works with their authors (first plus last name) and the
+--  authors position in the author list
+CREATE VIEW view_works_and_authors AS
+ SELECT w.work_id, wt.work_type, w.title, w.subtitle, btrim(( SELECT concat((((((a.first_name::text || ' '::text) || a.last_name::text) || ' ('::text) || wa.author_position) || ')'::text) || ', '::text) AS concat
+           FROM authors AS a, works AS w2, work_authors AS wa
+          WHERE wa.work_id = w2.work_id AND wa.author_id = a.author_id and w2.work_id = w.work_id
+	  --ORDER BY wa.author_position
+	  ), ', '::text) AS authors
+   FROM works AS w, work_types AS wt
+  WHERE w.work_type_id = wt.work_type_id;
+
+-- Initial version - grabbed all authors for each line (was missing an argument to the where clause).
+CREATE VIEW view_works_and_authors AS 
+  SELECT work_type, title, TRIM(', ' FROM
+         (SELECT CONCAT(first_name || ' ' || last_name || '(' || author_position || ')' || ', ')
+           FROM authors, works, work_authors
+           WHERE work_authors.work_id = works.work_id
+             AND work_authors.author_id = authors.author_id)
+           ) AS authors
+    FROM works, work_types
+    WHERE works.work_type_id = work_type.work_type_id
+;
+
+-- Lists the works that have a null num_references field in the works table.
+--  This is useful to find which works need to be revisited to find their 
+--  reference.  The syntax is different from above because it is what 
+--  pgAdmin III gave as the creation syntax (gotten from the server, I believe).
+CREATE OR REPLACE VIEW view_works_needing_num_references AS 
+ SELECT w.work_id, t.work_type, w.title, w.subtitle
+   FROM works w
+   LEFT JOIN work_types t ON w.work_type_id = t.work_type_id
+  WHERE w.num_references IS NULL;
+
+ALTER TABLE view_works_needing_num_references OWNER TO charles;
+GRANT ALL ON TABLE view_works_needing_num_references TO charles;
+GRANT SELECT ON TABLE view_works_needing_num_references TO paps_web_role;
+
+-- Lists the works whose num_references value is not null and is not equal to
+--  the number of records in the work_references table with that work as the
+--  referencing_work_id (the works which are missing references).
+CREATE OR REPLACE VIEW view_works_with_missing_references AS 
+ SELECT wr.referencing_work_id, w.title, w.subtitle, count(*) AS count, w.num_references
+   FROM work_references wr
+   LEFT JOIN works w ON w.work_id = wr.referencing_work_id
+  WHERE w.num_references IS NOT NULL
+  GROUP BY wr.referencing_work_id, w.num_references, w.title, w.subtitle
+ HAVING count(*) <> w.num_references;
+
+ALTER TABLE view_works_with_missing_references OWNER TO charles;
+GRANT ALL ON TABLE view_works_with_missing_references TO charles;
+GRANT SELECT ON TABLE view_works_with_missing_references TO paps_web_role;
+
+
+/* USEFUL QUERIES (soon to be views?) */
+-- lists the works that do not have an entry in the works_maint table.
+--  this is one way to find out if we even know if we have all of a work's
+--  references processed
+SELECT * FROM works
+  WHERE work_id NOT IN (
+    SELECT work_id FROM works_maint
+    )
+;
+
+SELECT work_source_id, work.title, sources.name AS source_name, work_sources.url
+  FROM sources, work_sources, works
+  WHERE sources.source_id = work_sources.source_id
+    AND works.work_id = work_sources.work_id;
+
+
+/* FUTURE TABLES */
+CREATE TABLE citations (
+  citation_id SERIAL PRIMARY KEY,
+  work_id int NOT NULL REFERENCES works (work_id),
+  format varchar NOT NULL  -- or a foreign key to a citation_type table?
+  citation varchar NOT NULL
+);
+
+CREATE TABLE users (
+  user_id SERIAL PRIMARY KEY,
+  user_name varchar NOT NULL UNIQUE,
+  password varchar NOT NULL,
+  first_name varchar,
+  middle_name varchar,
+  last_name varchar,
+  email varchar,
+  date_created date
+  -- anything else?
+);
+
+CREATE TABLE user_works (
+  user_works_id SERIAL PRIMARY KEY,
+  user_id int NOT NULL REFERENCES users (user_id),
+  work_id int NOT NULL REFERENCES works (work_id),
+  -- planning out what other fields to include
+  first_read date
+  read boolean 
+  understood enum  -- some values like 'yes', 'no', 'partial'
+  rating int  -- can break this up into whether the person like it, whether it was informative, etc.
+);
+
+CREATE TABLE tags (
+  tag_id SERIAL PRIMARY KEY,
+  tag_type_id int NOT NULL REFERENCES tag_types (tag_type_id),
+  name varchar NOT NULL,
+);
+
+CREATE TABLE tag_types (
+  tag_type_id SERIAL PRIMARY KEY,
+  name varchar NOT NULL
+);
+-- examples: General Terms, Keywords (all from ACM's digital library)
+
+CREATE TABLE work_tags (
+  work_tag_id SERIAL PRIMARY KEY,
+  work_id int NOT NULL REFERENCES works (work_id),
+  tag_id int NOT NULL REFERENCES tags (tag_id)
+);
+
+CREATE TABLE classifications (
+  classification_id SERIAL PRIMARY KEY,
+  classification_type_id int NOT NULL REFERENCES classification_types (classification_type_id),
+  name varchar NOT NULL,
+  name_short varchar,  -- name uncertain.  would be the 'H' or 'H.5', etc. for ACM's classification (http://portal.acm.org/citation.cfm?id=1514095.1514127&coll=ACM&dl=ACM&CFID=41838026&CFTOKEN=67450763)
+  parent_classification int REFERENCES classifications (classification_id)
+);
+
+CREATE TABLE classification_types (
+  classification_type_id SERIAL PRIMARY KEY,
+  name varchar NOT NULL,
+  originating_source int REFERENCES sources (source_id)
+);
+-- examples: ACM Class, arXiv Subject Class
+
+CREATE TABLE work_classifications (
+  work_classification_id SERIAL PRIMARY KEY,
+  work_id int NOT NULL REFERENCES works (work_id),
+  classification_id int NOT NULL REFERENCES classifications (classification_id),
+  qualifier varchar  -- 'primary', 'additional', etc.
+);
+
+/* Sample query for inserting a reference into the work_references table. */
+insert into work_references (referencing_work_id, citation, citation_order)
+	VALUES (2, 'Ganter, B., Wille, Rudolf, 1998. <i>Formal Concept Analysis: Mathematical Foundations</i>, Springer-Verlag, Berlin.', 
+		1);
