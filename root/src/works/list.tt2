@@ -1,0 +1,14 @@
+[% # Provide a title -%]
+[% META title = 'Works List' -%]
+
+<table>
+<tr><th>Title</th><th>Edition</th><th>Author(s)</th></tr>
+[% # Display each work in a table row %]
+[% FOREACH work IN works -%]
+  <tr>
+    <td>[% work.title %] [% work.subtitle %]</td>
+    <td>[% work.edition %]</td>
+    <td></td>
+  </tr>
+[% END -%]
+</table>
