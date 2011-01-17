@@ -23,6 +23,7 @@ CREATE TABLE works (
   work_type_id int NOT NULL REFERENCES work_types (work_type_id),
   title varchar NOT NULL,
   subtitle varchar,
+  edition smallint,
   num_references smallint,
   doi_name varchar
 );

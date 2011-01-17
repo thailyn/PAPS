@@ -48,6 +48,11 @@ __PACKAGE__->table("works");
   is_nullable: 1
   original: {data_type => "varchar"}
 
+=head2 edition
+
+  data_type: 'smallint'
+  is_nullable: 1
+
 =head2 num_references
 
   data_type: 'smallint'
@@ -83,6 +88,8 @@ __PACKAGE__->add_columns(
     is_nullable => 1,
     original    => { data_type => "varchar" },
   },
+  "edition",
+  { data_type => "smallint", is_nullable => 1 },
   "num_references",
   { data_type => "smallint", is_nullable => 1 },
   "doi_name",
@@ -126,8 +133,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2011-01-17 14:13:44
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:74yftdyevMKJ99OdzK4cCQ
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2011-01-17 14:57:57
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:L63PWYJSSCuDLNx/MkQmiQ
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
