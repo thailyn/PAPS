@@ -6,7 +6,10 @@ use warnings;
 use base 'Catalyst::View::TT';
 
 __PACKAGE__->config(
-    TEMPLATE_EXTENSION => '.tt',
+    TEMPLATE_EXTENSION => '.tt2',
+    INCLUDE_PATH => [
+        paps->path_to( 'root', 'src' ),
+    ],
     render_die => 1,
 );
 
