@@ -28,6 +28,24 @@ sub index :Path :Args(0) {
 }
 
 
+=head2 list
+
+Fetch all work objects and pass to works/list.tt2 in stash to be displayed
+
+=cut
+
+sub list :Local {
+    my ($self, $c) = @_;
+
+    # Retrieve all of the work records as work model objects and store in the
+    # stash where they can be accessed by the TT template
+    $c->stash(works => [$c->model('DB::Works')->all]);
+
+    # Set the TT template to use.
+    $c->stash(template => 'works/list.tt2');
+}
+
+
 =head1 AUTHOR
 
 Charles Macanka,,,
