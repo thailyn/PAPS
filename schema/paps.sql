@@ -1,5 +1,10 @@
 -- -*- sql -*- --
 
+-- Recreate the paps database using this sql file.
+-- Sample command:
+--   psql -U papsuser [-W] papsdb -f schema/paps.sql
+-- Including the -W argument makes entering a password required.
+
 -- Drop any tables if they already exist.
 DROP TABLE IF EXISTS work_types CASCADE;
 DROP TABLE IF EXISTS works CASCADE;
