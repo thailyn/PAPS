@@ -53,6 +53,12 @@ Attempt to render a view, if needed.
 
 sub end : ActionClass('RenderView') {}
 
+sub hello :Global {
+    my ( $self, $c ) = @_;
+
+    $c->response->body("Hello, World!");
+}
+
 =head1 AUTHOR
 
 Charles Macanka,,,
