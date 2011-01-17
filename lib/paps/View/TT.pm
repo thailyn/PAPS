@@ -10,6 +10,7 @@ __PACKAGE__->config(
     INCLUDE_PATH => [
         paps->path_to( 'root', 'src' ),
     ],
+    WRAPPER => 'wrapper.tt2',
     render_die => 1,
 );
 
