@@ -120,6 +120,13 @@ __PACKAGE__->many_to_many(works => 'work_authors', 'work_id');
 
 
 # Helper methods
+
+=head2 full_name
+
+Returns the full name of a person, including his middle name, if it exists.
+
+=cut
+
 sub full_name {
     my ($self) = @_;
 
@@ -129,6 +136,7 @@ sub full_name {
     $name .= $self->last_name;
     return $name;
 }
+
 
 =head2 work_count
 
