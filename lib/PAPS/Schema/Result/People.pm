@@ -118,5 +118,18 @@ __PACKAGE__->has_many(
 #   You must already have the has_many() defined to use a many_to_many().
 __PACKAGE__->many_to_many(works => 'work_authors', 'work_id');
 
+
+# Helper methods
+sub full_name {
+    my ($self) = @_;
+
+    my $name;
+    $name = $self->first_name . ' ';
+    $name .= $self->middle_name . ' ' if defined $self->middle_name;
+    $name .= $self->last_name;
+    return $name;
+}
+
+
 __PACKAGE__->meta->make_immutable;
 1;
