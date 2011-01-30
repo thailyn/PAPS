@@ -1,5 +1,5 @@
 [% # Provide a title -%]
-[% META title = 'Works List' -%]
+[% META title = 'People List' -%]
 
 <table>
 <tr>
