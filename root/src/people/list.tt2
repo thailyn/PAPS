@@ -35,7 +35,7 @@
          tt_works.push(work.title _ " " _ work.subtitle) FOREACH work = person.works %]
       [% # Now use a TT 'virtual method' to display the author count in parens   -%]
       [% # Note the use of the TT filter "| html" to escape dangerous characters -%]
-      ([% tt_works.size | html %])
+      ([% person.work_count | html %])
       [% # Use another TT vmethod to join & print the names & comma separators   -%]
       [% tt_works.join(', ') | html %]
     </td>
