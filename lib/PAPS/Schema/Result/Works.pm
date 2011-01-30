@@ -58,7 +58,7 @@ __PACKAGE__->table("works");
   data_type: 'smallint'
   is_nullable: 1
 
-=head2 doi_name
+=head2 doi
 
   data_type: 'text'
   is_nullable: 1
@@ -92,7 +92,7 @@ __PACKAGE__->add_columns(
   { data_type => "smallint", is_nullable => 1 },
   "num_references",
   { data_type => "smallint", is_nullable => 1 },
-  "doi_name",
+  "doi",
   {
     data_type   => "text",
     is_nullable => 1,
@@ -133,8 +133,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2011-01-29 22:32:41
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:H086rXglT0FaQ85f2ndsng
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2011-01-29 23:53:15
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Cm4WszX8TDtz4TvhAB8Cyw
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
