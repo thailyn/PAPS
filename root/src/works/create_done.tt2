@@ -1,0 +1,15 @@
+[% # Set the page title. -%]
+[% META title = 'Work Created' %]
+
+[% # Output information about the record that was added.  First title.   -%]
+<p>Added work '[% work.title %][% ':' _ work.subtitle IF work.subtitle %]'
+
+<!--
+[% # Output the last name of the first author.                           -%]
+by '[% work.authors.first.last_name %]'
+-->
+
+with DOI value '[% work.doi %]'.
+
+[% # Provide a link back to the list page                                    -%]
+<p><a href="[% c.uri_for('/works/list') %]">Return to list.</a></p>

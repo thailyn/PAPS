@@ -1,0 +1,11 @@
+[% META title = 'Create New Work' -%]
+
+<form method="post" action="[% c.uri_for('do_create') %]">
+<table>
+  <tr><td>Title:</td><td><input type="text" name="title"></td></tr>
+  <tr><td>Subtitle:</td><td><input type="text" name="subtitle"></td></tr>
+  <tr><td>DOI:</td><td><input type="text" name="doi"></td></tr>
+  <!-- <tr><td>Author ID:</td><td><input type="text" name="author_id"></td></tr> -->
+</table>
+<input type="submit" name="Submit" value="Submit">
+</form>
