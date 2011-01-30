@@ -161,5 +161,25 @@ sub author_count {
     return $self->authors->count;
 }
 
+
+=head2 author_list
+
+Return a comma-separated list of authors for the current book
+
+=cut
+
+sub author_list {
+    my ($self) = @_;
+
+    # Loop through all authors for the current work, calling the 'full_name' method
+    # on each to get the name to use.
+    my @names;
+    foreach my $author ($self->authors) {
+        push(@names, $author->full_name);
+    }
+
+    return join(', ', @names);
+}
+
 __PACKAGE__->meta->make_immutable;
 1;
