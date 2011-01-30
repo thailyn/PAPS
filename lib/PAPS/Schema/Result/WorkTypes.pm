@@ -1,4 +1,4 @@
-package paps::Schema::Result::WorkTypes;
+package PAPS::Schema::Result::WorkTypes;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -15,7 +15,7 @@ __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedCol
 
 =head1 NAME
 
-paps::Schema::Result::WorkTypes
+PAPS::Schema::Result::WorkTypes
 
 =cut
 
@@ -61,20 +61,20 @@ __PACKAGE__->set_primary_key("work_type_id");
 
 Type: has_many
 
-Related object: L<paps::Schema::Result::Works>
+Related object: L<PAPS::Schema::Result::Works>
 
 =cut
 
 __PACKAGE__->has_many(
   "works",
-  "paps::Schema::Result::Works",
+  "PAPS::Schema::Result::Works",
   { "foreign.work_type_id" => "self.work_type_id" },
   {},
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2011-01-17 14:13:44
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:naRwAKnYve739wB1vURwjA
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2011-01-29 22:32:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5H/03fRq2AmsErLWm0v6fQ
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

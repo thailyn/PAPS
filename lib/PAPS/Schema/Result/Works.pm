@@ -1,4 +1,4 @@
-package paps::Schema::Result::Works;
+package PAPS::Schema::Result::Works;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -15,7 +15,7 @@ __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedCol
 
 =head1 NAME
 
-paps::Schema::Result::Works
+PAPS::Schema::Result::Works
 
 =cut
 
@@ -107,13 +107,13 @@ __PACKAGE__->set_primary_key("work_id");
 
 Type: has_many
 
-Related object: L<paps::Schema::Result::WorkAuthors>
+Related object: L<PAPS::Schema::Result::WorkAuthors>
 
 =cut
 
 __PACKAGE__->has_many(
   "work_authors",
-  "paps::Schema::Result::WorkAuthors",
+  "PAPS::Schema::Result::WorkAuthors",
   { "foreign.work_id" => "self.work_id" },
   {},
 );
@@ -122,19 +122,19 @@ __PACKAGE__->has_many(
 
 Type: belongs_to
 
-Related object: L<paps::Schema::Result::WorkTypes>
+Related object: L<PAPS::Schema::Result::WorkTypes>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "work_type_id",
-  "paps::Schema::Result::WorkTypes",
+  "PAPS::Schema::Result::WorkTypes",
   { work_type_id => "work_type_id" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2011-01-17 14:57:57
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:L63PWYJSSCuDLNx/MkQmiQ
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2011-01-29 22:32:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:H086rXglT0FaQ85f2ndsng
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 use Catalyst::ScriptRunner;
-Catalyst::ScriptRunner->run('paps', 'FastCGI');
+Catalyst::ScriptRunner->run('PAPS', 'FastCGI');
 
 1;
 

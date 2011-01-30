@@ -5,7 +5,7 @@ BEGIN {
 }
 
 use Catalyst::ScriptRunner;
-Catalyst::ScriptRunner->run('paps', 'Server');
+Catalyst::ScriptRunner->run('PAPS', 'Server');
 
 1;
 

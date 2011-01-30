@@ -1,4 +1,4 @@
-package paps::Schema::Result::WorkAuthors;
+package PAPS::Schema::Result::WorkAuthors;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -15,7 +15,7 @@ __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedCol
 
 =head1 NAME
 
-paps::Schema::Result::WorkAuthors
+PAPS::Schema::Result::WorkAuthors
 
 =cut
 
@@ -72,13 +72,13 @@ __PACKAGE__->set_primary_key("works_author_id");
 
 Type: belongs_to
 
-Related object: L<paps::Schema::Result::Works>
+Related object: L<PAPS::Schema::Result::Works>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "work_id",
-  "paps::Schema::Result::Works",
+  "PAPS::Schema::Result::Works",
   { work_id => "work_id" },
 );
 
@@ -86,19 +86,19 @@ __PACKAGE__->belongs_to(
 
 Type: belongs_to
 
-Related object: L<paps::Schema::Result::People>
+Related object: L<PAPS::Schema::Result::People>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "person_id",
-  "paps::Schema::Result::People",
+  "PAPS::Schema::Result::People",
   { person_id => "person_id" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2011-01-17 14:13:44
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:g7F6sXitM3PldKed3PhwRQ
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2011-01-29 22:32:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:5d6uG5lK4zA5vIihr3NSpQ
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

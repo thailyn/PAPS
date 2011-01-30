@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 use Catalyst::ScriptRunner;
-Catalyst::ScriptRunner->run('paps', 'Test');
+Catalyst::ScriptRunner->run('PAPS', 'Test');
 
 1;
 

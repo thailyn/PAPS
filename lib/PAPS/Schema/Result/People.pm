@@ -1,4 +1,4 @@
-package paps::Schema::Result::People;
+package PAPS::Schema::Result::People;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -15,7 +15,7 @@ __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedCol
 
 =head1 NAME
 
-paps::Schema::Result::People
+PAPS::Schema::Result::People
 
 =cut
 
@@ -92,20 +92,20 @@ __PACKAGE__->set_primary_key("person_id");
 
 Type: has_many
 
-Related object: L<paps::Schema::Result::WorkAuthors>
+Related object: L<PAPS::Schema::Result::WorkAuthors>
 
 =cut
 
 __PACKAGE__->has_many(
   "work_authors",
-  "paps::Schema::Result::WorkAuthors",
+  "PAPS::Schema::Result::WorkAuthors",
   { "foreign.person_id" => "self.person_id" },
   {},
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2011-01-17 14:13:44
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:/1Y7/8+OUkhk2leIlPTNjw
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2011-01-29 22:32:41
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:mxa3KbFT0bpnzLjPO/QuRw
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

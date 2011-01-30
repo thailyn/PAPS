@@ -1,4 +1,4 @@
-package paps::Controller::Works;
+package PAPS::Controller::Works;
 use Moose;
 use namespace::autoclean;
 
@@ -6,7 +6,7 @@ BEGIN {extends 'Catalyst::Controller'; }
 
 =head1 NAME
 
-paps::Controller::Works - Catalyst Controller
+PAPS::Controller::Works - Catalyst Controller
 
 =head1 DESCRIPTION
 
@@ -24,7 +24,7 @@ Catalyst Controller.
 sub index :Path :Args(0) {
     my ( $self, $c ) = @_;
 
-    $c->response->body('Matched paps::Controller::Works in Works.');
+    $c->response->body('Matched PAPS::Controller::Works in Works.');
 }
 
 

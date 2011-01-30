@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Catalyst::ScriptRunner;
-Catalyst::ScriptRunner->run('paps', 'Create');
+Catalyst::ScriptRunner->run('PAPS', 'Create');
 
 1;
 

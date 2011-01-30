@@ -1,4 +1,4 @@
-package paps::Controller::Root;
+package PAPS::Controller::Root;
 use Moose;
 use namespace::autoclean;
 
@@ -12,7 +12,7 @@ __PACKAGE__->config(namespace => '');
 
 =head1 NAME
 
-paps::Controller::Root - Root Controller for paps
+PAPS::Controller::Root - Root Controller for PAPS
 
 =head1 DESCRIPTION
 

@@ -1,4 +1,4 @@
-package paps::View::TT;
+package PAPS::View::TT;
 
 use strict;
 use warnings;
@@ -8,7 +8,7 @@ use base 'Catalyst::View::TT';
 __PACKAGE__->config(
     TEMPLATE_EXTENSION => '.tt2',
     INCLUDE_PATH => [
-        paps->path_to( 'root', 'src' ),
+        PAPS->path_to( 'root', 'src' ),
     ],
     WRAPPER => 'wrapper.tt2',
     render_die => 1,
@@ -16,15 +16,15 @@ __PACKAGE__->config(
 
 =head1 NAME
 
-paps::View::TT - TT View for paps
+PAPS::View::TT - TT View for PAPS
 
 =head1 DESCRIPTION
 
-TT View for paps.
+TT View for PAPS.
 
 =head1 SEE ALSO
 
-L<paps>
+L<PAPS>
 
 =head1 AUTHOR
 

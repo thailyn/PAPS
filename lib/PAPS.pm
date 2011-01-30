@@ -1,4 +1,4 @@
-package paps;
+package PAPS;
 use Moose;
 use namespace::autoclean;
 
@@ -33,7 +33,7 @@ $VERSION = eval $VERSION;
 # local deployment.
 
 __PACKAGE__->config(
-    name => 'paps',
+    name => 'PAPS',
     # Disable deprecated behavior needed by old applications
     disable_component_resolution_regex_fallback => 1,
 );
@@ -44,7 +44,7 @@ __PACKAGE__->setup();
 
 =head1 NAME
 
-paps - Catalyst based application
+PAPS - Catalyst based application
 
 =head1 SYNOPSIS
 
@@ -56,7 +56,7 @@ paps - Catalyst based application
 
 =head1 SEE ALSO
 
-L<paps::Controller::Root>, L<Catalyst>
+L<PAPS::Controller::Root>, L<Catalyst>
 
 =head1 AUTHOR
 
