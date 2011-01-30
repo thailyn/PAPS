@@ -147,6 +147,21 @@ __PACKAGE__->belongs_to(
 #   You must already have the has_many() defined to use a many_to_many().
 __PACKAGE__->many_to_many(authors => 'work_authors', 'person_id');
 
+
+=head2 display_name
+
+Returns a formatted version of the title and subtitle suitable for display.
+
+=cut
+
+sub display_name {
+    my ($self) = @_;
+
+    my $name = $self->title;
+    $name .= ': ' . $self->subtitle if defined $self->subtitle;
+    return $name;
+}
+
 =head2 author_count
 
 Return the number of authors for the current work.
