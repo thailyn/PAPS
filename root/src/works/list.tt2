@@ -21,7 +21,7 @@
          tt_authors.push(author.full_name) FOREACH author = work.authors %]
       [% # Now use a TT 'virtual method' to display the author count in parens   -%]
       [% # Note the use of the TT filter "| html" to escape dangerous characters -%]
-      ([% tt_authors.size | html %])
+      ([% work.author_count | html %])
       [% # Use another TT vmethod to join & print the names & comma separators   -%]
       [% tt_authors.join(', ') | html %]
     </td>
