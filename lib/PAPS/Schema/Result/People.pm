@@ -153,6 +153,26 @@ sub work_count {
 }
 
 
+=head2 work_list
+
+Return a comma-separated list of works the current person was an author for.
+
+=cut
+
+sub work_list {
+    my ($self) = @_;
+
+    # Loop through all works for the current person, calling the 'display_name' method
+    # on each to get the name to use.
+    my @names;
+    foreach my $work ($self->works) {
+        push(@names, $work->display_name);
+    }
+
+    return join(', ', @names);
+}
+
+
 
 __PACKAGE__->meta->make_immutable;
 1;
