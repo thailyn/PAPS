@@ -2,7 +2,7 @@
 [% META title = 'Works List' -%]
 
 <table>
-<tr><th>Title</th><th>Edition</th><th>Author(s)</th><th>DOI Name</th></tr>
+<tr><th>Title</th><th>Edition</th><th>Author(s)</th><th>DOI</th></tr>
 [% # Display each work in a table row %]
 [% FOREACH work IN works -%]
   <tr>
@@ -25,7 +25,7 @@
       [% # Use another TT vmethod to join & print the names & comma separators   -%]
       [% tt_authors.join(', ') | html %]
     </td>
-    <td>[% work.doi_name %]</td>
+    <td>[% work.doi %]</td>
   </tr>
 [% END -%]
 </table>
