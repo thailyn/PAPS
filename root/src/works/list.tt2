@@ -8,7 +8,23 @@
   <tr>
     <td>[% work.title %] [% work.subtitle %]</td>
     <td>[% work.edition %]</td>
-    <td></td>
+    <td>
+      [% # NOTE: See Chapter 4 for a better way to do this!                      -%]
+      [% # First initialize a TT variable to hold a list.  Then use a TT FOREACH -%]
+      [% # loop in 'side effect notation' to load just the last names of the     -%]
+      [% # authors into the list. Note that the 'push' TT vmethod doesn't return -%]
+      [% # a value, so nothing will be printed here.  But, if you have something -%]
+      [% # in TT that does return a value and you don't want it printed, you     -%]
+      [% # 1) assign it to a bogus value, or                                     -%]
+      [% # 2) use the CALL keyword to call it and discard the return value.      -%]
+      [% tt_authors = [ ];
+         tt_authors.push(author.last_name) FOREACH author = work.authors %]
+      [% # Now use a TT 'virtual method' to display the author count in parens   -%]
+      [% # Note the use of the TT filter "| html" to escape dangerous characters -%]
+      ([% tt_authors.size | html %])
+      [% # Use another TT vmethod to join & print the names & comma separators   -%]
+      [% tt_authors.join(', ') | html %]
+    </td>
     <td>[% work.doi_name %]</td>
   </tr>
 [% END -%]
