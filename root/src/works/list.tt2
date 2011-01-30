@@ -25,7 +25,7 @@
       [% # Use another TT vmethod to join & print the names & comma separators   -%]
       [% tt_authors.join(', ') | html %]
     </td>
-    <td>[% work.doi %]</td>
+    <td>[% '<a href="http://doi.acm.org/' _ work.doi _ '">http://doi.acm.org/' _ work.doi _ '</a>' IF work.doi %]</td>
   </tr>
 [% END -%]
 </table>
