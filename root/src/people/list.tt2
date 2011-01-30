@@ -1,0 +1,44 @@
+[% # Provide a title -%]
+[% META title = 'Works List' -%]
+
+<table>
+<tr>
+  <th>
+    First Name
+  </th>
+  <th>
+    Middle Name
+  </th>
+  <th>
+    Last Name
+  </th>
+  <th>
+    Work(s)
+  </th>
+</tr>
+[% # Display each person in a table row %]
+[% FOREACH person IN people -%]
+  <tr>
+    <td>[% person.first_name %]</td>
+    <td>[% person.middle_name %]</td>
+    <td>[% person.last_name %]</td>
+    <td>
+      [% # NOTE: See Chapter 4 for a better way to do this!                      -%]
+      [% # First initialize a TT variable to hold a list.  Then use a TT FOREACH -%]
+      [% # loop in 'side effect notation' to load just the last names of the     -%]
+      [% # authors into the list. Note that the 'push' TT vmethod doesn't return -%]
+      [% # a value, so nothing will be printed here.  But, if you have something -%]
+      [% # in TT that does return a value and you don't want it printed, you     -%]
+      [% # 1) assign it to a bogus value, or                                     -%]
+      [% # 2) use the CALL keyword to call it and discard the return value.      -%]
+      [% tt_works = [ ];
+         tt_works.push(work.title _ " " _ work.subtitle) FOREACH work = person.works %]
+      [% # Now use a TT 'virtual method' to display the author count in parens   -%]
+      [% # Note the use of the TT filter "| html" to escape dangerous characters -%]
+      ([% tt_works.size | html %])
+      [% # Use another TT vmethod to join & print the names & comma separators   -%]
+      [% tt_works.join(', ') | html %]
+    </td>
+  </tr>
+[% END -%]
+</table>

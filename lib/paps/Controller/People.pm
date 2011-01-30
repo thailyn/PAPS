@@ -28,6 +28,24 @@ sub index :Path :Args(0) {
 }
 
 
+=head2 list
+
+Fetch all people objects and pass to people/list.tt2 in stash to be displayed
+
+=cut
+
+sub list :Local {
+    my ($self, $c) = @_;
+
+    # Retrieve all of the people records as people model objects and store in the
+    # stash where they can be accessed by the TT template
+    $c->stash(people => [$c->model('DB::People')->all]);
+
+    # Set the TT template to use.
+    $c->stash(template => 'people/list.tt2');
+}
+
+
 =head1 AUTHOR
 
 Charles Macanka,,,
