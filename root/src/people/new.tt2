@@ -1,0 +1,10 @@
+[% META title = 'Create New Person' -%]
+
+<form method="post" action="[% c.uri_for('do_create') %]">
+<table>
+  <tr><td>First Name:</td><td><input type="text" name="first_name"></td></tr>
+  <tr><td>Middle Name:</td><td><input type="text" name="middle_name"></td></tr>
+  <tr><td>Last Name:</td><td><input type="text" name="last_name"></td></tr>
+</table>
+<input type="submit" name="Submit" value="Submit">
+</form>

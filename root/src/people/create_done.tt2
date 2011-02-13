@@ -1,0 +1,8 @@
+[% # Set the page title. -%]
+[% META title = 'Person Created' %]
+
+[% # Output information about the record that was added.  First title.   -%]
+<p>Added person '[% person.full_name | html %]'.
+
+[% # Provide a link back to the list page                                    -%]
+<p><a href="[% c.uri_for('/people/list') %]">Return to list of People.</a></p>

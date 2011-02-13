@@ -17,15 +17,68 @@ Catalyst Controller.
 =cut
 
 
-=head2 index
+=head2 base
+
+Can place common logic to start chained dispatch here
 
 =cut
 
-sub index :Path :Args(0) {
-    my ( $self, $c ) = @_;
+sub base :Chained('/') :PathPart('people') :CaptureArgs(0) {
+    my ($self, $c) = @_;
 
-    $c->response->body('Matched PAPS::Controller::People in People.');
+    # Store the ResultSet in stash so it's available for other methods
+    $c->stash(resultset => $c->model('DB::People'));
+
+    ## Print a message to the debug log
+    #$c->log->debug('*** INSIDE PEOPLE BASE METHOD ***');
 }
+
+
+=head2 create_form
+
+Present a form to create a new Person.
+
+=cut
+
+sub create_form :Chained('base') :PathPart('new') :Args(0) {
+    my ($self, $c) = @_;
+
+    # Set the TT template to use
+    $c->stash(template => 'people/new.tt2');
+}
+
+
+=head2 do_create
+
+Take information from form and add new Person to database
+
+=cut
+
+sub do_create :Chained('base') :PathPart('do_create') :Args(0) {
+    my ($self, $c) = @_;
+
+    # Retrieve the values from the form
+    my $first_name = $c->request->params->{first_name};
+    my $middle_name = $c->request->params->{middle_name} || undef;
+    my $last_name = $c->request->params->{last_name};
+
+    # Create the work
+    my $person = $c->model('DB::People')->create({
+            first_name => $first_name,
+            middle_name => $middle_name,
+            last_name => $last_name,
+        });
+    # Below section taken from Works controller:
+    # Handle relationship with author
+    #$work->add_to_work_authors({author_id => $author_id});
+    # Note: Above is a shortcut for this:
+    # $work->create_related('work_authors', {author_id => $author_id});
+
+    # Store new model object in stash and set template
+    $c->stash(person => $person,
+              template => 'people/create_done.tt2');
+}
+
 
 
 =head2 list
