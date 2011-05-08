@@ -19,8 +19,16 @@
     <td>[% requested_work.edition | html %]</td>
   </tr>
   <tr>
-    <th>Authors:</th>
+    <th>DOI:</th>
+    <td>[% '<a href="' _ requested_work.doi_url _ '">' _ requested_work.doi _ '</a>' IF requested_work.doi %]</td>
+  </tr>
+  <tr>
+    <th>Author Count:</th>
     <td>[% requested_work.author_count | html %]</td>
+  </tr>
+  <tr>
+    <th>Reference Count:</th>
+    <td>[% requested_work.num_references | html %]</td>
   </tr>
 </table>
 
