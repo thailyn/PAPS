@@ -11,7 +11,7 @@
     <td>
       ([% work.author_count | html %]) [% work.author_list | html %]
     </td>
-    <td>[% '<a href="http://doi.acm.org/' _ work.doi _ '">http://doi.acm.org/' _ work.doi _ '</a>' IF work.doi %]</td>
+    <td>[% '<a href="' _ work.doi_url _ '">' _ work.doi _ '</a>' IF work.doi %]</td>
   </tr>
 [% END -%]
 </table>
