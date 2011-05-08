@@ -2,7 +2,23 @@
 [% META title = 'Works List' -%]
 
 <table>
-<tr><th>Title</th><th>Edition</th><th>Author(s)</th><th>DOI</th></tr>
+<tr>
+  <th>
+    Title
+  </th>
+  <th>
+    Edition
+  </th>
+  <th>
+    Author(s)
+  </th>
+  <th>
+    DOI
+  </th>
+  <th>
+    Details
+  </th>
+</tr>
 [% # Display each work in a table row %]
 [% FOREACH work IN works -%]
   <tr>
@@ -12,6 +28,7 @@
       ([% work.author_count | html %]) [% work.author_list | html %]
     </td>
     <td>[% '<a href="' _ work.doi_url _ '">' _ work.doi _ '</a>' IF work.doi %]</td>
+    <td><a href="[% c.uri_for('/works/' _ work.work_id) %]">View</a></td>
   </tr>
 [% END -%]
 </table>

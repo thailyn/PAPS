@@ -15,6 +15,9 @@
   <th>
     Work(s)
   </th>
+  <th>
+    Details
+  </th>
 </tr>
 [% # Display each person in a table row %]
 [% FOREACH person IN people -%]
@@ -25,6 +28,7 @@
     <td>
       ([% person.work_count | html %]) [% person.work_list | html %]
     </td>
+    <td><a href="[% c.uri_for('/people/' _ person.person_id) %]">View</a></td>
   </tr>
 [% END -%]
 </table>
