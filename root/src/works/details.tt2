@@ -22,10 +22,20 @@
     <th>Authors:</th>
     <td>[% requested_work.author_count | html %]</td>
   </tr>
+</table>
+
+<p />
+
+<div>Author Information</div>
+<table>
+  <tr>
+    <th>Position</th>
+    <th>Name</th>
+  </tr>
 [% FOREACH author IN requested_work.authors %]
   <tr>
-    <td>[ [% author.author_position %] | [% author.author_pos %] | [% author.get_column('author_position') %]]</td>
-    <td>[ [% author.person_id %] | <a href="[% c.uri_for("/people/$author.person_id") %]">[% author.full_name | html%]</a> ]</td>
+    <td>[% author.get_column('author_position') %]</td>
+    <td><a href="[% c.uri_for("/people/$author.person_id") %]">[% author.full_name | html%]</a></td>
     <!-- <td><pre>[% Dumper.dump(author)  %]</pre></td> -->
   </tr>
 [% END %]
