@@ -1,0 +1,32 @@
+[% # Provide a title -%]
+[% META title = 'Work Details' -%]
+
+[% USE Dumper(Indent=1) -%]
+
+<h1>Work Details</h1>
+
+<table>
+  <tr>
+    <th>Title:</th>
+    <td>[% requested_work.title | html %]</td>
+  </tr>
+  <tr>
+    <th>Subtitle:</th>
+    <td>[% requested_work.subtitle | html %]</td>
+  </tr>
+  <tr>
+    <th>Edition:</th>
+    <td>[% requested_work.edition | html %]</td>
+  </tr>
+  <tr>
+    <th>Authors:</th>
+    <td>[% requested_work.author_count | html %]</td>
+  </tr>
+[% FOREACH author IN requested_work.authors %]
+  <tr>
+    <td>[ [% author.author_position %] | [% author.author_pos %] | [% author.get_column('author_position') %]]</td>
+    <td>[ [% author.person_id %] | <a href="[% c.uri_for("/people/$author.person_id") %]">[% author.full_name | html%]</a> ]</td>
+    <!-- <td><pre>[% Dumper.dump(author)  %]</pre></td> -->
+  </tr>
+[% END %]
+</table>
