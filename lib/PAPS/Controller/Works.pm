@@ -32,6 +32,66 @@ sub base :Chained('/') :PathPart('works') :CaptureArgs(0) {
     #$c->log->debug('*** INSIDE BASE METHOD ***');
 }
 
+=head2 details
+
+Show the details for a specific work.
+
+=cut
+
+sub details :Chained('base') :PathPart('') :Args(1) {
+    my ($self, $c, $requested_work_id) = @_;
+
+    ## Print a message to the debug log
+    #$c->log->debug("*** INSIDE DETAILS METHOD ($requested_work_id) ***");
+
+    my $matching_work = $c->model('DB::Works')
+        ->find({work_id => {'=', $requested_work_id}});
+
+#    my $work_authors = [ $matching_work->authors
+#                         ->search(
+#                             {
+#                             },
+#                             {
+#                                 join => 'work_authors',
+#                                 '+select' => ['work_authors.author_position'],
+#                                 '+as' => ['author_position'],
+#                                 order_by => ['author_position']
+#                             }
+#                         )
+#        ];
+
+#    my $work_authors = [ $matching_work->related_resultset('work_authors')
+#                         ->search(
+#                             {
+#                             },
+#                             {
+#                                 prefetch => 'person_id',
+#                                 order_by => ['author_position']
+#                             }
+#                         )
+#        ];
+
+    $c->stash(work_id => $requested_work_id);
+    $c->stash(requested_work => $matching_work);
+
+    # Retrieve all of the work records as work model objects and store in the
+    # stash where they can be accessed by the TT template
+    #$c->stash(works => [$c->model('DB::Works')->all]);
+
+    #  If the find method does not get any matching records, a defined
+    # but false value is returned.  We can customize which template used
+    # based on this value.
+    #if ($matching_work) {
+    #    # Use template that shows work details
+    #}
+    #else {
+    #    # Use template that is specialized for finding no results
+    #}
+
+
+    $c->stash(template => 'works/details.tt2');
+}
+
 
 =head2 create_form
 
