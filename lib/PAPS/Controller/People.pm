@@ -34,6 +34,35 @@ sub base :Chained('/') :PathPart('people') :CaptureArgs(0) {
 }
 
 
+=head2 details
+
+Show the details for a specific person.
+
+=cut
+
+sub details :Chained('base') :PathPart('') :Args(1) {
+    my ($self, $c, $requested_person_id) = @_;
+
+    my $matching_person = $c->model('DB::People')
+        ->find({person_id => {'=', $requested_person_id}});
+
+    $c->stash(person_id => $requested_person_id);
+    $c->stash(requested_person => $matching_person);
+
+    #  If the find method does not get any matching records, a defined
+    # but false value is returned.  We can customize which template used
+    # based on this value.
+    #if ($matching_person) {
+    #    # Use template that shows work details
+    #}
+    #else {
+    #    # Use template that is specialized for finding no results
+    #}
+
+    $c->stash(template => 'people/details.tt2');
+}
+
+
 =head2 create_form
 
 Present a form to create a new Person.

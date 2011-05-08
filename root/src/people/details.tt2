@@ -1,0 +1,46 @@
+[% # Provide a title -%]
+[% META title = 'Person Details' -%]
+
+[% USE Dumper(Indent=1) -%]
+
+<h1>Person Details</h1>
+
+<table>
+  <tr>
+    <th>First Name:</th>
+    <td>[% requested_person.first_name | html %]</td>
+  </tr>
+  <tr>
+    <th>Middle Name:</th>
+    <td>[% requested_person.middle_name | html %]</td>
+  </tr>
+  <tr>
+    <th>Last Name:</th>
+    <td>[% requested_person.last_name | html %]</td>
+  </tr>
+  <tr>
+    <th>Date of Birth:</th>
+    <td>[% requested_person.date_of_birth | html %]</td>
+  </tr>
+  <tr>
+    <th>Works:</th>
+    <td>[% requested_person.work_count | html %]</td>
+  </tr>
+</table>
+
+<p />
+
+<div>Work Information</div>
+<table>
+  <tr>
+    <th>Work Type</th>
+    <th>Name</th>
+  </tr>
+[% FOREACH work IN requested_person.works %]
+  <tr>
+    <td>[%# work type %]</td>
+    <td><a href="[% c.uri_for("/works/$work.work_id") %]">[% work.title | html%]</a></td>
+    <!-- <td><pre>[% Dumper.dump(work)  %]</pre></td> -->
+  </tr>
+[% END %]
+</table>
