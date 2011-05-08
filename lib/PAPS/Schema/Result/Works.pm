@@ -152,6 +152,8 @@ __PACKAGE__->many_to_many(authors => 'work_authors', 'person_id',
                           });
 
 
+# Helper methods
+
 =head2 display_name
 
 Returns a formatted version of the title and subtitle suitable for display.
@@ -164,6 +166,20 @@ sub display_name {
     my $name = $self->title;
     $name .= ': ' . $self->subtitle if defined $self->subtitle;
     return $name;
+}
+
+=head2 doi_url
+
+Returns a complete URL based off of the doi value.
+
+=cut
+
+sub doi_url {
+    my ($self) = @_;
+
+    my $url;
+    $url = 'http://doi.acm.org/' . $self->doi;
+    return $url;
 }
 
 =head2 author_count
