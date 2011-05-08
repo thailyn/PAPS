@@ -110,6 +110,21 @@ __PACKAGE__->has_many(
 
 # You can replace this text with custom content, and it will be preserved on regeneration
 
+__PACKAGE__->has_many(
+  "work_authors",
+  "PAPS::Schema::Result::WorkAuthors",
+  { "foreign.person_id" => "self.person_id" },
+  {
+      #proxy => [ qw/work_authors.author_position/ ],  # does not do anything
+      #proxy => [ qw/author_position/ ],                # throws an error 'Can't locate object method "author_position"...'
+      #proxy => { author_pos => qw/work_authors.author_position/ },
+      #proxy => { author_pos => qw/author_position/ }, # throws an error 'Can't locate object method "author_position"...'
+
+      #'+select' => ['work_authors.author_position'],
+      #'+as' => ['author_pos'],
+  },
+);
+
 # many_to_many():
 #   args:
 #     1) Name of relationship, DBIC will create accessor with this name
@@ -117,7 +132,6 @@ __PACKAGE__->has_many(
 #     3) Name of belongs_to() relationship in model class of has_many() above
 #   You must already have the has_many() defined to use a many_to_many().
 __PACKAGE__->many_to_many(works => 'work_authors', 'work_id');
-
 
 # Helper methods
 
