@@ -41,35 +41,8 @@ Show the details for a specific work.
 sub details :Chained('base') :PathPart('') :Args(1) {
     my ($self, $c, $requested_work_id) = @_;
 
-    ## Print a message to the debug log
-    #$c->log->debug("*** INSIDE DETAILS METHOD ($requested_work_id) ***");
-
     my $matching_work = $c->model('DB::Works')
         ->find({work_id => {'=', $requested_work_id}});
-
-#    my $work_authors = [ $matching_work->authors
-#                         ->search(
-#                             {
-#                             },
-#                             {
-#                                 join => 'work_authors',
-#                                 '+select' => ['work_authors.author_position'],
-#                                 '+as' => ['author_position'],
-#                                 order_by => ['author_position']
-#                             }
-#                         )
-#        ];
-
-#    my $work_authors = [ $matching_work->related_resultset('work_authors')
-#                         ->search(
-#                             {
-#                             },
-#                             {
-#                                 prefetch => 'person_id',
-#                                 order_by => ['author_position']
-#                             }
-#                         )
-#        ];
 
     $c->stash(work_id => $requested_work_id);
     $c->stash(requested_work => $matching_work);

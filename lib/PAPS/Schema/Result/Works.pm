@@ -139,26 +139,6 @@ __PACKAGE__->belongs_to(
 
 # You can replace this text with custom content, and it will be preserved on regeneration
 
-#__PACKAGE__->has_many(
-#  "work_authors",
-#  "PAPS::Schema::Result::WorkAuthors",
-#  { "foreign.work_id" => "self.work_id" },
-#  {
-#      proxy => [ qw/author_position/ ],
-#  },
-#);
-
-# This one doesn't seem to break anything, but does not add anything without a proper proxy
-#__PACKAGE__->has_many(
-#    'work_authors' => 'PAPS::Schema::Result::WorkAuthors',
-#    'work_id',
-#    {
-#        #proxy => [ qw/author_position/ ],
-#        #'+select' => ['author_position'],
-#        #'+as' => ['author_pos'],
-#    },
-#    );
-
 # many_to_many():
 #   args:
 #     1) Name of relationship, DBIC will create accessor with this name
@@ -167,11 +147,6 @@ __PACKAGE__->belongs_to(
 #   You must already have the has_many() defined to use a many_to_many().
 __PACKAGE__->many_to_many(authors => 'work_authors', 'person_id',
                           {
-                              #proxy => [ qw/author_position/ ],
-                              #'+select' => ['author_position'],
-                              #'+as' => ['author_pos'],
-                              #prefetch => 'work_authors',
-
                               '+select' => 'me.author_position',
                               '+as' => 'author_position',
                           });
