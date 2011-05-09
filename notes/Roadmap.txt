@@ -1,0 +1,29 @@
+This file contains the roadmaps for the PAPS project, which lists the planned
+goals for upcoming versions or for some point in the future.
+
+0.004
+  - Edit pages for works and people.
+  - Include work type in the works list on the Person Details pages.
+
+0.005
+  - Work references tables.
+  - Specify the number of references when creating/editing a work.
+  - Add references to a work.
+
+0.006
+  - User accounts.
+  - Authentication/authorization.
+
+0.007
+  - Basic logging.
+  - Recording creating/editing works and people.
+
+0.008
+  - Sources/work sources.
+
+0.009
+  - Publications.
+
+Future
+  - Files (uploading/viewing)
+  - One-time links/logins/account creation.
