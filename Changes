@@ -1,5 +1,15 @@
 This file documents the revision history for Perl extension PAPS.
 
+0.003  2011-01-08 22:41:27 -0400
+        - Added a page to create new people.
+        - Added links to people and works creation pages in the naviation bar.
+        - Added pages to view details about a work or a person.  The work
+          details page provides a list of that work's authors, and the person
+          details page provides a list of that person's works.  Each list has
+          a link to go to the referenced work or person's details page.
+        - Pages with works and people lists now also includes a link to that
+          record's details page.
+
 0.002  2011-01-30 14:38:40 -0500
         - Set of a few very simple pages available.
         - Can view the list of people and works.
