@@ -51,15 +51,19 @@ INSERT INTO work_types (work_type) VALUES ('Paper');
 INSERT INTO works (work_type_id, title, subtitle, edition) VALUES (1, 'Artificial Intelligence', 'A Modern Approach', 2);
 INSERT INTO works (work_type_id, title, subtitle, edition) VALUES (1, 'Artificial Intelligence', 'A Systems Approach', 1);
 INSERT INTO works (work_type_id, title, edition, num_references, doi) VALUES (3, 'Takeover Times on Scale-Free Topologies', 1, 33, '10.1145/1276958.1277018'); -- 'http://doi.acm.org/10.1145/1276958.1277018'
+INSERT INTO works (work_type_id, title, edition, doi) VALUES (3, 'Parameterizing pair approximations for takeover dynamics', 1, '10.1145/1388969.1389047');
 
 INSERT INTO people (first_name, last_name) VALUES ('Stuart', 'Russell');
 INSERT INTO people (first_name, last_name) VALUES ('Peter', 'Norvig');
 INSERT INTO people (first_name, middle_name, last_name) VALUES ('M.', 'Tim', 'Jones');
 INSERT INTO people (first_name, middle_name, last_name) VALUES ('Joshua', 'L.', 'Payne');
 INSERT INTO people (first_name, middle_name, last_name) VALUES ('Margaret', 'J.', 'Eppstein');
+INSERT INTO people (first_name, middle_name, last_name) VALUES ('Randal', 'L.', 'Schwartz');
 
 INSERT INTO work_authors (work_id, person_id, author_position) VALUES (1, 1, 1);
 INSERT INTO work_authors (work_id, person_id, author_position) VALUES (1, 2, 2);
 INSERT INTO work_authors (work_id, person_id, author_position) VALUES (2, 3, 1);
 INSERT INTO work_authors (work_id, person_id, author_position) VALUES (3, 4, 1);
 INSERT INTO work_authors (work_id, person_id, author_position) VALUES (3, 5, 2);
+INSERT INTO work_authors (work_id, person_id, author_position) VALUES (4, 4, 1);
+INSERT INTO work_authors (work_id, person_id, author_position) VALUES (4, 5, 2);
