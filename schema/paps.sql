@@ -6,13 +6,24 @@
 -- Including the -W argument makes entering a password required.
 
 -- Drop any tables if they already exist.
+DROP TABLE IF EXISTS meta_works CASCADE;
 DROP TABLE IF EXISTS work_types CASCADE;
 DROP TABLE IF EXISTS works CASCADE;
 DROP TABLE IF EXISTS people CASCADE;
 DROP TABLE IF EXISTS work_authors CASCADE;
 
--- Create the table.  Required to, of course, create tables that are
+-- Create the tables.  Required to, of course, create tables that are
 -- referenced before the tables that reference them.
+
+-- The meta_works table serves as a link between different works that
+-- represent the same overal "work."  For example, two different editions of
+-- the same book will be represented as two different works, as they could
+-- have virtually completely different metadata (different authors, etc.), but
+-- would be connected by referencing the same meta work.
+CREATE TABLE meta_works (
+  id SERIAL PRIMARY KEY
+);
+
 CREATE TABLE work_types (
   work_type_id SERIAL PRIMARY KEY,
   work_type varchar NOT NULL
@@ -20,6 +31,7 @@ CREATE TABLE work_types (
 
 CREATE TABLE works (
   work_id SERIAL PRIMARY KEY,
+  meta_work_id int REFERENCES meta_works (id),
   work_type_id int NOT NULL REFERENCES work_types (work_type_id),
   title varchar NOT NULL,
   subtitle varchar,
