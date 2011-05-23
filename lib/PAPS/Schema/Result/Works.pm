@@ -161,6 +161,24 @@ __PACKAGE__->belongs_to(
 
 # You can replace this text with custom content, and it will be preserved on regeneration
 
+=head2 meta_work_id
+
+Type: belongs_to
+
+Related object: L<PAPS::Schema::Result::Metaworks>  This relation is redefined
+here in order to explicity specify the join type is a "LEFT OUTER" join, as a
+work does not need a related metawork.
+
+=cut
+
+__PACKAGE__->belongs_to(
+    "meta_work_id",
+    "PAPS::Schema::Result::Metaworks",
+    { id => "meta_work_id" },
+    { join_type => "LEFT OUTER" },
+);
+
+
 # many_to_many():
 #   args:
 #     1) Name of relationship, DBIC will create accessor with this name
