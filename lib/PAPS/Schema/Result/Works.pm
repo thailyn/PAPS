@@ -30,6 +30,12 @@ __PACKAGE__->table("works");
   is_nullable: 0
   sequence: 'works_work_id_seq'
 
+=head2 meta_work_id
+
+  data_type: 'integer'
+  is_foreign_key: 1
+  is_nullable: 1
+
 =head2 work_type_id
 
   data_type: 'integer'
@@ -74,6 +80,8 @@ __PACKAGE__->add_columns(
     is_nullable       => 0,
     sequence          => "works_work_id_seq",
   },
+  "meta_work_id",
+  { data_type => "integer", is_foreign_key => 1, is_nullable => 1 },
   "work_type_id",
   { data_type => "integer", is_foreign_key => 1, is_nullable => 0 },
   "title",
@@ -132,9 +140,23 @@ __PACKAGE__->belongs_to(
   { work_type_id => "work_type_id" },
 );
 
+=head2 meta_work_id
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2011-01-29 23:53:15
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:Cm4WszX8TDtz4TvhAB8Cyw
+Type: belongs_to
+
+Related object: L<PAPS::Schema::Result::MetaWorks>
+
+=cut
+
+__PACKAGE__->belongs_to(
+  "meta_work_id",
+  "PAPS::Schema::Result::MetaWorks",
+  { id => "meta_work_id" },
+);
+
+
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2011-05-22 19:53:35
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:OUg0KsUqH4w2Ti1mXRIwQg
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
