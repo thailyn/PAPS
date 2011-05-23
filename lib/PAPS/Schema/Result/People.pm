@@ -135,6 +135,18 @@ __PACKAGE__->many_to_many(works => 'work_authors', 'work_id');
 
 # Helper methods
 
+=head2 display_name
+
+Returns a string suitable to represent the essence of this object.
+
+=cut
+
+sub display_name {
+    my ($self) = @_;
+
+    return $self->full_name();
+}
+
 =head2 full_name
 
 Returns the full name of a person, including his middle name, if it exists.
