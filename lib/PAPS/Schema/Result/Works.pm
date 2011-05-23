@@ -144,19 +144,19 @@ __PACKAGE__->belongs_to(
 
 Type: belongs_to
 
-Related object: L<PAPS::Schema::Result::MetaWorks>
+Related object: L<PAPS::Schema::Result::Metaworks>
 
 =cut
 
 __PACKAGE__->belongs_to(
   "meta_work_id",
-  "PAPS::Schema::Result::MetaWorks",
+  "PAPS::Schema::Result::Metaworks",
   { id => "meta_work_id" },
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2011-05-22 19:53:35
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:OUg0KsUqH4w2Ti1mXRIwQg
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2011-05-22 23:16:06
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6dMIuQhilBwmMyCWHRHVaA
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration

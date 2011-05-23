@@ -1,4 +1,4 @@
-package PAPS::Schema::Result::MetaWorks;
+package PAPS::Schema::Result::Metaworks;
 
 # Created by DBIx::Class::Schema::Loader
 # DO NOT MODIFY THE FIRST PART OF THIS FILE
@@ -15,11 +15,11 @@ __PACKAGE__->load_components("InflateColumn::DateTime", "TimeStamp", "EncodedCol
 
 =head1 NAME
 
-PAPS::Schema::Result::MetaWorks
+PAPS::Schema::Result::Metaworks
 
 =cut
 
-__PACKAGE__->table("meta_works");
+__PACKAGE__->table("metaworks");
 
 =head1 ACCESSORS
 
@@ -28,7 +28,7 @@ __PACKAGE__->table("meta_works");
   data_type: 'integer'
   is_auto_increment: 1
   is_nullable: 0
-  sequence: 'meta_works_id_seq'
+  sequence: 'metaworks_id_seq'
 
 =cut
 
@@ -38,7 +38,7 @@ __PACKAGE__->add_columns(
     data_type         => "integer",
     is_auto_increment => 1,
     is_nullable       => 0,
-    sequence          => "meta_works_id_seq",
+    sequence          => "metaworks_id_seq",
   },
 );
 __PACKAGE__->set_primary_key("id");
@@ -61,8 +61,8 @@ __PACKAGE__->has_many(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2011-05-22 19:53:35
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:kLGxgXcIvdKH169vCRATPA
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2011-05-22 23:16:06
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:cZHiEcogy/SpBKwq4SZd6Q
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
