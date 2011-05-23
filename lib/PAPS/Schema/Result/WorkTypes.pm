@@ -78,5 +78,20 @@ __PACKAGE__->has_many(
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
+
+# Helper methods
+
+=head2 display_name
+
+Returns a string suitable to represent the essence of this object.
+
+=cut
+
+sub display_name {
+    my ($self) = @_;
+
+    return $self->work_type;
+}
+
 __PACKAGE__->meta->make_immutable;
 1;
