@@ -11,6 +11,8 @@ DROP TABLE IF EXISTS work_types CASCADE;
 DROP TABLE IF EXISTS works CASCADE;
 DROP TABLE IF EXISTS people CASCADE;
 DROP TABLE IF EXISTS work_authors CASCADE;
+DROP TABLE IF EXISTS reference_types CASCADE;
+DROP TABLE IF EXISTS work_references CASCADE;
 
 -- Create the tables.  Required to, of course, create tables that are
 -- referenced before the tables that reference them.
@@ -55,6 +57,23 @@ CREATE TABLE work_authors (
   author_position smallint
 );
 
+CREATE SEQUENCE reference_types_id_seq;
+CREATE TABLE reference_types (
+  id smallint DEFAULT nextval('reference_types_id_seq') PRIMARY KEY,
+  name varchar NOT NULL UNIQUE
+);
+ALTER SEQUENCE reference_types_id_seq OWNED BY reference_types.id;
+
+CREATE TABLE work_references ( -- or, 'citations'
+  id BIGSERIAL PRIMARY KEY,
+  referencing_work_id integer NOT NULL REFERENCES works (work_id),
+  referenced_work_id integer NULL REFERENCES works (work_id),
+  reference_type_id smallint NOT NULL REFERENCES reference_types (id),
+  rank smallint NOT NULL,
+  chapter smallint NULL,
+  reference_text text NULL
+);
+
 -- Populate the tables with some example data.
 INSERT INTO work_types (work_type) VALUES ('Textbook');
 INSERT INTO work_types (work_type) VALUES ('Book');
@@ -79,3 +98,15 @@ INSERT INTO work_authors (work_id, person_id, author_position) VALUES (3, 4, 1);
 INSERT INTO work_authors (work_id, person_id, author_position) VALUES (3, 5, 2);
 INSERT INTO work_authors (work_id, person_id, author_position) VALUES (4, 4, 1);
 INSERT INTO work_authors (work_id, person_id, author_position) VALUES (4, 5, 2);
+
+INSERT INTO reference_types (name) VALUES ('Bibliography'); -- or 'Works Cited'
+INSERT INTO reference_types (name) VALUES ('Endnote');
+INSERT INTO reference_types (name) VALUES ('Footnote');
+
+INSERT INTO work_references (referencing_work_id, referenced_work_id, reference_type_id, rank, chapter, reference_text) VALUES (1, null, 1, 1, null, '**Aarup**, M., Arentoft, M. M., Parrod, Yo., Stader, J., and Stokes, L (1994). OPTIMUM-AIV: A knowledge-based planning and scheduling system for spacecraft AIV.  In Fox, M. and Zweben, M. (Eds.), _Knowledge Based Scheduling_. Morgan Kaufmann, San Mateo, California.');
+INSERT INTO work_references (referencing_work_id, referenced_work_id, reference_type_id, rank, chapter, reference_text) VALUES (1, null, 1, 2, null, '**Abramson**, B. and Yung, M. (1989). Divide and conquer under global constraints:  A solution to the N-queens problem.  _Journal of Parallel and Distributed Computing, 6(3)_, 649-662.');
+INSERT INTO work_references (referencing_work_id, referenced_work_id, reference_type_id, rank, chapter, reference_text) VALUES (1, null, 1, 3, null, '**Ackley**, D. H. and Littman, M. L. (1991).  Interactions between learning and evolution.  In Langton, C., Taylor, C., Farmer, J. D., and Ramussen, S. (Eds.), _Artificial Life II_, pp. 487-509.  Addison-Wesley, Redwood City, California.');
+INSERT INTO work_references (referencing_work_id, referenced_work_id, reference_type_id, rank, chapter, reference_text) VALUES (2, null, 1, 1, 1, '[LISP 2007] Wikipedia "Lisp (programming language)", 2007. Available online at http://en.wikipedia.org/wiki/Lisp_%28programming_language%29');
+INSERT INTO work_references (referencing_work_id, referenced_work_id, reference_type_id, rank, chapter, reference_text) VALUES (2, null, 1, 2, 1, '[Newell 1956] Newell, A., Shaw, J.C., Simon, H.A "Emperical Explorations of the Logic Theory Machine: A Case Study in Heuristics," in Proceedings of the Western Joint Computer Conference, 1956.');
+INSERT INTO work_references (referencing_work_id, referenced_work_id, reference_type_id, rank, chapter, reference_text) VALUES (2, null, 1, 3, 1, '[Shannon 1950] Shannon, Claude, "Programming a Computer for Playing Chess," _Philisophical Magazine_ 41, 1950.');
+INSERT INTO work_references (referencing_work_id, referenced_work_id, reference_type_id, rank, chapter, reference_text) VALUES (2, null, 1, 1, 2, '[Bouton 1901] "Nim, a game with a complete mathematical theory," Ann, Math, Princeton 3, 35-39, 1901-1902');
