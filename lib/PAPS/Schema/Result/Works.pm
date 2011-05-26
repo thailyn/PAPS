@@ -126,6 +126,36 @@ __PACKAGE__->has_many(
   {},
 );
 
+=head2 work_references_referenced_work_ids
+
+Type: has_many
+
+Related object: L<PAPS::Schema::Result::WorkReferences>
+
+=cut
+
+__PACKAGE__->has_many(
+  "work_references_referenced_work_ids",
+  "PAPS::Schema::Result::WorkReferences",
+  { "foreign.referenced_work_id" => "self.work_id" },
+  {},
+);
+
+=head2 work_references_referencing_work_ids
+
+Type: has_many
+
+Related object: L<PAPS::Schema::Result::WorkReferences>
+
+=cut
+
+__PACKAGE__->has_many(
+  "work_references_referencing_work_ids",
+  "PAPS::Schema::Result::WorkReferences",
+  { "foreign.referencing_work_id" => "self.work_id" },
+  {},
+);
+
 =head2 work_type_id
 
 Type: belongs_to
@@ -155,8 +185,8 @@ __PACKAGE__->belongs_to(
 );
 
 
-# Created by DBIx::Class::Schema::Loader v0.07002 @ 2011-05-22 23:16:06
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:6dMIuQhilBwmMyCWHRHVaA
+# Created by DBIx::Class::Schema::Loader v0.07002 @ 2011-05-25 23:06:53
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:vdyrN3Y+Po4xRDqZxUkf9A
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
