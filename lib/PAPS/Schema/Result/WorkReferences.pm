@@ -138,5 +138,23 @@ __PACKAGE__->belongs_to(
 
 
 # You can replace this text with custom content, and it will be preserved on regeneration
+
+=head2 referenced_work_id
+
+Type: belongs_to
+
+Related object: L<PAPS::Schema::Result::Works>  This relation is redefined
+here in order to explicity specify the join type is a "LEFT OUTER" join, as a
+work_reference does not need a referenced work.
+
+=cut
+
+__PACKAGE__->belongs_to(
+    "referenced_work_id",
+    "PAPS::Schema::Result::Works",
+    { work_id => "referenced_work_id" },
+    { join_type => "LEFT OUTER" },
+);
+
 __PACKAGE__->meta->make_immutable;
 1;
