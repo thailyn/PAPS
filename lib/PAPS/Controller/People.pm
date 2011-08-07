@@ -49,6 +49,21 @@ sub details :Chained('base') :PathPart('') :Args(1) {
     $c->stash(person_id => $requested_person_id);
     $c->stash(requested_person => $matching_person);
 
+    # This does not work as well as I hoped.  This only gets the first work
+    # for a person, and is not needed, due to the works relationship, and the
+    # work_type relationship off of that.
+    #if ($matching_person) {
+    #    my @works = $c->model('DB::Works')
+    #        ->search({'work_authors.person_id' => $requested_person_id},
+    #                 {
+    #                     join => [ 'work_authors', 'work_type_id' ],
+    #                     #'+select' => 'work_type_id.work_type',
+    #                     #'+as' => 'work_type_name',
+    #                 },
+    #        );
+    #    $c->stash(person_works => @works);
+    #}
+
     #  If the find method does not get any matching records, a defined
     # but false value is returned.  We can customize which template used
     # based on this value.

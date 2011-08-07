@@ -31,12 +31,14 @@
 <p />
 
 <div>Work Information</div>
+<!-- <div><pre>[% Dumper.dump(person_works) %]</pre></div> -->
 <table>
   <tr>
     <th>Work Type</th>
     <th>Name</th>
   </tr>
 [% FOREACH work IN requested_person.works %]
+[%# FOREACH work IN person_works %]
   <tr>
     <td>[% work.work_type_id.work_type %]</td>
     <td><a href="[% c.uri_for("/works/$work.work_id") %]">[% work.title | html%]</a></td>
