@@ -4,7 +4,7 @@ use strict;
 use base 'Catalyst::Model::DBIC::Schema';
 
 __PACKAGE__->config(
-    schema_class => 'PAPS::Schema',
+    schema_class => 'PAPS::Database::papsdb::Schema',
     
     connect_info => {
         dsn => 'dbi:Pg:dbname=papsdb',

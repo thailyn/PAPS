@@ -18,6 +18,8 @@ use Catalyst qw/
     Static::Simple
 /;
 
+use lib "$ENV{HOME}/projects/PAPS-Database-papsdb-Schema/lib";
+
 extends 'Catalyst';
 
 our $VERSION = '0.004';
