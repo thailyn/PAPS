@@ -1,5 +1,12 @@
 This file documents the revision history for Perl extension PAPS.
 
+0.005  Sun Aug 7 19:13:34 2011 -0400
+  New features:
+    - Database schema is now loaded from an external extension,
+      PAPS::Database::papsdb::Schema.  This schema includes support for
+      multiple new features, including categories, tags, work metadata,
+      sources, and users.
+
 0.004  Sun Aug 7 19:05:25 2011 -0400
   New features:
     - In the details for a Person, the type of each work in his list of works
