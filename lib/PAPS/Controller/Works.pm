@@ -26,7 +26,7 @@ sub base :Chained('/') :PathPart('works') :CaptureArgs(0) {
     my ($self, $c) = @_;
 
     # Store the ResultSet in stash so it's available for other methods
-    $c->stash(resultset => $c->model('DB::Works'));
+    $c->stash(resultset => $c->model('DB::Work'));
 
     ## Print a message to the debug log
     #$c->log->debug('*** INSIDE BASE METHOD ***');
@@ -41,7 +41,7 @@ Show the details for a specific work.
 sub details :Chained('base') :PathPart('') :Args(1) {
     my ($self, $c, $requested_work_id) = @_;
 
-    my $matching_work = $c->model('DB::Works')
+    my $matching_work = $c->model('DB::Work')
         ->find({work_id => {'=', $requested_work_id}});
 
     $c->stash(work_id => $requested_work_id);
@@ -49,7 +49,7 @@ sub details :Chained('base') :PathPart('') :Args(1) {
 
     # Retrieve all of the work records as work model objects and store in the
     # stash where they can be accessed by the TT template
-    #$c->stash(works => [$c->model('DB::Works')->all]);
+    #$c->stash(works => [$c->model('DB::Work')->all]);
 
     #  If the find method does not get any matching records, a defined
     # but false value is returned.  We can customize which template used
@@ -95,7 +95,7 @@ sub do_create :Chained('base') :PathPart('do_create') :Args(0) {
     #my $author_id = $c->request->params->{author_id} || '1';
 
     # Create the work
-    my $work = $c->model('DB::Works')->create({
+    my $work = $c->model('DB::Work')->create({
             title   => $title,
             subtitle => $subtitle,
             doi => $doi,
@@ -123,7 +123,7 @@ sub list :Local {
 
     # Retrieve all of the work records as work model objects and store in the
     # stash where they can be accessed by the TT template
-    $c->stash(works => [$c->model('DB::Works')->all]);
+    $c->stash(works => [$c->model('DB::Work')->all]);
 
     # Set the TT template to use.
     $c->stash(template => 'works/list.tt2');
