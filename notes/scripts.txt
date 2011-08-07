@@ -1,0 +1,22 @@
+The script to run the built-in server is scripts/paps_server.pl.  This is
+perfectly fine for testing and situations with one or few users.  Include the
+'-r' argument for the server to restart when the module's files (Models or
+Controllers, etc., but not templates) changes:
+
+$ scripts/paps_server.pl -r
+
+If the environment variable DBIC_TRACE is set, DBIC (or is it Catalyst?) will
+include all queries to the database in the log messages.  This can be set
+globally, or for a single command.  For the latter, use the following command:
+
+$ DBIC_TRACE=1 scripts/paps_server.pl -r
+
+There are also options or flags to set the server in debug mode, which is
+probably the preferable way to turn on the debug setting, as the application
+should not be deployed in debug mode, particularly for security reasons.  I
+have not needed to do this yet, not having a production version yet, so I do
+not know how to do this exactly.
+
+Also, there is a flag to set on certain testing flags.  Again, I have not
+needed to do this and thus do not know the command offhand.  Check Test::Most
+or the Catalyst book for more information.

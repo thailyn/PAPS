@@ -1,0 +1,28 @@
+-*- org -*-
+
+* http://search.cpan.org/~ribasushi/DBIx-Class-Schema-Loader-0.07002/lib/DBIx/Class/Schema/Loader/Base.pm#naming
+* http://search.cpan.org/~hkclark/Catalyst-Manual-5.8004/lib/Catalyst/Manual/Tutorial/03_MoreCatalystBasics.pod
+  Earlier point in the tutorial, as a reference.
+* http://search.cpan.org/~abraxxa/DBIx-Class-0.08127/lib/DBIx/Class/Manual/Cookbook.pod
+* http://search.cpan.org/~abraxxa/DBIx-Class-0.08127/lib/DBIx/Class/Relationship/Base.pm
+* http://search.cpan.org/dist/Catalyst-Manual/lib/Catalyst/Manual/Actions.pod
+* http://search.cpan.org/~hkclark/Catalyst-Manual-5.8004/lib/Catalyst/Manual/Tutorial/05_Authentication.pod
+* DB
+** PostgreSQL
+*** http://search.cpan.org/~hkclark/Catalyst-Manual-5.8004/lib/Catalyst/Manual/Tutorial/10_Appendices.pod
+    SQL to use with PostgreSQL
+*** http://search.cpan.org/~abraxxa/DBIx-Class-0.08127/lib/DBIx/Class/Manual/Cookbook.pod#PostgreSQL
+** ResultSet
+*** http://search.cpan.org/~abraxxa/DBIx-Class-0.08127/lib/DBIx/Class/ResultSet.pm#ATTRIBUTES
+*** http://search.cpan.org/~abraxxa/DBIx-Class-0.08127/lib/DBIx/Class/ResultSet.pm#related_resultset
+    Related results in a result set.
+    Useful reference when trying to get data from joined tables.
+*** http://stackoverflow.com/questions/1326601/how-do-i-get-values-from-the-link-table-in-dbixclass
+    StackOverflow question related to an issue I am dealing with.
+** Other
+*** http://search.cpan.org/~rkitover/Catalyst-Model-DBIC-Schema-0.48/lib/Catalyst/TraitFor/Model/DBIC/Schema/SchemaProxy.pm
+* DOI
+** http://portal.acm.org/citation.cfm?id=1388969.1389047&coll=DL&dl=GUIDE
+   Sample document with DOI link
+** http://en.wikipedia.org/wiki/Digital_object_identifier
+   Wikipedia page on DOI
