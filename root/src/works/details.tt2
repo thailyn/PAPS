@@ -23,6 +23,10 @@
     <td>[% '<a href="' _ requested_work.doi_url _ '">' _ requested_work.doi _ '</a>' IF requested_work.doi %]</td>
   </tr>
   <tr>
+    <th>Type:</th>
+    <td>[% requested_work.work_type.work_type %]</td>
+  </tr>
+  <tr>
     <th>Author Count:</th>
     <td>[% requested_work.author_count | html %]</td>
   </tr>

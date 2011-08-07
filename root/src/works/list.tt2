@@ -10,6 +10,9 @@
     Edition
   </th>
   <th>
+    Type
+  </th>
+  <th>
     Author(s)
   </th>
   <th>
@@ -24,6 +27,7 @@
   <tr>
     <td>[% work.title %] [% work.subtitle %]</td>
     <td>[% work.edition %]</td>
+    <td>[% work.work_type.work_type %]</td>
     <td>
       ([% work.author_count | html %]) [% work.author_list | html %]
     </td>
