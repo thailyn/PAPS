@@ -1,5 +1,11 @@
 This file documents the revision history for Perl extension PAPS.
 
+0.004  Sun Aug 7 19:05:25 2011 -0400
+  New features:
+    - In the details for a Person, the type of each work in his list of works
+      is now properly included.
+    - Added schema information for metaworks and work references.
+
 0.003  2011-01-08 22:41:27 -0400
         - Added a page to create new people.
         - Added links to people and works creation pages in the naviation bar.
