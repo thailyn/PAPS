@@ -38,7 +38,7 @@
   </tr>
 [% FOREACH work IN requested_person.works %]
   <tr>
-    <td>[%# work type %]</td>
+    <td>[% work.work_type_id.work_type %]</td>
     <td><a href="[% c.uri_for("/works/$work.work_id") %]">[% work.title | html%]</a></td>
     <!-- <td><pre>[% Dumper.dump(work)  %]</pre></td> -->
   </tr>
