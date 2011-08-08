@@ -48,7 +48,49 @@
   <tr>
     <td>[% author.get_column('author_position') %]</td>
     <td><a href="[% c.uri_for("/people/$author.person_id") %]">[% author.full_name | html%]</a></td>
-    <!-- <td><pre>[% Dumper.dump(author)  %]</pre></td> -->
+  </tr>
+[% END %]
+</table>
+
+<div>References</div>
+[% work.work_id %]
+<table border=1>
+  <tr>
+    <th>Num</th>
+    <th>Chapter</th>
+    <th>Work</th>
+    <th>Reference Text</th>
+  </tr>
+[% FOREACH reference IN requested_work.work_references_referenced_works %]
+  <tr>
+    <td>[% reference.rank %]</td>
+    <td>[% reference.chapter %]</td>
+    [% IF reference.referenced_work %]
+      <td><a href="[% c.uri_for("/works/$reference.referenced_work.work_id") %]">[% reference.referenced_work.display_name | html %]</a></td>
+    [% ELSE %]
+      <td><i>Unknown</i></td>
+    [% END %]
+    <td>[% reference.reference_text | html %]</td>
+  </tr>
+[% END %]
+</table>
+
+<br />
+<div>Cited By</div>
+[% work.work_id %]
+<table border=1>
+  <tr>
+    <th>Num</th>
+    <th>Chapter</th>
+    <th>Work</th>
+    <th>Reference Text</th>
+  </tr>
+[% FOREACH reference IN requested_work.referencing_works %]
+  <tr>
+    <td>[% reference.get_column('rank') %]</td>
+    <td>[% reference.get_column('chapter') %]</td>
+    <td><a href="[% c.uri_for("/works/$reference.work_id") %]">[% reference.display_name | html %]</a></td>
+    <td>[% reference.get_column('reference_text') | html %]</td>
   </tr>
 [% END %]
 </table>
