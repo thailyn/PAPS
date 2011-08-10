@@ -67,6 +67,24 @@ sub details :Chained('base') :PathPart('') :Args(1) {
 }
 
 
+=head2 edit_form
+
+=cut
+
+sub edit_form :Chained('base') :PathPart('edit') :Args(1) {
+    my ($self, $c, $requested_work_id) = @_;
+
+    my $matching_work = $c->model('DB::Work')
+        ->find({work_id => {'=', $requested_work_id}});
+
+    $c->stash(work_id => $requested_work_id);
+    $c->stash(work => $matching_work);
+
+    # Set the TT template to use
+    $c->stash(template => 'works/edit.tt2');
+}
+
+
 =head2 create_form
 
 =cut
