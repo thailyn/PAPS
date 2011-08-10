@@ -1,0 +1,42 @@
+[% META title = 'Edit Work' -%]
+
+<form method="post" action="[% c.uri_for(c.controller('works').action_for('do_edit'),
+                            [ work.work_id ]) %] [%# c.uri_for('do_edit', [ work.work_id ]) %] ">
+  <table>
+    <tr>
+      <td>Title:</td>
+      <td><input type="text" name="title" value="[% work.title %]"></td>
+    </tr>
+    <tr>
+      <td>Subtitle:</td>
+      <td><input type="text" name="subtitle" value="[% work.subtitle %]"></td>
+    </tr>
+    <tr>
+      <td>Edition:</td>
+      <td><input type="text" name="edition" value="[% work.edition %]"></td>
+    </tr>
+    <tr>
+      <td>Num References:</td>
+      <td><input type="text" name="num_references" value="[% work.num_references %]"></td>
+    </tr>
+    <tr>
+      <td>Type:</td>
+      <td>
+        <select name="work_type">
+          <option value="" />
+          [% WHILE (work_type = work_types_rs.next) %]
+          <option value="[% work_type.id %]" [%-
+                  IF work.work_type_id == work_type.id %] selected="selected" [% END %]>[% work_type.work_type %]</option>
+          [% END %]
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>DOI:</td>
+      <td><input type="text" name="doi" value="[% work.doi %]"></td>
+    </tr>
+
+    <!-- <tr><td>Author ID:</td><td><input type="text" name="author_id"></td></tr> -->
+  </table>
+  <input type="submit" name="Submit" value="Submit" />
+</form>
