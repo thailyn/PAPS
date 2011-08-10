@@ -27,6 +27,7 @@ sub base :Chained('/') :PathPart('works') :CaptureArgs(0) {
 
     # Store the ResultSet in stash so it's available for other methods
     $c->stash(resultset => $c->model('DB::Work'));
+    $c->stash(work_types_rs => $c->model('DB::WorkType'));
 
     ## Print a message to the debug log
     #$c->log->debug('*** INSIDE BASE METHOD ***');
