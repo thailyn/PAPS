@@ -53,7 +53,6 @@
 </table>
 
 <div>References</div>
-[% work.work_id %]
 <table border=1>
   <tr>
     <th>Num</th>
@@ -77,7 +76,6 @@
 
 <br />
 <div>Cited By</div>
-[% work.work_id %]
 <table border=1>
   <tr>
     <th>Num</th>
