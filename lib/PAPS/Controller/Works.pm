@@ -59,13 +59,15 @@ Show the details for a specific work.
 
 =cut
 
-sub details :Chained('base') :PathPart('') :Args(1) {
-    my ($self, $c, $requested_work_id) = @_;
+sub details :Chained('work') :PathPart('') :Args(0) {
+    my ($self, $c) = @_;
+
+    my $work_id = $c->stash->{work_id};
 
     my $matching_work = $c->model('DB::Work')
-        ->find({work_id => {'=', $requested_work_id}});
+        ->find({work_id => {'=', $work_id}});
 
-    $c->stash(work_id => $requested_work_id);
+    #$c->stash(work_id => $requested_work);
     $c->stash(requested_work => $matching_work);
 
     # Retrieve all of the work records as work model objects and store in the
@@ -91,13 +93,15 @@ sub details :Chained('base') :PathPart('') :Args(1) {
 
 =cut
 
-sub edit_form :Chained('base') :PathPart('edit') :Args(1) {
-    my ($self, $c, $requested_work_id) = @_;
+sub edit_form :Chained('work') :PathPart('edit') :Args(0) {
+    my ($self, $c) = @_;
+
+    my $work_id = $c->stash->{work_id};
 
     my $matching_work = $c->model('DB::Work')
-        ->find({work_id => {'=', $requested_work_id}});
+        ->find({work_id => {'=', $work_id}});
 
-    $c->stash(work_id => $requested_work_id);
+    #$c->stash(work_id => $requested_work_id);
     $c->stash(work => $matching_work);
 
     # Set the TT template to use
