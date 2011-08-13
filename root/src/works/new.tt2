@@ -5,6 +5,17 @@
   <tr><td>Title:</td><td><input type="text" name="title"></td></tr>
   <tr><td>Subtitle:</td><td><input type="text" name="subtitle"></td></tr>
   <tr><td>DOI:</td><td><input type="text" name="doi"></td></tr>
+  <tr>
+    <td>Type:</td>
+    <td>
+      <select name="work_type">
+        <option value="" />
+        [% WHILE (work_type = work_types_rs.next) %]
+          <option value="[% work_type.id %]">[% work_type.work_type %]</option>
+        [% END %]
+      </select>
+    </td>
+  </tr>
   <!-- <tr><td>Author ID:</td><td><input type="text" name="author_id"></td></tr> -->
 </table>
 <input type="submit" name="Submit" value="Submit">
