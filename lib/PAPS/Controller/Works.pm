@@ -33,6 +33,26 @@ sub base :Chained('/') :PathPart('works') :CaptureArgs(0) {
     #$c->log->debug('*** INSIDE BASE METHOD ***');
 }
 
+=head2 work
+
+Captures an argument indicating a specific work_id to deal with.  If the
+referenced work exists, it and its work_id are stored in the stash.  If the
+work does not exist, the method dies.
+
+=cut
+
+sub work :Chained('base'): PathPart('') :CaptureArgs(1) {
+    my ($self, $c, $work_id) = @_;
+
+    my $work = $c->stash->{resultset}->find({ work_id => $work_id },
+                                            { key => 'primary' });
+
+    die "No such work" if (!$work);
+
+    $c->stash(work_id => $work_id);
+    $c->stash(work => $work);
+}
+
 =head2 details
 
 Show the details for a specific work.
