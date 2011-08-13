@@ -109,6 +109,50 @@ sub edit_form :Chained('work') :PathPart('edit') :Args(0) {
 }
 
 
+=head2 do_edit
+
+Take information from form and update a work in the database.
+
+=cut
+
+sub do_edit :Chained('work') :PathPart('do_edit') :Args(0) {
+    my ($self, $c) = @_;
+
+    if (lc $c->request->method ne 'post') {
+        return;
+    }
+
+    my $params = $c->request->params;
+    my $work = $c->stash->{work};
+
+    # Retrieve the values from the form
+    my $title = $params->{title};
+    my $subtitle = $params->{subtitle} || undef;
+    my $doi = $params->{doi} || undef;
+    my $work_type_id = $params->{work_type_id};# || '2';
+    #my $author_id = $c->request->params->{author_id} || '1';
+
+    if (lc $params->{Submit} eq 'submit') {
+        $work->update({
+            title => $params->{title},
+            subtitle => $params->{subtitle} || undef,
+            edition => $params->{edition} || undef,
+            num_references => $params->{num_references} || undef,
+            doi => $params->{doi} || undef,
+            work_type_id => $params->{work_type} || undef,
+                      });
+    }
+
+    # having trouble getting this to work right
+    return $c->res->redirect(
+        $c->uri_for($c->controller('works')->action_for('list')));
+        #$c->uri_for($c->controller('works')->action_for(''),
+        #            [ $work->id ]));
+        #$c->uri_for($c->controller('works')->action_for('details'),
+        #            [ $work->id ]));
+}
+
+
 =head2 create_form
 
 =cut
