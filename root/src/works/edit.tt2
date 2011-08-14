@@ -41,3 +41,55 @@
   <input type="submit" name="Submit" value="Submit" />
   <input type="submit" name="Cancel" value="Cancel" />
 </form>
+
+<div>References</div>
+<table border=0 >
+  <tr>
+    <th>Num</th>
+    <th>Chapter</th>
+    <th>Work</th>
+    <th>Reference Text</th>
+    <th /> <!-- for action buttons -->
+    <th /> <!-- for action buttons -->
+  </tr>
+  [% FOREACH reference IN work.work_references_referenced_works %]
+  <form method="post" action="[% c.uri_for(c.controller('works').action_for('do_edit_reference'),
+                              [ work.work_id ]) %]">
+    <tr>
+      <td><input type="text" name="rank" value="[% reference.rank %]" /></td>
+      <td><input type="text" name="chapter" value="[% reference.chapter %]" /></td>
+      <td>
+        <select name="referenced_work_id">
+          <option value="" [% UNLESS reference.referenced_work %] selected="selected" [% END %] />
+          [% WHILE (work_reference = works_rs.next) %]
+          <option value="[% work_reference.work_id %]" [%-
+                  IF work_reference.work_id == reference.referenced_work.work_id %] selected="selected" [% END %] >[% work_reference.display_name | html %][%# reference.referenced_work.display_name | html %]</option>
+          [% END %]
+          <!-- [% works_rs.reset %] -->
+      </td>
+      <td><textarea type="textarea" rows="5" cols="60" name="reference_text">[% reference.reference_text | html %]</textarea></td>
+      <td><input type="submit" name="submit" value="Edit" /></td>
+      <td><input type="submit" name="delete" value="Delete" disabled="disabled" /></td>
+    </tr>
+  </form>
+  [% END %]
+  <!-- blank row to add a new reference -->
+  <form method="post" action="[% c.uri_for(c.controller('works').action_for('do_add_reference'),
+                              [ work.work_id ]) %]">
+    <tr>
+      <td><input type="text" name="rank" value="" /></td>
+      <td><input type="text" name="chapter" value="" /></td>
+      <td>
+        <select name="referenced_work_id">
+          <option value="" selected="selected" />
+          [%- WHILE (work_reference = works_rs.next) -%]
+          <option value="[% work_reference.work_id %]">[% work_reference.display_name | html %][%# reference.referenced_work.display_name | html %]</option>
+          [%- END -%]
+          <!-- [% works_rs.reset %] -->
+      </td>
+      <td><textarea rows="5" cols="60" name="reference_text"></textarea></td>
+      <td><input type="submit" name="submit" value="Add" /></td>
+    </tr>
+  </form>
+</table>
+
