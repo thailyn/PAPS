@@ -174,9 +174,10 @@ sub do_edit_reference :Chained('work') :PathPart('do_edit_reference') :Args(1) {
         $reference->update({
             rank => $params->{rank} || undef,
             chapter => $params->{chapter} || undef,
+            reference_type_id => $params->{reference_type_id} || undef,
             referenced_work_id => $params->{referenced_work_id} || undef,
             reference_text => $params->{reference_text} || undef,
-                           }); #reference_type_id => ......,
+                           });
     }
 
     return $c->res->redirect(
