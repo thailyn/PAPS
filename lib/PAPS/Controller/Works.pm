@@ -26,7 +26,7 @@ sub base :Chained('/') :PathPart('works') :CaptureArgs(0) {
     my ($self, $c) = @_;
 
     # Store the ResultSet in stash so it's available for other methods
-    $c->stash(resultset => $c->model('DB::Work'));
+    $c->stash(works_rs => $c->model('DB::Work'));
     $c->stash(work_types_rs => $c->model('DB::WorkType'));
 
     ## Print a message to the debug log
@@ -44,7 +44,7 @@ work does not exist, the method dies.
 sub work :Chained('base'): PathPart('') :CaptureArgs(1) {
     my ($self, $c, $work_id) = @_;
 
-    my $work = $c->stash->{resultset}->find({ work_id => $work_id },
+    my $work = $c->stash->{works_rs}->find({ work_id => $work_id },
                                             { key => 'primary' });
 
     die "No such work" if (!$work);
