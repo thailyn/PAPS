@@ -42,6 +42,53 @@
   <input type="submit" name="Cancel" value="Cancel" />
 </form>
 
+<div>Authors</div>
+<table border=0>
+  <tr>
+    <th>Rank</th>
+    <th>Person</th>
+    <th /> <!-- for action buttons -->
+    <th /> <!-- for action buttons -->
+  </tr>
+  [% FOREACH work_author IN work.work_authors %]
+  <form method="post" action="[% c.uri_for(c.controller('works').action_for('do_edit_author'),
+                              [ work.work_id ], ( work_author.works_author_id )) %]">
+    <tr>
+      <td><input type="text" name="author_position" value="[% work_author.author_position %]" /></td>
+      <td>
+        <select name="person_id">
+          <option value="" [% UNLESS work_author.person_id %] selected="selected" [% END %] />
+          [% WHILE (person = people_rs.next) %]
+          <option value="[% person.person_id %]" [%-
+                  IF work_author.person_id == person.person_id %] selected="selected" [% END %] >[% person.display_name | html %]</option>
+          [% END %]
+          <!-- [% people_rs.reset %] -->
+        </select>
+      </td>
+      <td><input type="submit" name="submit" value="Save" /></td>
+      <td><input type="submit" name="delete" value="Delete" disabled="disabled" /></td>
+    </tr>
+  </form>
+  [% END %]
+  <!-- blank row to add a new reference -->
+  <form method="post" action="[% c.uri_for(c.controller('works').action_for('do_add_author'),
+                              [ work.work_id ]) %]">
+    <tr>
+      <td><input type="text" name="author_position" value="" /></td>
+      <td>
+        <select name="person_id">
+          <option value="" selected="selected" />
+          [% WHILE (person = people_rs.next) %]
+          <option value="[% person.person_id %]" >[% person.display_name | html %]</option>
+          [% END %]
+          <!-- [% people_rs.reset %] -->
+        </select>
+      </td>
+      <td><input type="submit" name="submit" value="Add" /></td>
+    </tr>
+  </form>
+</table>
+
 <div>References</div>
 <table border=0 >
   <tr>
