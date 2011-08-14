@@ -143,13 +143,9 @@ sub do_edit :Chained('work') :PathPart('do_edit') :Args(0) {
                       });
     }
 
-    # having trouble getting this to work right
     return $c->res->redirect(
-        $c->uri_for($c->controller('works')->action_for('list')));
-        #$c->uri_for($c->controller('works')->action_for(''),
-        #            [ $work->id ]));
-        #$c->uri_for($c->controller('works')->action_for('details'),
-        #            [ $work->id ]));
+        $c->uri_for($c->controller('works')->action_for('details'),
+                    [ $work->id ]));
 }
 
 
