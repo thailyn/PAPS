@@ -1,6 +1,7 @@
 package PAPS::Controller::Works;
 use Moose;
 use namespace::autoclean;
+use GraphViz;
 
 BEGIN {extends 'Catalyst::Controller'; }
 
@@ -344,6 +345,74 @@ sub list :Local {
 
     # Set the TT template to use.
     $c->stash(template => 'works/list.tt2');
+}
+
+
+=head2 graph
+
+TODO: Describe me
+
+=cut
+
+sub graph :Chained('base') :PathPart('graph') :Args(0) {
+    my ($self, $c) = @_;
+
+    my $g = GraphViz->new(directed => 0);
+    my $works_rs = $c->stash->{works_rs};
+
+    while (my $work = $works_rs->next) {
+        #$c->log->debug($work->display_name);
+        $g->add_node($work->work_id, label => $work->display_name,
+                     shape => 'record', style => 'filled');
+    }
+
+    # get the list of references
+    my $ref_rs = $c->model('DB::WorkReference')->search(undef,
+                                                        { order_by => 'referencing_work_id'});
+
+    # Create edges for references, either by creating an  edge between two
+    # existing works, or creating a node for the referenced work that does not
+    # exist and creating an edge to that.
+    my $ref_work_id = -1;
+    my $ref_num = 0;
+    while (my $ref = $ref_rs->next) {
+        # keep track of what number reference this is for a work, so we can
+        # index each reference that does not have a referenced_work_id with a
+        # number.
+        if ($ref->referencing_work_id != $ref_work_id) {
+            $ref_work_id = $ref->referencing_work_id;
+            $ref_num = 0;
+        }
+
+        #$c->log->debug($ref->id . "\t" . $ref->referencing_work_id . "\t" .
+        #               ($ref->referenced_work_id || "NULL") . "\t" . $ref->reference_type_id . "\t" .
+        #               $ref->rank . "\t" . ($ref->chapter || "NULL") . "\t" . ($ref->reference_text || "NULL"));
+
+        if ($ref->referenced_work_id) {
+            # if the referenced work exists, simply create an edge between them
+            $g->add_edge($ref->referencing_work_id => $ref->referenced_work_id, dir => 'forward');
+        }
+        else {
+            # if the referenced work does not exist, create a new node an an
+            # edge to it
+            my $node_name = $ref->referencing_work_id . "-" . $ref_num;
+
+            # some of the reference_text values throw an error when used as the
+            # node name or able, so leave that out until we can scrub the text
+            # properly
+            $g->add_node($node_name, label => $node_name, shape => 'record', style => 'dotted'); # label => $ref->reference_text,
+            $g->add_edge($ref->referencing_work_id => $node_name, dir => 'forward');
+        }
+        $ref_num++;
+    }
+
+    #$c->log->debug("*** DEBUG *** Home path: " . $c->config->{home});
+    #$c->log->debug("*** DEBUG *** Sample path: " . $c->path_to('root', 'static', 'images', 'works.png'));
+
+    # export the graph
+    $g->as_png($c->path_to('root', 'static', 'images', 'works.png')->stringify);
+
+    $c->stash(template => 'works/graph.tt2');
 }
 
 
