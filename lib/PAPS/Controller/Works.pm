@@ -151,6 +151,69 @@ sub do_edit :Chained('work') :PathPart('do_edit') :Args(0) {
 }
 
 
+=head2 do_edit_author
+
+TODO: Describe me.
+
+=cut
+
+sub do_edit_author :Chained('work') :PathPart('do_edit_author') :Args(1) {
+    my ($self, $c, $author_id) = @_;
+
+    if (lc $c->request->method ne 'post') {
+        return;
+    }
+
+    my $params = $c->request->params;
+    my $work = $c->stash->{work};
+    # Using the many-to-many relationship $work->authors returns the
+    # set of People objects, which is not what we want.  Use the has-many
+    # relationship instead.
+    my $work_author = $work->work_authors->find({works_author_id => {'=', $author_id}});
+
+    if (lc $params->{submit} eq 'save') {
+        $work_author->update({
+            person_id => $params->{person_id} || undef,
+            author_position => $params->{author_position} || undef,
+                             });
+    }
+
+    return $c->res->redirect(
+        $c->uri_for($c->controller('works')->action_for('edit_form'),
+                    [ $work->id ]));
+}
+
+
+=head2 do_add_author
+
+TODO: Describe me.
+
+=cut
+
+sub do_add_author :Chained('work') :PathPart('do_add_author') :Args(0) {
+    my ($self, $c) = @_;
+
+    if (lc $c->request->method ne 'post') {
+        return;
+    }
+
+    my $params = $c->request->params;
+    my $work = $c->stash->{work};
+
+    if (lc $params->{submit} eq 'add') {
+        $work->create_related('work_authors', {
+            #work_id => $work->work_id,
+            person_id => $params->{person_id} || undef,
+            author_position => $params->{author_position} || undef,
+                              });
+    }
+
+    return $c->res->redirect(
+        $c->uri_for($c->controller('works')->action_for('edit_form'),
+                    [ $work->id ]));
+}
+
+
 =head2 do_edit_reference
 
 TODO: Describe me.
