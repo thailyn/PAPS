@@ -1,0 +1,4 @@
+[% META title = 'Works Graph' -%]
+
+<img src="[% c.uri_for('/static/images/works.png') %]" alt="Works Graph" />
+
