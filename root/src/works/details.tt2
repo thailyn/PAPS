@@ -95,7 +95,5 @@
 
 <br />
 
-<form method="post" action="[% c.uri_for(c.controller('works').action_for('edit_form'),
-                            [ requested_work.work_id ]) %]">
-  <input type="submit" name="edit" value="Edit" />
-</form>
+<a href="[% c.uri_for(c.controller('works').action_for('edit_form'),
+         [requested_work.work_id ]) %]">Edit</a>
