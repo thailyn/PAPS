@@ -54,7 +54,7 @@
   </tr>
   [% FOREACH reference IN work.work_references_referenced_works %]
   <form method="post" action="[% c.uri_for(c.controller('works').action_for('do_edit_reference'),
-                              [ work.work_id ]) %]">
+                              [ work.work_id ], ( reference.id )) %]">
     <tr>
       <td><input type="text" name="rank" value="[% reference.rank %]" /></td>
       <td><input type="text" name="chapter" value="[% reference.chapter %]" /></td>
