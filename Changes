@@ -1,5 +1,18 @@
 This file documents the revision history for Perl extension PAPS.
 
+0.006  Sat Aug 13 21:25:10 2011 -0400
+  New features:
+    - The work details page includes lists of works that work references and
+      works that reference that work.
+    - The work details page and the works list page includes the type of each
+      work (paper, textbook, etc.).
+    - Added a page to edit the information about a work.  This page can be
+      accessed via a button on each work's details page.  There is a Submit
+      button on this page to save changes to the current work, and a Cancel
+      button to return to that work's details page and not enact any changes.
+    - The page to create a work now includes a dropdown box to indicate what
+      type of work the new work is.
+
 0.005  Sun Aug 7 19:13:34 2011 -0400
   New features:
     - Database schema is now loaded from an external extension,
