@@ -57,6 +57,7 @@
   <tr>
     <th>Num</th>
     <th>Chapter</th>
+    <th>Location</th>
     <th>Work</th>
     <th>Reference Text</th>
   </tr>
@@ -64,6 +65,7 @@
   <tr>
     <td>[% reference.rank %]</td>
     <td>[% reference.chapter %]</td>
+    <td>[% reference.reference_type.name %]</td>
     [% IF reference.referenced_work %]
       <td><a href="[% c.uri_for("/works/$reference.referenced_work.work_id") %]">[% reference.referenced_work.display_name | html %]</a></td>
     [% ELSE %]
@@ -80,6 +82,7 @@
   <tr>
     <th>Num</th>
     <th>Chapter</th>
+    <th>Location</th>
     <th>Work</th>
     <th>Reference Text</th>
   </tr>
@@ -87,6 +90,7 @@
   <tr>
     <td>[% reference.rank %]</td>
     <td>[% reference.chapter %]</td>
+    <td>[% reference.reference_type.name %]</td>
     <td><a href="[% c.uri_for("/works/$reference.referencing_work.work_id") %]">[% reference.referencing_work.display_name | html %]</a></td>
     <td>[% reference.reference_text | html %]</td>
   </tr>

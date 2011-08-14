@@ -47,6 +47,7 @@
   <tr>
     <th>Num</th>
     <th>Chapter</th>
+    <th>Location</th>
     <th>Work</th>
     <th>Reference Text</th>
     <th /> <!-- for action buttons -->
@@ -58,6 +59,15 @@
     <tr>
       <td><input type="text" name="rank" value="[% reference.rank %]" /></td>
       <td><input type="text" name="chapter" value="[% reference.chapter %]" /></td>
+      <td>
+        <select name="reference_type_id">
+          <option value="" [% UNLESS reference.reference_type %] selected="selected" [% END %] />
+          [% WHILE (reference_type = reference_types_rs.next) %]
+          <option value="[% reference_type.id %]" [%-
+                  IF reference.reference_type_id == reference_type.id %] selected="selected" [% END %] >[% reference_type.name | html %]</option>
+          [% END %]
+          <!-- [% reference_types_rs.reset %] -->
+      </td>
       <td>
         <select name="referenced_work_id">
           <option value="" [% UNLESS reference.referenced_work %] selected="selected" [% END %] />
@@ -79,6 +89,14 @@
     <tr>
       <td><input type="text" name="rank" value="" /></td>
       <td><input type="text" name="chapter" value="" /></td>
+      <td>
+        <select name="reference_type_id">
+          <option value="" selected="selected" />
+          [% WHILE (reference_type = reference_types_rs.next) %]
+          <option value="[% reference_type.id %]" >[% reference_type.name | html %]</option>
+          [% END %]
+          <!-- [% reference_types_rs.reset %] -->
+      </td>
       <td>
         <select name="referenced_work_id">
           <option value="" selected="selected" />
