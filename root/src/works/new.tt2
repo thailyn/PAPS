@@ -8,7 +8,7 @@
   <tr>
     <td>Type:</td>
     <td>
-      <select name="work_type">
+      <select name="work_type_id">
         <option value="" />
         [% WHILE (work_type = work_types_rs.next) %]
           <option value="[% work_type.id %]">[% work_type.work_type %]</option>
