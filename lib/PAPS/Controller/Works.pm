@@ -149,6 +149,41 @@ sub do_edit :Chained('work') :PathPart('do_edit') :Args(0) {
 }
 
 
+=head2 do_edit_reference
+
+TODO: Describe me.
+
+=cut
+
+sub do_edit_reference :Chained('work') :PathPart('do_edit_reference') :Args(1) {
+    my ($self, $c, $reference_id) = @_;
+
+    if (lc $c->request->method ne 'post') {
+        return;
+    }
+
+    my $params = $c->request->params;
+    my $work = $c->stash->{work};
+    # Using the many-to-many relationship $work->referenced_works returns the
+    # set of Work objects, which is not what we want.  Use the has-many
+    # relationship instead.
+    my $reference = $work->work_references_referenced_works->find({id => {'=', $reference_id}});
+
+    if (lc $params->{submit} eq 'edit') {
+        $reference->update({
+            rank => $params->{rank} || undef,
+            chapter => $params->{chapter} || undef,
+            referenced_work_id => $params->{referenced_work_id} || undef,
+            reference_text => $params->{reference_text} || undef,
+                           }); #reference_type_id => ......,
+    }
+
+    return $c->res->redirect(
+        $c->uri_for($c->controller('works')->action_for('edit_form'),
+                    [ $work->id ]));
+}
+
+
 =head2 create_form
 
 =cut
