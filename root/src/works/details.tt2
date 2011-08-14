@@ -83,12 +83,12 @@
     <th>Work</th>
     <th>Reference Text</th>
   </tr>
-[% FOREACH reference IN requested_work.referencing_works %]
+[% FOREACH reference IN requested_work.work_references_referencing_works %]
   <tr>
-    <td>[% reference.get_column('rank') %]</td>
-    <td>[% reference.get_column('chapter') %]</td>
-    <td><a href="[% c.uri_for("/works/$reference.work_id") %]">[% reference.display_name | html %]</a></td>
-    <td>[% reference.get_column('reference_text') | html %]</td>
+    <td>[% reference.rank %]</td>
+    <td>[% reference.chapter %]</td>
+    <td><a href="[% c.uri_for("/works/$reference.referencing_work.work_id") %]">[% reference.referencing_work.display_name | html %]</a></td>
+    <td>[% reference.reference_text | html %]</td>
   </tr>
 [% END %]
 </table>
