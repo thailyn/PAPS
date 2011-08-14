@@ -184,6 +184,39 @@ sub do_edit_reference :Chained('work') :PathPart('do_edit_reference') :Args(1) {
 }
 
 
+=head2 do_add_reference
+
+TODO: Describe me.
+
+=cut
+
+sub do_add_reference :Chained('work') :PathPart('do_add_reference') :Args(0) {
+    my ($self, $c) = @_;
+
+    if (lc $c->request->method ne 'post') {
+        return;
+    }
+
+    my $params = $c->request->params;
+    my $work = $c->stash->{work};
+
+    if (lc $params->{submit} eq 'add') {
+        $work->create_related('work_references_referenced_works', {
+            #referencing_work_id => $work->work_id,
+            referenced_work_id => $params->{referenced_work_id} || undef,
+            reference_type_id => $params->{reference_type_id} || 1,
+            rank => $params->{rank} || undef,
+            chapter => $params->{chapter} || undef,
+            reference_text => $params->{reference_text} || undef,
+                              });
+    }
+
+    return $c->res->redirect(
+        $c->uri_for($c->controller('works')->action_for('edit_form'),
+                    [ $work->id ]));
+}
+
+
 =head2 create_form
 
 =cut
