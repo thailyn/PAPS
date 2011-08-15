@@ -357,7 +357,7 @@ TODO: Describe me
 sub graph :Chained('base') :PathPart('graph') :Args(0) {
     my ($self, $c) = @_;
 
-    my $g = GraphViz->new(directed => 0);
+    my $g = GraphViz->new( directed => 1, layout => 'sfdp', overlap => 'false', );
     my $works_rs = $c->stash->{works_rs};
 
     while (my $work = $works_rs->next) {
