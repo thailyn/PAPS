@@ -27,7 +27,7 @@ sub base :Chained('/') :PathPart('people') :CaptureArgs(0) {
     my ($self, $c) = @_;
 
     # Store the ResultSet in stash so it's available for other methods
-    $c->stash(resultset => $c->model('DB::People'));
+    $c->stash(people_rs => $c->model('DB::People'));
 
     ## Print a message to the debug log
     #$c->log->debug('*** INSIDE PEOPLE BASE METHOD ***');
