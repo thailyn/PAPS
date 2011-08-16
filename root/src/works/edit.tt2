@@ -158,3 +158,50 @@
   </form>
 </table>
 
+
+<div>Sources</div>
+<table border=0>
+  <tr>
+    <th>Source</th>
+    <th>URL</th>
+    <th /> <!-- for action buttons -->
+    <th /> <!-- for action buttons -->
+  </tr>
+  [% FOREACH work_source IN work.work_sources %]
+  <form method="post" action="[% c.uri_for(c.controller('works').action_for('do_edit_source'),
+                              [ work.work_id ], ( work_source.id )) %]">
+    <tr>
+      <td>
+        <select name="source_id">
+          <option value="" [% UNLESS work_source.source_id %] selected="selected" [% END %] />
+          [% WHILE (source = sources_rs.next) %]
+          <option value="[% source.id %]" [%-
+                  IF work_source.source_id == source.id %] selected="selected" [% END %] >[% source.display_name | html %]</option>
+          [% END %]
+          <!-- [% sources_rs.reset %] -->
+        </select>
+      </td>
+      <td><input type="text" name="url" value="[% work_source.url %]" /></td>
+      <td><input type="submit" name="submit" value="Save" /></td>
+      <td><input type="submit" name="delete" value="Delete" disabled="disabled" /></td>
+    </tr>
+  </form>
+  [% END %]
+  <!-- blank row to add a new reference -->
+  <form method="post" action="[% c.uri_for(c.controller('works').action_for('do_add_source'),
+                              [ work.work_id ]) %]">
+    <tr>
+      <td>
+        <select name="source_id">
+          <option value="" selected="selected" />
+          [% WHILE (source = sources_rs.next) %]
+          <option value="[% source.id %]" >[% source.display_name | html %]</option>
+          [% END %]
+          <!-- [% people_rs.reset %] -->
+        </select>
+      </td>
+      <td><input type="text" name="url" value="" /></td>
+      <td><input type="submit" name="submit" value="Add" /></td>
+    </tr>
+  </form>
+</table>
