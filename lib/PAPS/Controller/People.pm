@@ -33,6 +33,18 @@ sub base :Chained('/') :PathPart('people') :CaptureArgs(0) {
     #$c->log->debug('*** INSIDE PEOPLE BASE METHOD ***');
 }
 
+sub person :Chained('base') :PathPart('') :CaptureArgs(1) {
+    my ($self, $c, $person_id) = @_;
+
+    my $person = $c->stash->{people_rs}->find({ person_id => $person_id },
+                                              { key => 'primary' });
+
+    die "No such person" if (!$person);
+
+    $c->stash(person_id => $person_id);
+    $c->stash(person => $person);
+}
+
 
 =head2 details
 
