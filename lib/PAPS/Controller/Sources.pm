@@ -27,6 +27,30 @@ sub index :Path :Args(0) {
     $c->response->body('Matched PAPS::Controller::Sources in Sources.');
 }
 
+=head2 base
+
+=cut
+
+sub base :Chained('/') :PathPart('sources') :CaptureArgs(0) {
+    my ($self, $c) = @_;
+
+    # Store in the stash ResultSets that are useful to chained actions.
+    $c->stash(sources_rs => $c->model('DB::Source'));
+}
+
+sub source :Chained('base') :PathPart('') :CaptureArgs(1) {
+    my ($self, $c, $source_id) = @_;
+
+    my $source = $c->stash->{sources_rs}->find({ id => $source_id },
+                                             { key => 'primary' });
+
+    die "No such source" if (!$source);
+
+    $c->stash(source_id => $source_id);
+    $c->stash(source => $source);
+}
+
+
 
 =head1 AUTHOR
 
