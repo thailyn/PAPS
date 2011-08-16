@@ -51,6 +51,43 @@ sub source :Chained('base') :PathPart('') :CaptureArgs(1) {
 }
 
 
+=head2 details
+
+Show the details for a specific source.
+
+=cut
+
+sub details :Chained('source') :PathPart('') :Args(0) {
+    my ($self, $c) = @_;
+
+    my $source_id = $c->stash->{source_id};
+
+    my $matching_source = $c->stash->{sources_rs}
+        ->find({id => {'=', $source_id}});
+
+    $c->stash(source => $matching_source);
+
+    $c->stash(template => 'sources/details.tt2');
+}
+
+
+=head2 list
+
+Fetch all source objects and pass to sources/list.tt2 in stash to be displayed
+
+=cut
+
+sub list :Local {
+    my ($self, $c) = @_;
+
+    # Retrieve all of the source records as source model objects and store in the
+    # stash where they can be accessed by the TT template
+    $c->stash(sources => [$c->model('DB::Source')->all]);
+
+    # Set the TT template to use.
+    $c->stash(template => 'sources/list.tt2');
+}
+
 
 =head1 AUTHOR
 

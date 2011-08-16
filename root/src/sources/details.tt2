@@ -1,0 +1,57 @@
+[% META title = 'Source Details' -%]
+
+[% USE Dumper(Indent=1) -%]
+
+<h1>Source Details</h1>
+
+<table>
+  <tr>
+    <th>Name:</th>
+    <td>[% source.name | html %]</td>
+  </tr>
+  <tr>
+    <th>Short Name:</th>
+    <td>[% source.name_short | html %]</td>
+  <tr>
+    <th>Description:</th>
+    <td>[% source.description | html %]</td>
+  </tr>
+  <tr>
+    <th>URL:</th>
+    <td>[% '<a href="' _ source.url _ '">' _ source.url _ '</a>' IF source.url %]</td>
+  </tr>
+  <tr>
+    <th>Has Accounts:</th>
+    <td>[% source.has_accounts %]</td>
+  </tr>
+  <tr>
+    <th>Paid Membership:</th>
+    <td>[% source.paid_membership %]</td>
+  </tr>
+  <tr>
+    <th>Work Count:</th>
+    <td>[% source.work_count | html %]</td>
+  </tr>
+</table>
+
+<p />
+
+<div>Work Information</div>
+<table>
+  <tr>
+    <th>Work Type</th>
+    <th>Name</th>
+  </tr>
+[% FOREACH work IN source.works %]
+  <tr>
+    <td>[% work.work_type.work_type %]</td>
+    <td><a href="[% c.uri_for("/works/$work.work_id") %]">[% work.title | html%]</a></td>
+    <!-- <td><pre>[%# Dumper.dump(work) %]</pre></td> -->
+  </tr>
+[% END %]
+</table>
+
+<br />
+
+<a href="[% c.uri_for(c.controller('works').action_for('edit_form'),
+         [source.work_id ]) %]">Edit</a>

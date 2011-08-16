@@ -1,0 +1,39 @@
+[% META title = 'Source List' -%]
+
+<table>
+  <tr>
+    <th>
+      Name
+    </th>
+    <th>
+      Short Name
+    </th>
+    <th>
+      Description
+    </th>
+    <th>
+      URL
+    </th>
+    <th>
+      Has Accounts
+    </th>
+    <th>
+      Paid Membership
+    </th>
+    <th>
+      Work Count
+    </th>
+  </tr>
+  [% FOREACH source IN sources -%]
+  <tr>
+    <td>[% source.name | html %]</td>
+    <td>[% source.name_short | html %]</td>
+    <td>[% source.description | html %]</td>
+    <td>[% '<a href="' _ source.url _ '">' _ source.url _ '</a>' IF source.url %]</td>
+    <td>[% source.has_accounts %]</td>
+    <td>[% source.paid_membership %]</td>
+    <td>[% source.work_count | html %]</td>
+    <td><a href="[% c.uri_for('/sources/' _ source.id) %]">View</a></td>
+  </tr>
+  [% END -%]
+</table>
