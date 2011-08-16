@@ -52,14 +52,12 @@ Show the details for a specific person.
 
 =cut
 
-sub details :Chained('base') :PathPart('') :Args(1) {
+sub details :Chained('person') :PathPart('') :Args(0) {
     my ($self, $c, $requested_person_id) = @_;
 
-    my $matching_person = $c->model('DB::People')
-        ->find({person_id => {'=', $requested_person_id}});
+    my $person = $c->stash->{person};
 
-    $c->stash(person_id => $requested_person_id);
-    $c->stash(requested_person => $matching_person);
+    $c->stash(requested_person => $person);
 
     #  If the find method does not get any matching records, a defined
     # but false value is returned.  We can customize which template used
