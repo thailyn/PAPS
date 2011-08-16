@@ -73,6 +73,48 @@ sub details :Chained('person') :PathPart('') :Args(0) {
 }
 
 
+=head2 edit_form
+
+=cut
+
+sub edit_form :Chained('person') :PathPart('edit') :Args(0) {
+    my ($self, $c) = @_;
+
+    # Set the TT template to use
+    $c->stash(template => 'people/edit.tt2');
+}
+
+
+=head2 do_edit
+
+Take information from form and update a person in the database.
+
+=cut
+
+sub do_edit :Chained('person') :PathPart('do_edit') :Args(0) {
+    my ($self, $c) = @_;
+
+    if (lc $c->request->method ne 'post') {
+        return;
+    }
+
+    my $params = $c->request->params;
+    my $person = $c->stash->{person};
+
+    if (lc $params->{Submit} eq 'submit') {
+        $person->update({
+            first_name => $params->{first_name} || undef,
+            middle_name => $params->{middle_name} || undef,
+            last_name => $params->{last_name} || undef,
+                        });
+    }
+
+    return $c->res->redirect(
+        $c->uri_for($c->controller('people')->action_for('details'),
+                    [ $person->person_id ]));
+}
+
+
 =head2 create_form
 
 Present a form to create a new Person.
