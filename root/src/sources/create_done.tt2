@@ -1,0 +1,6 @@
+[% META title = 'Source Created' %]
+
+[% # Output information about the record that was added.  First title.   -%]
+<p>Added source '[% source.name %]' [% '("' _ source.name_short _ '")' IF source.name_short %] with description "[% source.description %]" and URL [% source.url %].
+
+<p><a href="[% c.uri_for('/sources/list') %]">Return to list.</a></p>

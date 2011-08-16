@@ -70,6 +70,45 @@ sub details :Chained('source') :PathPart('') :Args(0) {
     $c->stash(template => 'sources/details.tt2');
 }
 
+=head2 create_form
+
+=cut
+
+sub create_form :Chained('base') :PathPart('new') :Args(0) {
+    my ($self, $c) = @_;
+
+    # Set the TT template to use
+    $c->stash(template => 'sources/new.tt2');
+}
+
+
+=head2 do_create
+
+Take information from form and add to database
+
+=cut
+
+sub do_create :Chained('base') :PathPart('do_create') :Args(0) {
+    my ($self, $c) = @_;
+
+    my $params = $c->request->params;
+
+    # Create the source
+    # TOOD: Pass FALSE instead of NULL when check boxes are unchecked.
+    my $source = $c->model('DB::Source')->create({
+        name => $params->{name},
+        name_short => $params->{name_short} || undef,
+        description => $params->{description} || undef,
+        url => $params->{url} || undef,
+        has_accounts => $params->{has_accounts},
+        paid_membership => $params->{paid_membership},
+                                                 });
+
+    # Store new model object in stash and set template
+    $c->stash(source => $source,
+              template => 'sources/create_done.tt2');
+}
+
 
 =head2 list
 

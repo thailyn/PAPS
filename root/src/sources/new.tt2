@@ -1,0 +1,31 @@
+[% META title = 'Create New Source' -%]
+
+<form method="post" action="[% c.uri_for('do_create') %]">
+<table>
+  <tr>
+    <td>Name:</td>
+    <td><input type="text" name="name"></td>
+  </tr>
+  <tr>
+    <td>Short Name:</td>
+    <td><input type="text" name="name_short"></td>
+  </tr>
+  <tr>
+    <td>Description:</td>
+    <td><input type="text" name="description"></td>
+  </tr>
+  <tr>
+    <td>URL:</td>
+    <td><input type="text" name="url"></td>
+  </tr>
+  <tr>
+    <td>Has Accounts:</td>
+    <td><input type="checkbox" name="has_accounts"></td>
+  </tr>
+  <tr>
+    <td>Paid Membership:</td>
+    <td><input type="checkbox" name="paid_membership"></td>
+  </tr>
+</table>
+<input type="submit" name="submit" value="Submit">
+</form>
