@@ -21,6 +21,7 @@
           <ul>
             <li>Works - <a href="[% c.uri_for('/works/list') %]">List</a> | <a href="[% c.uri_for('/works/new') %]">New</a></li>
             <li>People - <a href="[% c.uri_for('/people/list') %]">List</a> | <a href="[% c.uri_for('/people/new') %]">New</a></li>
+            <li>Sources - <a href="[% c.uri_for('/sources/list') %]">List</a> | <a href="[% c.uri_for('/sources/new') %]">New</a></li>
             <li><a href="[% c.uri_for('/works/graph') %]">Graph</a></li>
             <li><a href="[% c.uri_for('/') %]" title="Catalyst Welcome Page">Welcome</a></li>
           </ul>
