@@ -44,3 +44,8 @@
   </tr>
 [% END %]
 </table>
+
+<br />
+
+<a href="[% c.uri_for(c.controller('people').action_for('edit_form'),
+         [requested_person.person_id ]) %]">Edit</a>
