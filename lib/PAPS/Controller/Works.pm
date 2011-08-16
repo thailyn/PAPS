@@ -31,6 +31,7 @@ sub base :Chained('/') :PathPart('works') :CaptureArgs(0) {
     $c->stash(work_types_rs => $c->model('DB::WorkType'));
     $c->stash(reference_types_rs => $c->model('DB::ReferenceType'));
     $c->stash(people_rs => $c->model('DB::People'));
+    $c->stash(sources_rs => $c->model('DB::Source'));
 
     ## Print a message to the debug log
     #$c->log->debug('*** INSIDE BASE METHOD ***');
@@ -275,6 +276,69 @@ sub do_add_reference :Chained('work') :PathPart('do_add_reference') :Args(0) {
             rank => $params->{rank} || undef,
             chapter => $params->{chapter} || undef,
             reference_text => $params->{reference_text} || undef,
+                              });
+    }
+
+    return $c->res->redirect(
+        $c->uri_for($c->controller('works')->action_for('edit_form'),
+                    [ $work->id ]));
+}
+
+
+=head2 do_edit_source
+
+TODO: Describe me.
+
+=cut
+
+sub do_edit_source :Chained('work') :PathPart('do_edit_source') :Args(1) {
+    my ($self, $c, $work_source_id) = @_;
+
+    if (lc $c->request->method ne 'post') {
+        return;
+    }
+
+    my $params = $c->request->params;
+    my $work = $c->stash->{work};
+    # Using the many-to-many relationship $work->sources returns the set of
+    # Source objects, which is not what we want.  Use the has-many
+    # relationship instead.
+    my $work_source = $work->work_sources->find({id => {'=', $work_source_id}});
+
+    if (lc $params->{submit} eq 'save') {
+        $work_source->update({
+            source_id => $params->{source_id} || undef,
+            url => $params->{url} || undef
+                           });
+    }
+
+    return $c->res->redirect(
+        $c->uri_for($c->controller('works')->action_for('edit_form'),
+                    [ $work->id ]));
+}
+
+
+=head2 do_add_source
+
+TODO: Describe me.
+
+=cut
+
+sub do_add_source :Chained('work') :PathPart('do_add_source') :Args(0) {
+    my ($self, $c) = @_;
+
+    if (lc $c->request->method ne 'post') {
+        return;
+    }
+
+    my $params = $c->request->params;
+    my $work = $c->stash->{work};
+
+    if (lc $params->{submit} eq 'add') {
+        $work->create_related('work_sources', {
+            #work_id => $work->work_id,
+            source_id => $params->{source_id} || undef,
+            url => $params->{url} || undef,
                               });
     }
 
