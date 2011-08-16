@@ -98,6 +98,23 @@
 </table>
 
 <br />
+<div>Sources</div>
+<table border = 1 >
+  <tr>
+    <th>Name</th>
+    <th>Homepage</th>
+    <th>URL</th>
+  </tr>
+  [% FOREACH work_source IN requested_work.work_sources %]
+  <tr>
+    <td><a href="[% c.uri_for("/sources/$work_source.source.id") %]">[% work_source.source.name | html %]</a></td>
+    <td><a href="[% work_source.source.url %]">[% work_source.source.url %]</a></td>
+    <td><a href="[% work_source.url %]">[% work_source.url %]</a></td>
+  </tr>
+  [% END %]
+</table>
+
+<br />
 
 <a href="[% c.uri_for(c.controller('works').action_for('edit_form'),
          [requested_work.work_id ]) %]">Edit</a>
