@@ -1,0 +1,21 @@
+[% META title = 'Edit Person' -%]
+
+<form method="post" action="[% c.uri_for(c.controller('people').action_for('do_edit'),
+                            [ person.person_id ]) %]">
+  <table>
+    <tr>
+      <td>First Name:</td>
+      <td><input type="text" name="first_name" value="[% person.first_name %]"></td>
+    </tr>
+    <tr>
+      <td>Middle Name::</td>
+      <td><input type="text" name="middle_name" value="[% person.middle_name %]"></td>
+    </tr>
+    <tr>
+      <td>Last Name:</td>
+      <td><input type="text" name="last_name" value="[% person.last_name %]"></td>
+    </tr>
+  </table>
+  <input type="submit" name="Submit" value="Submit" />
+  <input type="submit" name="Cancel" value="Cancel" />
+</form>
