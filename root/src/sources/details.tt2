@@ -53,5 +53,5 @@
 
 <br />
 
-<a href="[% c.uri_for(c.controller('works').action_for('edit_form'),
-         [source.work_id ]) %]">Edit</a>
+<a href="[% c.uri_for(c.controller('sources').action_for('edit_form'),
+         [source.id ]) %]">Edit</a>
