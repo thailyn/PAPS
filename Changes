@@ -1,5 +1,16 @@
 This file documents the revision history for Perl extension PAPS.
 
+0.008  Sun Aug 23 17:48:02 2011 -0400
+  New features:
+    - Added support for Work Sources.  The sidebar has links to pages to
+      create new Sources and list the existing Sources.  The details page for
+      Sources includes a table of the Works that can be found in that Source.
+      Information about a Source can be edited using the Edit link on that
+      Source's details page.
+    - Sources can be added to a Work on that Work's details page.
+    - Added an edit page for People, to allow changing the data about People.
+      The details page for a Person has a link to the edit page.
+
 0.007  Sun Aug 14 20:23:39 2011 -0400
   New features:
     - Changed the "Edit" button on the Work details page to a hyperlink.
