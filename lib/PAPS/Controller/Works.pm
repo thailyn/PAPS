@@ -421,7 +421,11 @@ TODO: Describe me
 sub graph :Chained('base') :PathPart('graph') :Args(0) {
     my ($self, $c) = @_;
 
-    my $g = GraphViz->new( directed => 1, layout => 'sfdp', overlap => 'false', );
+    my $g = GraphViz->new(
+        directed => 0,
+        layout => 'sfdp',
+        overlap => 'scalexy', # 'false' works well but makes a big graph
+        );
     my $works_rs = $c->stash->{works_rs};
 
     while (my $work = $works_rs->next) {
