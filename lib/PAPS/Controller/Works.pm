@@ -425,6 +425,7 @@ sub graph :Chained('base') :PathPart('graph') :Args(0) {
         directed => 0,
         layout => 'sfdp',
         overlap => 'scalexy', # 'false' works well but makes a big graph
+        random_start => 'true'
         );
     my $works_rs = $c->stash->{works_rs};
 
