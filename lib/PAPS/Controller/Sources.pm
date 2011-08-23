@@ -70,6 +70,52 @@ sub details :Chained('source') :PathPart('') :Args(0) {
     $c->stash(template => 'sources/details.tt2');
 }
 
+
+=head2 edit_form
+
+=cut
+
+sub edit_form :Chained('source') :PathPart('edit') :Args(0) {
+    my ($self, $c) = @_;
+
+    # Set the TT template to use
+    $c->stash(template => 'sources/edit.tt2');
+}
+
+
+=head2 do_edit
+
+Take information from form and update a source in the database.
+
+=cut
+
+sub do_edit :Chained('source') :PathPart('do_edit') :Args(0) {
+    my ($self, $c) = @_;
+
+    if (lc $c->request->method ne 'post') {
+        return;
+    }
+
+    my $params = $c->request->params;
+    my $source = $c->stash->{source};
+
+    if (lc $params->{Submit} eq 'submit') {
+        $source->update({
+            name_short => $params->{name_short} || undef,
+            name => $params->{name} || undef,
+            description => $params->{description} || undef,
+            url => $params->{url} || undef,
+            has_accounts => $params->{has_accounts},
+            paid_membership => $params->{paid_membership},
+                        });
+    }
+
+    return $c->res->redirect(
+        $c->uri_for($c->controller('sources')->action_for('details'),
+                    [ $source->id ]));
+}
+
+
 =head2 create_form
 
 =cut
