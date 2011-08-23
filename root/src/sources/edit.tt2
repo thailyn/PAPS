@@ -1,0 +1,33 @@
+[% META title = 'Edit Source' -%]
+
+<form method="post" action="[% c.uri_for(c.controller('sources').action_for('do_edit'),
+                            [ source.id ]) %]">
+  <table>
+    <tr>
+      <td>Name:</td>
+      <td><input type="text" name="name" value="[% source.name %]"></td>
+    </tr>
+    <tr>
+      <td>Short Name:</td>
+      <td><input type="text" name="name_short" value="[% source.name_short %]"></td>
+    </tr>
+    <tr>
+      <td>Description:</td>
+      <td><input type="text" name="description" value="[% source.description %]"></td>
+    </tr>
+    <tr>
+      <td>Url:</td>
+      <td><input type="text" name="url" value="[% source.url %]"></td>
+    </tr>
+    <tr>
+      <td>Has Accounts:</td>
+      <td><input type="checkbox" name="has_accounts" value="1" [% 'checked="' _ source.has_accounts _ '"' IF source.has_accounts %]></td>
+    </tr>
+    <tr>
+      <td>Paid Membership:</td>
+      <td><input type="checkbox" name="paid_membership" value="1" [% 'checked="' _ source.paid_membership _ '"' IF source.paid_membership %]></td>
+    </tr>
+  </table>
+  <input type="submit" name="Submit" value="Submit" />
+  <input type="submit" name="Cancel" value="Cancel" />
+</form>
