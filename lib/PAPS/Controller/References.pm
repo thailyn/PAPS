@@ -28,6 +28,22 @@ sub index :Path :Args(0) {
 }
 
 
+=head2 base
+
+=cut
+
+sub base :Chained('/') :PathPart('references') :CaptureArgs(0) {
+    my ($self, $c) = @_;
+
+    # Store ResultSet in the so they are available for other methods.
+    $c->stash(works_rs => $c->model('DB::Work'));
+    $c->stash(work_types_rs => $c->model('DB::WorkType'));
+    $c->stash(reference_types_rs => $c->model('DB::ReferenceType'));
+    #$c->stash(people_rs => $c->model('DB::People'));
+    #$c->stash(sources_rs => $c->model('DB::Source'));
+}
+
+
 =head2 list
 
 Fetch all Reference objects and pass to references/list.tt2 in the stash to be displayed
