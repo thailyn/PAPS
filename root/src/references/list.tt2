@@ -1,0 +1,28 @@
+[% # Provide a title -%]
+[% META title = 'References List' -%]
+
+<div>References</div>
+<table border=1>
+  <tr>
+    <th>Referencing Work</th>
+    <th>Num</th>
+    <th>Chapter</th>
+    <th>Location</th>
+    <th>Referenced Work</th>
+    <th>Reference Text</th>
+  </tr>
+[% FOREACH reference IN references %]
+  <tr>
+    <td><a href="[% c.uri_for("/works/$reference.referencing_work.work_id") %]">[% reference.referencing_work.display_name | html %]</a></td>
+    <td>[% reference.rank %]</td>
+    <td>[% reference.chapter %]</td>
+    <td>[% reference.reference_type.name %]</td>
+    [% IF reference.referenced_work %]
+      <td><a href="[% c.uri_for("/works/$reference.referenced_work.work_id") %]">[% reference.referenced_work.display_name | html %]</a></td>
+    [% ELSE %]
+      <td><i>Unknown</i></td>
+    [% END %]
+    <td>[% reference.reference_text | html %]</td>
+  </tr>
+[% END %]
+</table>
