@@ -70,7 +70,7 @@
     </tr>
   </form>
   [% END %]
-  <!-- blank row to add a new reference -->
+  <!-- blank row to add a new author -->
   <form method="post" action="[% c.uri_for(c.controller('works').action_for('do_add_author'),
                               [ work.work_id ]) %]">
     <tr>
