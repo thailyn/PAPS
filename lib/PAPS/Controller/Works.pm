@@ -431,8 +431,25 @@ sub graph :Chained('base') :PathPart('graph') :Args(0) {
 
     while (my $work = $works_rs->next) {
         #$c->log->debug($work->display_name);
+        my ($outline_color, $fill_color, $node_style);
+        if (!$work->num_references) {
+            $outline_color = 'red';
+            $node_style = 'filled';
+            $fill_color = 'gray';
+        }
+        elsif ($work->num_references != $c->model('DB::WorkReference')->search({ referencing_work_id => $work->work_id})->count) {
+            $outline_color = 'yellow';
+            $node_style = 'filled';
+            $fill_color = 'gray';
+        }
+        else {
+            $outline_color = 'black';
+            $node_style = 'filled';
+            $fill_color = 'gray';
+        }
         $g->add_node($work->work_id, label => $work->display_name,
-                     shape => 'record', style => 'filled');
+                     shape => 'record', style => $node_style,
+                     color => $outline_color, fillcolor => $fill_color);
     }
 
     # get the list of references
