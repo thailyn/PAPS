@@ -45,6 +45,8 @@
     <th>Name</th>
   </tr>
 [% FOREACH author IN requested_work.authors %]
+[%# FOREACH author IN requested_work.search_related("authors", { },
+  { order_by => [ 'author_position' ] } ) %]
   <tr>
     <td>[% author.get_column('author_position') %]</td>
     <td><a href="[% c.uri_for("/people/$author.person_id") %]">[% author.full_name | html%]</a></td>
@@ -61,7 +63,8 @@
     <th>Work</th>
     <th>Reference Text</th>
   </tr>
-[% FOREACH reference IN requested_work.work_references_referenced_works %]
+[% FOREACH reference IN requested_work.search_related("work_references_referenced_works", { },
+  { order_by => [ 'chapter', 'rank' ] } ) %]
   <tr>
     <td>[% reference.rank %]</td>
     <td>[% reference.chapter %]</td>
@@ -86,7 +89,8 @@
     <th>Work</th>
     <th>Reference Text</th>
   </tr>
-[% FOREACH reference IN requested_work.work_references_referencing_works %]
+[% FOREACH reference IN requested_work.search_related("work_references_referencing_works", { },
+  { order_by => [ 'chapter', 'rank' ] } ) %]
   <tr>
     <td>[% reference.rank %]</td>
     <td>[% reference.chapter %]</td>
