@@ -1,0 +1,6 @@
+[% META title = 'Source Category Type Created' %]
+
+[% # Output information about the record that was added.  First title.   -%]
+<p>Added source category type '[% source_category_type.name %]' with description "[% source_category_type.description %]" and related source [% source_category_type.source.display_name %].
+
+<p><a href="[% c.uri_for('list') %]">Return to list.</a></p>
