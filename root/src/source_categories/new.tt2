@@ -1,0 +1,51 @@
+[% META title = 'Create New Source Category' -%]
+
+<p>A source category is a category that a source can attribute to a work.  Each source category belongs to a single source category type..</p>
+
+<form method="post" action="[% c.uri_for('do_create') %]">
+<table>
+  <tr>
+    <td>Name:</td>
+    <td><input type="text" name="name"></td>
+  </tr>
+  <tr>
+    <td>Description:</td>
+    <td><input type="text" name="description"></td>
+  </tr>
+  <tr>
+    <td>Parent Category:</td>
+    <td>
+      <select name="parent_category_id">
+        <option value="" selected="selected" />
+        [% WHILE (source_category = source_categories_rs.next) %]
+        <option value="[% source_category.id %]" >[% source_category.display_name | html %]</option>
+        [% END %]
+        <!-- [% source_categories_rs.reset %] -->
+    </td>
+  </tr>
+  <tr>
+    <td>Category Type:</td>
+    <td>
+      <select name="category_type_id">
+        <option value="" selected="selected" />
+        [% WHILE (source_category_type = source_category_types_rs.next) %]
+        <option value="[% source_category_type.id %]" >[% source_category_type.display_name | html %]</option>
+        [% END %]
+        <!-- [% source_category_types_rs.reset %] -->
+    </td>
+  </tr>
+  <tr>
+    <td>Source:</td>
+    <td>
+      <select name="source_id">
+        <option value="" selected="selected" />
+        [% WHILE (source = sources_rs.next) %]
+        <option value="[% source.id %]" >[% source.display_name | html %]</option>
+        [% END %]
+        <!-- [% sources_rs.reset %] -->
+      </select>
+    </td>
+  </tr>
+</table>
+<input type="submit" name="submit" value="Submit">
+</form>

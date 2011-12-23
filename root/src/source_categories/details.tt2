@@ -1,0 +1,68 @@
+[% # Provide a title -%]
+[% META title = 'Source Category Type Details' -%]
+
+[% USE Dumper(Indent=1) -%]
+
+<h1>Source Category Type Details</h1>
+
+<table>
+  <tr>
+    <th>Name:</th>
+    <td>[% source_category.name | html %]</td>
+  </tr>
+  <tr>
+    <th>Description:</th>
+    <td>[% source_category.description | html %]</td>
+  </tr>
+  <tr>
+    <th>Parent Category:</th>
+    [% IF source_category.parent_category %]
+      <td><a href="[% c.uri_for(c.controller('SourceCategories').action_for('details'),
+                   [ source_category.parent_category_id ]) %]">[% source_category.parent_category.display_name | html %]</a></td>
+    [% ELSE %]
+      <td><i>None</i></td>
+    [% END %]
+  </tr>
+  <tr>
+    <th>Category Type:</th>
+    <td><a href="[% c.uri_for(c.controller('SourceCategoryTypes').action_for('details'),
+                 [ source_category.category_type.id ]) %]">[% source_category.category_type.display_name | html %]</a></td>
+  </tr>
+  <tr>
+    <th>Source:</th>
+    <td><a href="[% c.uri_for(c.controller('Sources').action_for('details'),
+                 [ source_category.source.id ]) %]">[% source_category.source.display_name | html %]</a></td>
+  </tr>
+</table>
+
+<p />
+
+<div>Child Categories</div>
+<table border=1>
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Parent Category</th>
+    <th>Source</th>
+    <th>Category Type</th>
+  </tr>
+[% FOREACH source_category IN source_category.search_related("source_categories", { },
+  { order_by => [ 'source_id', 'category_type_id', 'name' ] } ) %]
+  <tr>
+    <td>[% source_category.name %]</td>
+    <td>[% source_category.description %]</td>
+    [% IF source_category.parent_category_id %]
+      <td><a href="[% c.uri_for("/sourcecategories/$source_category.parent_category.id") %]">[% source_category.parent_category.display_name | html %]</a></td>
+    [% ELSE %]
+      <td><i>None</i></td>
+    [% END %]
+    <td><a href="[% c.uri_for('/sources/' _ source_category.source.id) %]">[% source_category.source.display_name | html %]</a></td>
+    <td><a href="[% c.uri_for('/sourcecategorytypes/' _ source_category.category_type.id) %]">[% source_category.category_type.display_name | html %]</a></td>
+  </tr>
+[% END %]
+</table>
+
+<br />
+
+<a href="[% c.uri_for(c.controller('SourceCategories').action_for('edit_form_single'),
+         [source_category.id ]) %]">Edit</a>
