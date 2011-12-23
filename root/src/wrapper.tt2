@@ -23,6 +23,7 @@
             <li>People - <a href="[% c.uri_for('/people/list') %]">List</a> | <a href="[% c.uri_for('/people/new') %]">New</a></li>
             <li>Sources - <a href="[% c.uri_for('/sources/list') %]">List</a> | <a href="[% c.uri_for('/sources/new') %]">New</a></li>
             <li>References - <a href="[% c.uri_for('/references/list') %]">List</a> | <a href="[% c.uri_for('/references/edit') %]">Edit</a></li>
+            <li>Source Category Types - <a href="[% c.uri_for('/sourcecategorytypes/list') %]">List</a> | <a href="[% c.uri_for('/sourcecategorytypes/new') %]">New</a> | <a href="[% c.uri_for('/sourcecategorytypes/edit') %]">Edit</a></li>
             <li><a href="[% c.uri_for('/works/graph') %]">Graph</a></li>
             <li><a href="[% c.uri_for('/') %]" title="Catalyst Welcome Page">Welcome</a></li>
           </ul>
