@@ -1,0 +1,51 @@
+[% META title = 'Edit Source Category' -%]
+
+<table border=0 >
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Parent Category</th>
+    <th>Source Category Type</th>
+    <th>Source</th>
+    <th /> <!-- for action buttons -->
+    <th /> <!-- for action buttons -->
+  </tr>
+  [% FOREACH source_category IN source_categories %]
+  <form method="post" action="[% c.uri_for(c.controller('SourceCategories').action_for('do_edit'),
+                              [ ], ( source_category.id )) %]">
+    <tr>
+      <td><input type="text" name="name" value="[% source_category.name %]" /></td>
+      <td><input type="text" name="description" value="[% source_category.description %]" /></td>
+      <td>
+        <select name="parent_category_id">
+          <option value="" [% UNLESS source_category.parent_category_id %] selected="selected" [% END %] />
+          [% WHILE (parent_source_category = source_categories_rs.next) %]
+          <option value="[% parent_source_category.id %]" [%-
+                  IF parent_source_category.id == source_category.parent_category_id %] selected="selected" [% END %] >[% parent_source_category.display_name | html %]</option>
+          [% END %]
+          <!-- [% source_categories_rs.reset %] -->
+      </td>
+      <td>
+        <select name="category_type_id">
+          <option value="" [% UNLESS source_category.category_type_id %] selected="selected" [% END %] />
+          [% WHILE (source_category_type = source_category_types_rs.next) %]
+          <option value="[% source_category_type.id %]" [%-
+                  IF source_category_type.id == source_category.category_type_id %] selected="selected" [% END %] >[% source_category_type.display_name | html %]</option>
+          [% END %]
+          <!-- [% source_category_types_rs.reset %] -->
+      </td>
+      <td>
+        <select name="source_id">
+          <option value="" [% UNLESS source_category.source_id %] selected="selected" [% END %] />
+          [% WHILE (source = sources_rs.next) %]
+          <option value="[% source.id %]" [%-
+                  IF source.id == source_category.source_id %] selected="selected" [% END %] >[% source.display_name | html %]</option>
+          [% END %]
+          <!-- [% sources_rs.reset %] -->
+      </td>
+      <td><input type="submit" name="submit" value="Edit" /></td>
+      <td><input type="submit" name="delete" value="Delete" disabled="disabled" /></td>
+    </tr>
+  </form>
+  [% END %]
+</table>

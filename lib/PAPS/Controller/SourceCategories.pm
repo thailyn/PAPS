@@ -80,6 +80,56 @@ sub details :Chained('source_category') :PathPart('') :Args(0) {
     $c->stash(template => 'source_categories/details.tt2');
 }
 
+=head2 edit_form
+
+=cut
+
+sub edit_form :Chained('base') :PathPart('edit') :Args(0) {
+    my ($self, $c) = @_;
+
+    # Retrieve all of the source category as SourceCategoryType model objects
+    # and store in the stash where they can be accessed by the TT template
+    $c->stash(source_categories => [$c->model('DB::SourceCategory')
+                                    ->search(undef, { order_by => { -asc => [qw/source_id category_type_id name/] }, })
+                                    ->all]);
+
+    # Set the TT template to use
+    $c->stash(template => 'source_categories/edit.tt2');
+}
+
+=head2 do_edit
+
+This method is virtually identical to do_edit_reference in the References
+controller.  Figure out which to keep and get rid of one, so we do not
+duplicate code.
+
+=cut
+
+sub do_edit :Chained('base') :PathPart('do_edit') :Args(1) {
+    my ($self, $c, $source_category_id) = @_;
+
+    if (lc $c->request->method ne 'post') {
+        return;
+    }
+
+    my $params = $c->request->params;
+    my $source_category = $c->model('DB::SourceCategory')->find({id => {'=', $source_category_id}});
+
+    if (lc $params->{submit} eq 'edit') {
+        $source_category->update({
+            name => $params->{name} || undef,
+            description => $params->{description} || undef,
+            parent_category_id => $params->{parent_category_id} || undef,
+            category_type_id => $params->{category_type_id} || undef,
+            source_id => $params->{source_id} || undef,
+                                 });
+    }
+
+    return $c->res->redirect(
+        $c->uri_for($c->controller('SourceCategories')->action_for('edit_form'),
+                    [ ]));
+}
+
 =head2 create_form
 
 =cut
