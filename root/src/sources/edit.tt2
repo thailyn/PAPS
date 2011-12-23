@@ -31,3 +31,34 @@
   <input type="submit" name="Submit" value="Submit" />
   <input type="submit" name="Cancel" value="Cancel" />
 </form>
+
+<div>Source Category Types</div>
+<table border=0 >
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th /> <!-- for action buttons -->
+    <th /> <!-- for action buttons -->
+  </tr>
+  [% FOREACH source_category_type IN source.search_related("source_category_types", { },
+    { order_by => [ 'name' ] } ) %]
+  <form method="post" action="[% c.uri_for(c.controller('Sources').action_for('do_edit_source_category_type'),
+                              [ source.id ], ( source_category_type.id )) %]">
+    <tr>
+      <td><input type="text" name="name" value="[% source_category_type.name %]" /></td>
+      <td><input type="text" name="description" value="[% source_category_type.description %]" /></td>
+      <td><input type="submit" name="submit" value="Save" /></td>
+      <td><input type="submit" name="delete" value="Delete" disabled="disabled" /></td>
+    </tr>
+  </form>
+  [% END %]
+  <!-- blank row to add a new source category type -->
+  <form method="post" action="[% c.uri_for(c.controller('Sources').action_for('do_add_source_category_type'),
+                              [ source.id ]) %]">
+    <tr>
+      <td><input type="text" name="name" value="" /></td>
+      <td><input type="text" name="description" value="" /></td>
+      <td><input type="submit" name="submit" value="Add" /></td>
+    </tr>
+  </form>
+</table>
