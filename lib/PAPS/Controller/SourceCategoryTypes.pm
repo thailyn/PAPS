@@ -60,6 +60,26 @@ sub source_category_type :Chained('base'): PathPart('') :CaptureArgs(1) {
     $c->stash(source_category_type => $source_category_type);
 }
 
+=head2 details
+
+Show the details for a specific source category type.
+
+=cut
+
+sub details :Chained('source_category_type') :PathPart('') :Args(0) {
+    my ($self, $c) = @_;
+
+    my $source_category_type_id = $c->stash->{source_category_type_id};
+
+    my $matching_source_category_type = $c->model('DB::SourceCategoryType')
+        ->find({id => {'=', $source_category_type_id}});
+
+    #$c->stash(work_id => $requested_work);
+    $c->stash(source_category_type => $matching_source_category_type);
+
+    $c->stash(template => 'source_category_types/details.tt2');
+}
+
 =head2 edit_form
 
 =cut
