@@ -1,9 +1,9 @@
 [% # Provide a title -%]
-[% META title = 'Source Category Type Details' -%]
+[% META title = 'Source Category Details' -%]
 
 [% USE Dumper(Indent=1) -%]
 
-<h1>Source Category Type Details</h1>
+<h1>Source Category Details</h1>
 
 <table>
   <tr>
