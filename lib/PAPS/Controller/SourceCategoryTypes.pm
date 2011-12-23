@@ -27,6 +27,16 @@ sub index :Path :Args(0) {
     $c->response->body('Matched PAPS::Controller::SourceCategoryTypes in SourceCategoryTypes.');
 }
 
+=head2 base
+
+=cut
+
+sub base :Chained('/') :PathPart('sourcecategories') :CaptureArgs(0) {
+    my ($self, $c) = @_;
+
+    # Store in the stash ResultSets that are useful to chained actions.
+    $c->stash(source_category_types_rs => $c->model('DB::SourceCategoryType'));
+}
 
 =head1 AUTHOR
 
