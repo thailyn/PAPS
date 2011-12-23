@@ -49,7 +49,8 @@
 [% FOREACH source_category IN source_category.search_related("source_categories", { },
   { order_by => [ 'source_id', 'category_type_id', 'name' ] } ) %]
   <tr>
-    <td>[% source_category.name %]</td>
+    <td><a href="[% c.uri_for(c.controller('SourceCategories').action_for('details')
+                 [ source_category.id ] ) %]">[% source_category.name | html %]</a></td>
     <td>[% source_category.description %]</td>
     [% IF source_category.parent_category_id %]
       <td><a href="[% c.uri_for("/sourcecategories/$source_category.parent_category.id") %]">[% source_category.parent_category.display_name | html %]</a></td>
