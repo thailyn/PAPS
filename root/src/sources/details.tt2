@@ -71,6 +71,36 @@
 [% END %]
 </table>
 
+<p />
+
+<div>Source Category Information</div>
+<table border=1>
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Parent Category</th>
+    <th>Source Category Type</th>
+    <th>Details</th>
+  </tr>
+[% FOREACH source_category IN source.search_related("source_categories", { },
+   { order_by => [ 'category_type_id', 'name' ] } ) %]
+  <tr>
+    <td>[% source_category.name | html %]</td>
+    <td>[% source_category.description | html %]</td>
+    [% IF source_category.parent_category %]
+      <td><a href="[% c.uri_for(c.controller('SourceCategories').action_for('details'),
+                   [ source_category.parent_category.id ]) %]">[% source_category.parent_category.display_name | html %]</a></td>
+    [% ELSE %]
+      <td><i>None</i></td>
+    [% END %]
+    <td><a href="[% c.uri_for(c.controller('SourceCategoryTypes').action_for('details'),
+                 [ source_category.category_type.id ]) %]">[% source_category.category_type.display_name | html %]</a></td>
+    <td><a href="[% c.uri_for(c.controller('SourceCategories').action_for('details'),
+                 [ source_category.id ]) %]">View</a></td>
+  </tr>
+[% END %]
+</table>
+
 <br />
 
 <a href="[% c.uri_for(c.controller('sources').action_for('edit_form'),
