@@ -80,6 +80,59 @@ sub details :Chained('source_category_type') :PathPart('') :Args(0) {
     $c->stash(template => 'source_category_types/details.tt2');
 }
 
+=head2 edit_form_single
+
+=cut
+
+sub edit_form_single :Chained('source_category_type') :PathPart('edit') :Args(0) {
+    my ($self, $c) = @_;
+
+    my $source_category_type_id = $c->stash->{source_category_type_id};
+
+    my $matching_source_category_type = $c->model('DB::SourceCategoryType')
+        ->find({id => {'=', $source_category_type_id}});
+
+    #$c->stash(work_id => $requested_work_id);
+    $c->stash(source_category_type => $matching_source_category_type);
+
+    # Set the TT template to use
+    $c->stash(template => 'source_category_types/edit_single.tt2');
+}
+
+=head2 do_edit_single
+
+Take information from form and update a work in the database.
+
+=cut
+
+sub do_edit_single :Chained('source_category_type') :PathPart('do_edit') :Args(0) {
+    my ($self, $c) = @_;
+
+    if (lc $c->request->method ne 'post') {
+        return;
+    }
+
+    my $params = $c->request->params;
+    my $source_category_type = $c->stash->{source_category_type};
+
+    # Retrieve the values from the form
+    my $name = $params->{name};
+    my $description = $params->{description} || undef;
+    my $source_id = $params->{source_id} || undef;
+
+    if (lc $params->{Submit} eq 'submit') {
+        $source_category_type->update({
+            name => $name,
+            description => $description,
+            source_id => $source_id,
+                                      });
+    }
+
+    return $c->res->redirect(
+        $c->uri_for($c->controller('SourceCategoryTypes')->action_for('details'),
+                    [ $source_category_type->id ]));
+}
+
 =head2 edit_form
 
 =cut
