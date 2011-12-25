@@ -206,3 +206,47 @@
     </tr>
   </form>
 </table>
+
+<br />
+
+<div>Source Categories</div>
+<table border=0 >
+  <tr>
+    <th>Name</th>
+    <th /> <!-- for action buttons -->
+    <th /> <!-- for action buttons -->
+  </tr>
+  [% FOREACH source_category IN work.source_work_categories %]
+  <form method="post" action="[% c.uri_for(c.controller('works').action_for('do_edit_source_category'),
+                              [ work.work_id ], ( source_category.category_id )) %]">
+    <tr>
+      <td>
+        <select name="source_category_id">
+          <option value="" [% UNLESS source_category.id %] selected="selected" [% END %] />
+          [% WHILE (sc = source_categories_rs.next) %]
+          <option value="[% sc.id %]" [%-
+                  IF source_category.category_id == sc.id %] selected="selected" [% END %] >[% sc.name _ ' (' _ sc.source.display_name _ ')' | html %]</option>
+          [% END %]
+          <!-- [% source_categories_rs.reset %] -->
+      </td>
+      <td><input type="submit" name="submit" value="Edit" disabled="disabled" /></td>
+      <td><input type="submit" name="delete" value="Delete" disabled="disabled" /></td>
+    </tr>
+  </form>
+  [% END %]
+  <!-- blank row to add a new reference -->
+  <form method="post" action="[% c.uri_for(c.controller('works').action_for('do_add_source_category'),
+                              [ work.work_id ]) %]">
+    <tr>
+       <td>
+        <select name="source_category_id">
+          <option value="" selected="selected" />
+          [% WHILE (sc = source_categories_rs.next) %]
+          <option value="[% sc.id %]" >[% sc.name _ ' (' _ sc.source.display_name _ ')' | html %]</option>
+          [% END %]
+          <!-- [% source_categories_rs.reset %] -->
+      </td>
+      <td><input type="submit" name="submit" value="Add" /></td>
+    </tr>
+  </form>
+</table>
