@@ -65,5 +65,21 @@
 
 <br />
 
+<div>Work Information</div>
+<table border=1>
+  <tr>
+    <th>Work Type</th>
+    <th>Name</th>
+  </tr>
+[% FOREACH work IN source_category.works %]
+  <tr>
+    <td>[% work.work_type.work_type %]</td>
+    <td><a href="[% c.uri_for("/works/$work.work_id") %]">[% work.title | html%]</a></td>
+  </tr>
+[% END %]
+</table>
+
+<br />
+
 <a href="[% c.uri_for(c.controller('SourceCategories').action_for('edit_form_single'),
          [source_category.id ]) %]">Edit</a>
