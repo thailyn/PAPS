@@ -123,5 +123,28 @@
 
 <br />
 
+<div>Source Tag Information</div>
+<table border=1>
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Source Tag Type</th>
+    <th>Details</th>
+  </tr>
+[% FOREACH source_tag IN source.search_related("source_tags", { },
+   { order_by => [ 'tag_type_id', 'name' ] } ) %]
+  <tr>
+    <td>[% source_tag.name | html %]</td>
+    <td>[% source_tag.description | html %]</td>
+    <td><a href="[% c.uri_for(c.controller('SourceTagTypes').action_for('details'),
+                 [ source_tag.tag_type.id ]) %]">[% source_tag.tag_type.display_name | html %]</a></td>
+    <td><a href="[% c.uri_for(c.controller('SourceTags').action_for('details'),
+                 [ source_tag.id ]) %]">View</a></td>
+  </tr>
+[% END %]
+</table>
+
+<br />
+
 <a href="[% c.uri_for(c.controller('sources').action_for('edit_form'),
          [source.id ]) %]">Edit</a>
