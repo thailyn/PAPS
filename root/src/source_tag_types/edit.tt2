@@ -1,0 +1,31 @@
+[% META title = 'Edit Source Tag Type' -%]
+
+<table border=0 >
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Source</th>
+    <th /> <!-- for action buttons -->
+    <th /> <!-- for action buttons -->
+  </tr>
+  [% FOREACH source_tag_type IN source_tag_types %]
+  <form method="post" action="[% c.uri_for(c.controller('sourcetagtypes').action_for('do_edit'),
+                              [ ], ( source_tag_type.id )) %]">
+    <tr>
+      <td><input type="text" name="name" value="[% source_tag_type.name %]" /></td>
+      <td><input type="text" name="description" value="[% source_tag_type.description %]" /></td>
+      <td>
+        <select name="source_id">
+          <option value="" [% UNLESS source_tag_type.source_id %] selected="selected" [% END %] />
+          [% WHILE (source = sources_rs.next) %]
+          <option value="[% source.id %]" [%-
+                  IF source.id == source_tag_type.source_id %] selected="selected" [% END %] >[% source.display_name | html %]</option>
+          [% END %]
+          <!-- [% sources_rs.reset %] -->
+      </td>
+      <td><input type="submit" name="submit" value="Edit" /></td>
+      <td><input type="submit" name="delete" value="Delete" disabled="disabled" /></td>
+    </tr>
+  </form>
+  [% END %]
+</table>

@@ -1,0 +1,26 @@
+[% META title = 'Source Tag Types List' -%]
+
+<table border=1>
+  <tr>
+    <th>
+      Name
+    </th>
+    <th>
+      Description
+    </th>
+    <th>
+      Source
+    </th>
+    <th>
+      Details
+    </th>
+  </tr>
+  [% FOREACH source_tag_type IN source_tag_types -%]
+  <tr>
+    <td>[% source_tag_type.name | html %]</td>
+    <td>[% source_tag_type.description | html %]</td>
+    <td><a href="[% c.uri_for('/sources/' _ source_tag_type.source.id) %]">[% source_tag_type.source.display_name | html %]</a></td>
+    <td><a href="[% c.uri_for(source_tag_type.id) %]">View</a></td>
+  </tr>
+  [% END -%]
+</table>

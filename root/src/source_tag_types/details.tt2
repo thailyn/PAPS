@@ -1,0 +1,48 @@
+[% # Provide a title -%]
+[% META title = 'Source Tag Type Details' -%]
+
+[% USE Dumper(Indent=1) -%]
+
+<h1>Source Tag Type Details</h1>
+
+<table>
+  <tr>
+    <th>Name:</th>
+    <td>[% source_tag_type.name | html %]</td>
+  </tr>
+  <tr>
+    <th>Description:</th>
+    <td>[% source_tag_type.description | html %]</td>
+  </tr>
+  <tr>
+    <th>Source:</th>
+    <td><a href="[% c.uri_for('/sources/' _ source_tag_type.source.id) %]">[% source_tag_type.source.display_name | html %]</a></td>
+  </tr>
+</table>
+
+<p />
+
+<div>Source Tag</div>
+<table border=1>
+  <tr>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Source</th>
+    <th>Tag Type</th>
+  </tr>
+[% FOREACH source_tag IN source_tag_type.search_related("source_tags", { },
+  { order_by => [ 'source_id', 'tag_type_id', 'name' ] } ) %]
+  <tr>
+    <td><a href="[% c.uri_for(c.controller('SourceCategories').action_for('details')
+                 [ source_tag.id ] ) %]">[% source_tag.name | html %]</a></td>
+    <td>[% source_tag.description %]</td>
+    <td><a href="[% c.uri_for('/sources/' _ source_tag.source.id) %]">[% source_tag.source.display_name | html %]</a></td>
+    <td><a href="[% c.uri_for('/sourcetagtypes/' _ source_tag.tag_type.id) %]">[% source_tag.tag_type.display_name | html %]</a></td>
+  </tr>
+[% END %]
+</table>
+
+<br />
+
+<a href="[% c.uri_for(c.controller('SourceTagTypes').action_for('edit_form_single'),
+         [source_tag_type.id ]) %]">Edit</a>
