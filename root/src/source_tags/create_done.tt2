@@ -1,0 +1,6 @@
+[% META title = 'Source Tag Created' %]
+
+[% # Output information about the record that was added.  First title.   -%]
+<p>Added source tag '[% source_tag.name | html %]' with description "[% source_tag.description | html%]" and related source [% source_tag_type.source.display_name | html %] under source tag type '[% source_tag.tag_type.display_name | html %]'.
+
+<p><a href="[% c.uri_for('list') %]">Return to list.</a></p>

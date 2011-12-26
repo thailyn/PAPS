@@ -1,0 +1,41 @@
+[% META title = 'Edit Source Tag' -%]
+
+<form method="post" action="[% c.uri_for(c.controller('SourceTags').action_for('do_edit_single'),
+                            [ source_tag.id ]) %] [%# c.uri_for('do_edit', [ work.work_id ]) %] ">
+  <table>
+    <tr>
+      <td>Name:</td>
+      <td><input type="text" name="name" value="[% source_tag.name %]"></td>
+    </tr>
+    <tr>
+      <td>Description:</td>
+      <td><input type="text" name="description" value="[% source_tag.description %]"></td>
+    </tr>
+    <tr>
+      <td>Source Tag Type:</td>
+      <td>
+        <select name="tag_type_id">
+          <option value="" [% UNLESS source_tag.tag_type_id %] selected="selected" [% END %] />
+          [% WHILE (source_tag_type = source_tag_types_rs.next) %]
+          <option value="[% source_tag_type.id %]" [%-
+                  IF source_tag_type.id == source_tag.tag_type_id %] selected="selected" [% END %] >[% source_tag_type.display_name | html %]</option>
+          [% END %]
+          <!-- [% source_tag_types_rs.reset %] -->
+      </td>
+    </tr>
+    <tr>
+      <td>Source:</td>
+      <td>
+        <select name="source_id">
+          <option value="" />
+          [% WHILE (source = sources_rs.next) %]
+          <option value="[% source.id %]" [%-
+                  IF source.id == source_tag.source_id %] selected="selected" [% END %]>[% source.display_name | html %]</option>
+          [% END %]
+        </select>
+      </td>
+    </tr>
+  </table>
+  <input type="submit" name="Submit" value="Submit" />
+  <input type="submit" name="Cancel" value="Cancel" />
+</form>

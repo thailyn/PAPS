@@ -1,0 +1,50 @@
+[% # Provide a title -%]
+[% META title = 'Source Tag Details' -%]
+
+[% USE Dumper(Indent=1) -%]
+
+<h1>Source Tag Details</h1>
+
+<table>
+  <tr>
+    <th>Name:</th>
+    <td>[% source_tag.name | html %]</td>
+  </tr>
+  <tr>
+    <th>Description:</th>
+    <td>[% source_tag.description | html %]</td>
+  </tr>
+  <tr>
+    <th>Tag Type:</th>
+    <td><a href="[% c.uri_for(c.controller('SourceTagTypes').action_for('details'),
+                 [ source_tag.category_type.id ]) %]">[% source_tag.tag_type.display_name | html %]</a></td>
+  </tr>
+  <tr>
+    <th>Source:</th>
+    <td><a href="[% c.uri_for(c.controller('Sources').action_for('details'),
+                 [ source_tag.source.id ]) %]">[% source_tag.source.display_name | html %]</a></td>
+  </tr>
+</table>
+
+<p />
+
+<br />
+
+<div>Work Information</div>
+<table border=1>
+  <tr>
+    <th>Work Type</th>
+    <th>Name</th>
+  </tr>
+[% FOREACH work IN source_tag.works %]
+  <tr>
+    <td>[% work.work_type.work_type %]</td>
+    <td><a href="[% c.uri_for("/works/$work.work_id") %]">[% work.title | html%]</a></td>
+  </tr>
+[% END %]
+</table>
+
+<br />
+
+<a href="[% c.uri_for(c.controller('SourceTags').action_for('edit_form_single'),
+         [source_tag.id ]) %]">Edit</a>
