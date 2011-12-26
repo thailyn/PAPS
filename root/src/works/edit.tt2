@@ -250,3 +250,47 @@
     </tr>
   </form>
 </table>
+
+<br />
+
+<div>Source Tags</div>
+<table border=0 >
+  <tr>
+    <th>Name</th>
+    <th /> <!-- for action buttons -->
+    <th /> <!-- for action buttons -->
+  </tr>
+  [% FOREACH source_tag IN work.source_work_tags %]
+  <form method="post" action="[% c.uri_for(c.controller('works').action_for('do_edit_source_tag'),
+                              [ work.work_id ], ( source_tag.tag_id )) %]">
+    <tr>
+      <td>
+        <select name="source_tag_id">
+          <option value="" [% UNLESS source_tag.id %] selected="selected" [% END %] />
+          [% WHILE (st = source_tags_rs.next) %]
+          <option value="[% st.id %]" [%-
+                  IF source_tag.tag_id == st.id %] selected="selected" [% END %] >[% st.name _ ' (' _ st.source.display_name _ ')' | html %]</option>
+          [% END %]
+          <!-- [% source_tags_rs.reset %] -->
+      </td>
+      <td><input type="submit" name="submit" value="Edit" disabled="disabled" /></td>
+      <td><input type="submit" name="delete" value="Delete" disabled="disabled" /></td>
+    </tr>
+  </form>
+  [% END %]
+  <!-- blank row to add a new tag -->
+  <form method="post" action="[% c.uri_for(c.controller('works').action_for('do_add_source_tag'),
+                              [ work.work_id ]) %]">
+    <tr>
+       <td>
+        <select name="source_tag_id">
+          <option value="" selected="selected" />
+          [% WHILE (st = source_tags_rs.next) %]
+          <option value="[% st.id %]" >[% st.name _ ' (' _ st.source.display_name _ ')' | html %]</option>
+          [% END %]
+          <!-- [% source_tags_rs.reset %] -->
+      </td>
+      <td><input type="submit" name="submit" value="Add" /></td>
+    </tr>
+  </form>
+</table>

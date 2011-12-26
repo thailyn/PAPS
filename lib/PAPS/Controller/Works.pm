@@ -30,6 +30,7 @@ sub base :Chained('/') :PathPart('works') :CaptureArgs(0) {
     $c->stash(works_rs => $c->model('DB::Work'));
     $c->stash(work_types_rs => $c->model('DB::WorkType'));
     $c->stash(reference_types_rs => $c->model('DB::ReferenceType'));
+    $c->stash(source_tags_rs => $c->model('DB::SourceTag'));
     $c->stash(source_categories_rs => $c->model('DB::SourceCategory'));
     $c->stash(people_rs => $c->model('DB::People'));
     $c->stash(sources_rs => $c->model('DB::Source'));
@@ -402,6 +403,68 @@ sub do_add_source_category :Chained('work') :PathPart('do_add_source_category') 
         $work->create_related('source_work_categories', {
             #work_id => $work->work_id,
             category_id => $params->{source_category_id} || undef,
+                              });
+    }
+
+    return $c->res->redirect(
+        $c->uri_for($c->controller('works')->action_for('edit_form'),
+                    [ $work->id ]));
+}
+
+=head2 do_edit_source_tag
+
+TODO: Describe me.
+
+=cut
+
+sub do_edit_source_tag :Chained('work') :PathPart('do_edit_source_tag') :Args(1) {
+    my ($self, $c, $work_source_tag_id) = @_;
+
+    if (lc $c->request->method ne 'post') {
+        return;
+    }
+
+    my $params = $c->request->params;
+    my $work = $c->stash->{work};
+    # Using the many-to-many relationship returns the set of
+    # SourceTag objects, which is not what we want.  Use the has-many
+    # relationship instead.
+    my $work_source_tag = $work->source_work_tags->find({tag_id => {'=', $work_source_tag_id}});
+
+    # This does not work, as source_tag_id is part of the primary key, and,
+    # apparently, DBIx does not want to update those values.
+    if (lc $params->{submit} eq 'save') {
+        $work_source_tag->update({
+            tag_id => $params->{source_tag_id} || undef,
+                                 });
+    }
+
+    return $c->res->redirect(
+        $c->uri_for($c->controller('works')->action_for('edit_form'),
+                    [ $work->id ]));
+}
+
+
+=head2 do_add_source_tag
+
+TODO: Describe me.
+
+=cut
+
+sub do_add_source_tag :Chained('work') :PathPart('do_add_source_tag') :Args(0) {
+    my ($self, $c) = @_;
+
+    if (lc $c->request->method ne 'post') {
+        return;
+    }
+
+    my $params = $c->request->params;
+    my $work = $c->stash->{work};
+
+    if (lc $params->{submit} eq 'add') {
+        $work->create_related('source_work_tags', {
+            #work_id => $work->work_id,
+            tag_id => $params->{source_tag_id} || undef,
                               });
     }
 

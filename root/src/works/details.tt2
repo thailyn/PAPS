@@ -143,6 +143,23 @@
 </table>
 
 <br />
+<div>Source Tags</div>
+<table border = 1>
+  <tr>
+    <th>Name</th>
+    <th>Source</th>
+  </tr>
+  [% FOREACH source_tag IN requested_work.source_tags %]
+  <tr>
+    <td><a href="[% c.uri_for(c.controller('SourceTags').action_for('details')
+                 [ source_tag.id ]) %]">[% source_tag.display_name | html %]</a></td>
+    <td><a href="[% c.uri_for(c.controller('Sources').action_for('details'),
+                 [ source_tag.source.id ]) %]">[% source_tag.source.display_name | html %]</a></td>
+  </tr>
+  [% END %]
+</table>
+
+<br />
 
 <a href="[% c.uri_for(c.controller('works').action_for('edit_form'),
          [requested_work.work_id ]) %]">Edit</a>
