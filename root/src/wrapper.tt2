@@ -25,6 +25,7 @@
             <li>References - <a href="[% c.uri_for('/references/list') %]">List</a> | <a href="[% c.uri_for('/references/edit') %]">Edit</a></li>
             <li>Source Category Types - <a href="[% c.uri_for('/sourcecategorytypes/list') %]">List</a> | <a href="[% c.uri_for('/sourcecategorytypes/new') %]">New</a> | <a href="[% c.uri_for('/sourcecategorytypes/edit') %]">Edit</a></li>
             <li>Source Categories - <a href="[% c.uri_for(c.controller('SourceCategories').action_for('list')) %]">List</a> | <a href="[% c.uri_for(c.controller('SourceCategories').action_for('create_form')) %]">New</a> | <a href="[% c.uri_for(c.controller('SourceCategories').action_for('edit_form')) %]">Edit</a></li>
+            <li>Source Tag Types - <a href="[% c.uri_for(c.controller('SourceTagTypes').action_for('list')) %]">List</a> | <a href="[% c.uri_for(c.controller('SourceTagTypes').action_for('create_form')) %]">New</a> | <a href="[% c.uri_for(c.controller('SourceTagTypes').action_for('edit_form')) %]">Edit</a></li>
             <li><a href="[% c.uri_for('/works/graph') %]">Graph</a></li>
             <li><a href="[% c.uri_for('/') %]" title="Catalyst Welcome Page">Welcome</a></li>
           </ul>
