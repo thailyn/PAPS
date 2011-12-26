@@ -177,6 +177,67 @@ sub do_add_source_category_type :Chained('source') :PathPart('do_add_source_cate
                     [ $source->id ]));
 }
 
+=head2 do_edit_source_tag_type
+
+TODO: Describe me.
+
+=cut
+
+sub do_edit_source_tag_type :Chained('source') :PathPart('do_edit_source_tag_type') :Args(1) {
+    my ($self, $c, $source_tag_type_id) = @_;
+
+    if (lc $c->request->method ne 'post') {
+        return;
+    }
+
+    my $params = $c->request->params;
+    my $source = $c->stash->{source};
+    # Using the many-to-many relationship $work->authors returns the
+    # set of People objects, which is not what we want.  Use the has-many
+    # relationship instead.
+    my $source_tag_type = $source->source_tag_types->find({id => {'=', $source_tag_type_id}});
+
+    if (lc $params->{submit} eq 'save') {
+        $source_tag_type->update({
+            name => $params->{name} || undef,
+            description => $params->{description} || undef,
+                                 });
+    }
+
+    return $c->res->redirect(
+        $c->uri_for($c->controller('Sources')->action_for('edit_form'),
+                    [ $source->id ]));
+}
+
+
+=head2 do_add_source_tag_type
+
+TODO: Describe me.
+
+=cut
+
+sub do_add_source_tag_type :Chained('source') :PathPart('do_add_source_tag_type') :Args(0) {
+    my ($self, $c) = @_;
+
+    if (lc $c->request->method ne 'post') {
+        return;
+    }
+
+    my $params = $c->request->params;
+    my $source = $c->stash->{source};
+
+    if (lc $params->{submit} eq 'add') {
+        $source->create_related('source_tag_types', {
+            name => $params->{name} || undef,
+            description => $params->{description} || undef,
+                                });
+    }
+
+    return $c->res->redirect(
+        $c->uri_for($c->controller('Sources')->action_for('edit_form'),
+                    [ $source->id ]));
+}
+
 
 =head2 create_form
 
