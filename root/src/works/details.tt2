@@ -147,14 +147,22 @@
 <table border = 1>
   <tr>
     <th>Name</th>
+    <th>Tag Type</th>
     <th>Source</th>
   </tr>
-  [% FOREACH source_tag IN requested_work.source_tags %]
+  [%# This search should be done in the Works Controller instead of here in the view. %]
+  [% FOREACH source_tag IN requested_work.search_related("source_work_tags", { },
+    { join      => { tag => [ 'source', 'tag_type' ] },
+      '+select' => [ 'tag.name', 'source.id', 'source.name', 'tag_type.id', 'tag_type.name' ],
+      '+as'     => [ 'tag_name', 'source_id', 'source_name', 'tag_type_id', 'tag_type_name' ],
+      order_by  => [ 'source.name', 'tag_type.name', 'me.name' ] } ) %]
   <tr>
     <td><a href="[% c.uri_for(c.controller('SourceTags').action_for('details')
-                 [ source_tag.id ]) %]">[% source_tag.display_name | html %]</a></td>
+                 [ source_tag.tag_id ]) %]">[% source_tag.get_column('tag_name') | html %]</a></td>
+    <td><a href="[% c.uri_for(c.controller('SourceTagTypes').action_for('details')
+                 [ source_tag.get_column('tag_type_id') ]) %]">[% source_tag.get_column('tag_type_name') | html %]</a></td>
     <td><a href="[% c.uri_for(c.controller('Sources').action_for('details'),
-                 [ source_tag.source.id ]) %]">[% source_tag.source.display_name | html %]</a></td>
+                 [ source_tag.get_column('source_id') ]) %]">[% source_tag.get_column('source_name') | html %]</a></td>
   </tr>
   [% END %]
 </table>
