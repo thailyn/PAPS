@@ -1,5 +1,40 @@
 This file documents the revision history for Perl extension PAPS.
 
+0.009  Mon Dec 26 21:59:50 2011 -0500
+  New features:
+    - Added support for References and Work References.  The sidebar has links
+      to pages that list all references or allow editing references.
+    - The details page for a work lists all references that work references,
+      as well as all works that reference that work.  The edit page for a work
+      allows editing existing references (what works that work references), as
+      well as adding new references.
+    - Added support for Source Category Types, Source Categories, Source Tag
+      Types, and Source Tags.  The sidebar has links to pages to list, create,
+      and edit these objects, as appropriate.  All of these objects are
+      related to specific Sources.
+    - The Source details page lists all related Source Category Types, Source
+      Categories, Source Tag Types, and Source Tags.  The edit page for
+      Sources allows creating new and editing current Source Category Types
+      and Source Tag Types.
+    - The Works details page lists all associated Source Categories and Source
+      Tags.  The edit page for Works allows creating new related categories
+      and tags.  These can not currently be edited from the Works page, as all
+      of the fields in these tables are part of the primary keys for those
+      tables.
+    - The list of authors on the Works details page are now sorted by author
+      position.
+    - The list of references on the Works details and edit pages are now
+      sorted by chapter then rank.
+    - Change the default layout for the works graph so the resulting image is
+      smaller.
+    - Updated the works graph to use a random start for the initial work's
+      position, so the graph is different each time it is drawn.
+    - The nodes in the works graph are now colored based on each work's
+      references.  If the total number of references is not known, the node is
+      given a red border.  If the total number is known but not all are added,
+      it is given a yellow border.  Otherwise, the node is given a black
+      border.
+
 0.008  Sun Aug 23 17:48:02 2011 -0400
   New features:
     - Added support for Work Sources.  The sidebar has links to pages to
