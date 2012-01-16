@@ -145,6 +145,7 @@ sub do_edit :Chained('work') :PathPart('do_edit') :Args(0) {
             title => $params->{title},
             subtitle => $params->{subtitle} || undef,
             edition => $params->{edition} || undef,
+            year => $params->{year} || undef,
             num_references => $params->{num_references} || undef,
             doi => $params->{doi} || undef,
             work_type_id => $params->{work_type} || undef,
