@@ -19,6 +19,10 @@
     <td>[% requested_work.edition | html %]</td>
   </tr>
   <tr>
+    <th>Year:</th>
+    <td>[% requested_work.year | html %]</td>
+  </tr>
+  <tr>
     <th>DOI:</th>
     <td>[% '<a href="' _ requested_work.doi_url _ '">' _ requested_work.doi _ '</a>' IF requested_work.doi %]</td>
   </tr>

@@ -16,6 +16,10 @@
       <td><input type="text" name="edition" value="[% work.edition %]"></td>
     </tr>
     <tr>
+      <td>Year:</td>
+      <td><input type="text" name="year" value="[% work.year %]"></td>
+    </tr>
+    <tr>
       <td>Num References:</td>
       <td><input type="text" name="num_references" value="[% work.num_references %]"></td>
     </tr>
