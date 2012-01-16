@@ -27,7 +27,7 @@ sub base :Chained('/') :PathPart('people') :CaptureArgs(0) {
     my ($self, $c) = @_;
 
     # Store the ResultSet in stash so it's available for other methods
-    $c->stash(people_rs => $c->model('DB::People'));
+    $c->stash(people_rs => $c->model('DB::Person'));
 
     ## Print a message to the debug log
     #$c->log->debug('*** INSIDE PEOPLE BASE METHOD ***');
@@ -144,7 +144,7 @@ sub do_create :Chained('base') :PathPart('do_create') :Args(0) {
     my $last_name = $c->request->params->{last_name};
 
     # Create the work
-    my $person = $c->model('DB::People')->create({
+    my $person = $c->model('DB::Person')->create({
             first_name => $first_name,
             middle_name => $middle_name,
             last_name => $last_name,
@@ -173,7 +173,7 @@ sub list :Local {
 
     # Retrieve all of the people records as people model objects and store in the
     # stash where they can be accessed by the TT template
-    $c->stash(people => [$c->model('DB::People')->all]);
+    $c->stash(people => [$c->model('DB::Person')->all]);
 
     # Set the TT template to use.
     $c->stash(template => 'people/list.tt2');

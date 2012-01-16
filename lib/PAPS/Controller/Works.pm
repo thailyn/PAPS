@@ -34,7 +34,7 @@ sub base :Chained('/') :PathPart('works') :CaptureArgs(0) {
     $c->stash(reference_types_rs => $c->model('DB::ReferenceType'));
     $c->stash(source_tags_rs => $c->model('DB::SourceTag'));
     $c->stash(source_categories_rs => $c->model('DB::SourceCategory'));
-    $c->stash(people_rs => $c->model('DB::People'));
+    $c->stash(people_rs => $c->model('DB::Person'));
     $c->stash(sources_rs => $c->model('DB::Source'));
 
     ## Print a message to the debug log
