@@ -560,7 +560,7 @@ sub graph :Chained('base') :PathPart('graph') :Args(0) {
 
     while (my $work = $works_rs->next) {
         #$c->log->debug($work->display_name);
-        my ($outline_color, $fill_color, $node_style);
+        my ($outline_color, $fill_color, $node_style, $node_label);
         if (!$work->num_references) {
             $outline_color = 'red';
             $node_style = 'filled';
@@ -576,7 +576,11 @@ sub graph :Chained('base') :PathPart('graph') :Args(0) {
             $node_style = 'filled';
             $fill_color = 'gray';
         }
-        $g->add_node($work->work_id, label => $work->display_name,
+
+        $node_label = $work->display_name;
+        $node_label .= " (" . $work->year . ")" if $work->year;
+
+        $g->add_node($work->work_id, label => $node_label,
                      shape => 'record', style => $node_style,
                      color => $outline_color, fillcolor => $fill_color);
     }
@@ -657,7 +661,7 @@ sub graph2 :Chained('base') :PathPart('graph2') :Args(0) {
 
     while (my $work = $works_rs->next) {
         #$c->log->debug($work->display_name);
-        my ($outline_color, $fill_color, $node_style);
+        my ($outline_color, $fill_color, $node_style, $node_label);
         if (!$work->num_references) {
             $outline_color = 'red';
             $node_style = 'filled';
@@ -673,6 +677,10 @@ sub graph2 :Chained('base') :PathPart('graph2') :Args(0) {
             $node_style = 'filled';
             $fill_color = 'gray';
         }
+
+        $node_label = $work->display_name;
+        $node_label .= " (" . $work->year . ")" if $work->year;
+
         my $author_list = "None";
         if ($work->author_count > 0) {
             $author_list = $work->author_list;
@@ -715,7 +723,7 @@ sub graph2 :Chained('base') :PathPart('graph2') :Args(0) {
         my $label = qq(<
 <table border="0" >
   <tr>
-    <td align="left">) . $work->display_name . qq(</td>
+    <td align="left">$node_label</td>
   </tr>
   <tr>
     <td align="left"><i>Authors: $author_list</i></td>
