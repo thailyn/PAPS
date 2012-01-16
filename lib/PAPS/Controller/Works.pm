@@ -2,6 +2,8 @@ package PAPS::Controller::Works;
 use Moose;
 use namespace::autoclean;
 use GraphViz;
+use GraphViz2;
+use File::Temp ();
 
 BEGIN {extends 'Catalyst::Controller'; }
 
@@ -623,6 +625,177 @@ sub graph :Chained('base') :PathPart('graph') :Args(0) {
 
     # export the graph
     $g->as_png($c->path_to('root', 'static', 'images', 'works.png')->stringify);
+
+    $c->stash(template => 'works/graph.tt2');
+}
+
+
+=head2 graph2
+
+TODO: Describe me
+
+=cut
+
+sub graph2 :Chained('base') :PathPart('graph2') :Args(0) {
+    my ($self, $c) = @_;
+
+    my $g = GraphViz2->new(
+        global => { directed => 1, format => 'png' },
+        graph => {
+            start => 'random',
+            layout => 'sfdp',
+            overlap => 'scalexy',
+        },
+        #verbose => 1,
+
+        #layout => 'sfdp',
+        #overlap => 'scalexy', # 'false' works well but makes a big graph
+        #random_start => 'true'
+        );
+    my $works_rs = $c->stash->{works_rs};
+
+    while (my $work = $works_rs->next) {
+        #$c->log->debug($work->display_name);
+        my ($outline_color, $fill_color, $node_style);
+        if (!$work->num_references) {
+            $outline_color = 'red';
+            $node_style = 'filled';
+            $fill_color = 'gray';
+        }
+        elsif ($work->num_references != $c->model('DB::WorkReference')->search({ referencing_work_id => $work->work_id})->count) {
+            $outline_color = 'yellow';
+            $node_style = 'filled';
+            $fill_color = 'gray';
+        }
+        else {
+            $outline_color = 'black';
+            $node_style = 'filled';
+            $fill_color = 'gray';
+        }
+        my $author_list = "None";
+        if ($work->author_count > 0) {
+            $author_list = $work->author_list;
+            $author_list = substr($author_list, 0, 70) . "..." if length($author_list) > 73;
+        }
+
+        #my $tags_rs = $work->search_related_rs("source_work_tags", { },
+        #                                       { join => { tag => [ 'source', 'tag_type' ] },
+        #                                         '+select' => [ 'tag.name', 'source.id', 'source.name', 'tag_type.id', 'tag_type.name' ],
+        #                                         '+as'     => [ 'tag_name', 'source_id', 'source_name', 'tag_type_id', 'tag_type_name' ],
+        #                                         order_by  => [ 'source.name', 'tag_type.name', 'me.name' ] } );
+        #my $tag_list = "";
+        #while (my $tag = $tags_rs->next) {
+        #    $tag_list .= ", " unless $tag_list eq "";
+        #    $tag_list .= $tag->get_column('tag_name') . " (" . $tag->get_column('tag_type_name')
+        #        . " | " . $tag->get_column('source_name') . ")";
+        #}
+
+        my $category_list = "None";
+        my @categories;
+        foreach my $category ($work->source_categories) {
+            push @categories, $category->display_name;
+        }
+        if (scalar @categories > 0) {
+            $category_list = join(', ', @categories);
+            $category_list = substr($category_list, 0, 60) . "..." if length($category_list) > 63;
+        }
+
+        my $tag_list = "None";
+        my @tags;
+        foreach my $tag ($work->source_tags) {
+            push @tags, $tag->display_name;
+        }
+        if (scalar @tags > 0) {
+            $tag_list = join(', ', @tags);
+            $tag_list = substr($tag_list, 0, 60) . "..." if length($tag_list) > 63;
+        }
+
+
+        my $label = qq(<
+<table border="0" >
+  <tr>
+    <td align="left">) . $work->display_name . qq(</td>
+  </tr>
+  <tr>
+    <td align="left"><i>Authors: $author_list</i></td>
+  </tr>
+  <tr>
+    <td align="left">Categories: $category_list</td>
+  </tr>
+  <tr>
+    <td align="left">Tags: $tag_list</td>
+  </tr>
+</table>>);
+        $label = join('', split(/\n/, $label));
+        #$c->log->debug("label: $label");
+        $g->add_node(name => $work->work_id, label => $label,
+                     shape => 'record', style => $node_style,
+                     color => $outline_color, fillcolor => $fill_color);
+    }
+
+    # get the list of references
+    my $ref_rs = $c->model('DB::WorkReference')->search(undef,
+                                                        { order_by => 'referencing_work_id'});
+
+    # Create edges for references, either by creating an  edge between two
+    # existing works, or creating a node for the referenced work that does not
+    # exist and creating an edge to that.
+    my $ref_work_id = -1;
+    my $ref_num = 0;
+    while (my $ref = $ref_rs->next) {
+        # keep track of what number reference this is for a work, so we can
+        # index each reference that does not have a referenced_work_id with a
+        # number.
+        if ($ref->referencing_work_id != $ref_work_id) {
+            $ref_work_id = $ref->referencing_work_id;
+            $ref_num = 0;
+        }
+
+        #$c->log->debug($ref->id . "\t" . $ref->referencing_work_id . "\t" .
+        #               ($ref->referenced_work_id || "NULL") . "\t" . $ref->reference_type_id . "\t" .
+        #               $ref->rank . "\t" . ($ref->chapter || "NULL") . "\t" . ($ref->reference_text || "NULL"));
+
+        if ($ref->referenced_work_id) {
+            # if the referenced work exists, simply create an edge between them
+            $g->add_edge(from => $ref->referencing_work_id, to => $ref->referenced_work_id);
+        }
+        else {
+            # if the referenced work does not exist, create a new node an an
+            # edge to it
+            my $node_name = $ref->referencing_work_id . "-" . $ref_num;
+
+            # some of the reference_text values throw an error when used as the
+            # node name or able, so leave that out until we can scrub the text
+            # properly
+            $g->add_node(name => $node_name, label => $node_name, shape => 'record', style => 'dotted'); # label => $ref->reference_text,
+            $g->add_edge(from => $ref->referencing_work_id, to => $node_name);
+        }
+        $ref_num++;
+    }
+
+    #$c->log->debug("*** DEBUG *** Home path: " . $c->config->{home});
+    #$c->log->debug("*** DEBUG *** Sample path: " . $c->path_to('root', 'static', 'images', 'works.png'));
+
+    # export the graph
+    my $format = "png";
+    my $output_file = $c->path_to('root', 'static', 'images', 'works.png')->stringify;
+    #$c->log->debug($output_file);
+    #$g->as_png($c->path_to('root', 'static', 'images', 'works.png')->stringify);
+    #$g->run(format => 'svg', output_file => $output_file);
+    my $gv_command = join('', @{$g->command->print}) . "}\n";
+
+    #$c->log->debug("graphviz command: " . $gv_command);
+    #$c->log->debug("diver: " . $g->global->{driver});
+    #$c->log->debug("dot_output: " . $g->dot_output());
+
+    my $fh = File::Temp->new(EXLOCK => 0);
+    my $input_file = $fh->filename;
+
+    binmode $fh;
+    print $fh $gv_command;
+    close $fh;
+
+    system($g->global->{driver}, "-T$format", "-o$output_file", $input_file);
 
     $c->stash(template => 'works/graph.tt2');
 }
