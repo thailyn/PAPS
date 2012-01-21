@@ -629,8 +629,10 @@ sub graph :Chained('base') :PathPart('graph') :Args(0) {
     #$c->log->debug("*** DEBUG *** Sample path: " . $c->path_to('root', 'static', 'images', 'works.png'));
 
     # export the graph
-    $g->as_png($c->path_to('root', 'static', 'images', 'works.png')->stringify);
+    my $output_file_name = 'works.png';
+    $g->as_png($c->path_to('root', 'static', 'images', $output_file_name)->stringify);
 
+    $c->stash(graph_file_name => $output_file_name);
     $c->stash(template => 'works/graph.tt2');
 }
 
@@ -715,7 +717,8 @@ sub graph2 :Chained('base') :PathPart('graph2') :Args(0) {
 
     # export the graph
     my $format = "png";
-    my $output_file = $c->path_to('root', 'static', 'images', 'works.png')->stringify;
+    my $output_file_name = 'works.png';
+    my $output_file = $c->path_to('root', 'static', 'images', $output_file_name)->stringify;
     #$c->log->debug($output_file);
     #$g->as_png($c->path_to('root', 'static', 'images', 'works.png')->stringify);
     #$g->run(format => 'svg', output_file => $output_file);
@@ -734,6 +737,7 @@ sub graph2 :Chained('base') :PathPart('graph2') :Args(0) {
 
     system($g->global->{driver}, "-T$format", "-o$output_file", $input_file);
 
+    $c->stash(graph_file_name => $output_file_name);
     $c->stash(template => 'works/graph.tt2');
 }
 
