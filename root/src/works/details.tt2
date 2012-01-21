@@ -172,6 +172,10 @@
 </table>
 
 <br />
+<div>Graph</div>
+<img src="[% c.uri_for("/static/images/$graph_file_name") %]" alt="Works Graph" />
+
+<br />
 
 <a href="[% c.uri_for(c.controller('works').action_for('edit_form'),
          [requested_work.work_id ]) %]">Edit</a>
