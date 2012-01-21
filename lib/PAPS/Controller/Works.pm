@@ -809,6 +809,22 @@ sub graph2 :Chained('base') :PathPart('graph2') :Args(0) {
     $c->stash(template => 'works/graph.tt2');
 }
 
+=head2 create_node_from_work_id
+
+TODO: Describe me
+
+=cut
+
+sub create_node_from_work_id {
+    my ($c, $work_id) = @_;
+
+    my $work = $c->stash->{works_rs}->find({ work_id => $work_id },
+                                            { key => 'primary' });
+
+    return undef if (!$work);
+    return create_node_from_work($c, $work);
+}
+
 =head2 create_node_from_work
 
 TODO: Describe me
