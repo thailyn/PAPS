@@ -75,8 +75,10 @@ sub details :Chained('work') :PathPart('') :Args(0) {
     my $matching_work = $c->model('DB::Work')
         ->find({work_id => {'=', $work_id}});
 
-    #$c->stash(work_id => $requested_work);
     $c->stash(requested_work => $matching_work);
+
+    my $graph_file_name = create_work_graph($c, $c->stash->{work});
+    $c->stash(graph_file_name => $graph_file_name);
 
     # Retrieve all of the work records as work model objects and store in the
     # stash where they can be accessed by the TT template
