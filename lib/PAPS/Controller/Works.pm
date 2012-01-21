@@ -661,85 +661,13 @@ sub graph2 :Chained('base') :PathPart('graph2') :Args(0) {
 
     while (my $work = $works_rs->next) {
         #$c->log->debug($work->display_name);
-        my ($outline_color, $fill_color, $node_style, $node_label);
-        if (!$work->num_references) {
-            $outline_color = 'red';
-            $node_style = 'filled';
-            $fill_color = 'gray';
-        }
-        elsif ($work->num_references != $c->model('DB::WorkReference')->search({ referencing_work_id => $work->work_id})->count) {
-            $outline_color = 'yellow';
-            $node_style = 'filled';
-            $fill_color = 'gray';
-        }
-        else {
-            $outline_color = 'black';
-            $node_style = 'filled';
-            $fill_color = 'gray';
-        }
+        my $work_node = create_node_from_work($c, $work);
 
-        $node_label = $work->display_name;
-        $node_label .= " (" . $work->year . ")" if $work->year;
-
-        my $author_list = "None";
-        if ($work->author_count > 0) {
-            $author_list = $work->author_list;
-            $author_list = substr($author_list, 0, 70) . "..." if length($author_list) > 73;
-        }
-
-        #my $tags_rs = $work->search_related_rs("source_work_tags", { },
-        #                                       { join => { tag => [ 'source', 'tag_type' ] },
-        #                                         '+select' => [ 'tag.name', 'source.id', 'source.name', 'tag_type.id', 'tag_type.name' ],
-        #                                         '+as'     => [ 'tag_name', 'source_id', 'source_name', 'tag_type_id', 'tag_type_name' ],
-        #                                         order_by  => [ 'source.name', 'tag_type.name', 'me.name' ] } );
-        #my $tag_list = "";
-        #while (my $tag = $tags_rs->next) {
-        #    $tag_list .= ", " unless $tag_list eq "";
-        #    $tag_list .= $tag->get_column('tag_name') . " (" . $tag->get_column('tag_type_name')
-        #        . " | " . $tag->get_column('source_name') . ")";
-        #}
-
-        my $category_list = "None";
-        my @categories;
-        foreach my $category ($work->source_categories) {
-            push @categories, $category->display_name;
-        }
-        if (scalar @categories > 0) {
-            $category_list = join(', ', @categories);
-            $category_list = substr($category_list, 0, 60) . "..." if length($category_list) > 63;
-        }
-
-        my $tag_list = "None";
-        my @tags;
-        foreach my $tag ($work->source_tags) {
-            push @tags, $tag->display_name;
-        }
-        if (scalar @tags > 0) {
-            $tag_list = join(', ', @tags);
-            $tag_list = substr($tag_list, 0, 60) . "..." if length($tag_list) > 63;
-        }
-
-
-        my $label = qq(<
-<table border="0" >
-  <tr>
-    <td align="left">$node_label</td>
-  </tr>
-  <tr>
-    <td align="left"><i>Authors: $author_list</i></td>
-  </tr>
-  <tr>
-    <td align="left">Categories: $category_list</td>
-  </tr>
-  <tr>
-    <td align="left">Tags: $tag_list</td>
-  </tr>
-</table>>);
-        $label = join('', split(/\n/, $label));
         #$c->log->debug("label: $label");
-        $g->add_node(name => $work->work_id, label => $label,
-                     shape => 'record', style => $node_style,
-                     color => $outline_color, fillcolor => $fill_color);
+        $g->add_node(name => $work_node->{'name'}, label => $work_node->{'label'},
+                     shape => $work_node->{'shape'}, style => $work_node->{'node_style'},
+                     color => $work_node->{'outline_color'},
+                     fillcolor => $work_node->{'fill_color'});
     }
 
     # get the list of references
