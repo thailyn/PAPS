@@ -809,6 +809,97 @@ sub graph2 :Chained('base') :PathPart('graph2') :Args(0) {
     $c->stash(template => 'works/graph.tt2');
 }
 
+=head2 create_node_from_work
+
+TODO: Describe me
+
+=cut
+sub create_node_from_work {
+    my ($c, $work) = @_;
+    my $work_node = {};
+
+    $work_node->{'name'} = $work->work_id;
+    $work_node->{'shape'} = 'record';
+
+    if (!$work->num_references) {
+        $work_node->{'outline_color'} = 'red';
+        $work_node->{'node_style'} = 'filled';
+        $work_node->{'fill_color'} = 'gray';
+    }
+    elsif ($work->num_references != $c->model('DB::WorkReference')->search({ referencing_work_id => $work->work_id})->count) {
+        $work_node->{'outline_color'} = 'yellow';
+        $work_node->{'node_style'} = 'filled';
+        $work_node->{'fill_color'} = 'gray';
+    }
+    else {
+        $work_node->{'outline_color'} = 'black';
+        $work_node->{'node_style'} = 'filled';
+        $work_node->{'fill_color'} = 'gray';
+    }
+
+    my $node_label;
+    $node_label = $work->display_name;
+    $node_label .= " (" . $work->year . ")" if $work->year;
+
+    my $author_list = "None";
+    if ($work->author_count > 0) {
+        $author_list = $work->author_list;
+        $author_list = substr($author_list, 0, 70) . "..." if length($author_list) > 73;
+    }
+
+    #my $tags_rs = $work->search_related_rs("source_work_tags", { },
+    #                                       { join => { tag => [ 'source', 'tag_type' ] },
+    #                                         '+select' => [ 'tag.name', 'source.id', 'source.name', 'tag_type.id', 'tag_type.name' ],
+    #                                         '+as'     => [ 'tag_name', 'source_id', 'source_name', 'tag_type_id', 'tag_type_name' ],
+    #                                         order_by  => [ 'source.name', 'tag_type.name', 'me.name' ] } );
+    #my $tag_list = "";
+    #while (my $tag = $tags_rs->next) {
+    #    $tag_list .= ", " unless $tag_list eq "";
+    #    $tag_list .= $tag->get_column('tag_name') . " (" . $tag->get_column('tag_type_name')
+    #        . " | " . $tag->get_column('source_name') . ")";
+    #}
+
+    my $category_list = "None";
+    my @categories;
+    foreach my $category ($work->source_categories) {
+        push @categories, $category->display_name;
+    }
+    if (scalar @categories > 0) {
+        $category_list = join(', ', @categories);
+        $category_list = substr($category_list, 0, 60) . "..." if length($category_list) > 63;
+    }
+
+    my $tag_list = "None";
+    my @tags;
+    foreach my $tag ($work->source_tags) {
+        push @tags, $tag->display_name;
+    }
+    if (scalar @tags > 0) {
+        $tag_list = join(', ', @tags);
+        $tag_list = substr($tag_list, 0, 60) . "..." if length($tag_list) > 63;
+    }
+
+
+    $work_node->{'label'} = qq(<
+<table border="0" >
+  <tr>
+    <td align="left">$node_label</td>
+  </tr>
+  <tr>
+    <td align="left"><i>Authors: $author_list</i></td>
+  </tr>
+  <tr>
+    <td align="left">Categories: $category_list</td>
+  </tr>
+  <tr>
+    <td align="left">Tags: $tag_list</td>
+  </tr>
+</table>>);
+    $work_node->{'label'} = join('', split(/\n/, $work_node->{'label'}));
+
+    return $work_node;
+}
+
 
 =head1 AUTHOR
 
