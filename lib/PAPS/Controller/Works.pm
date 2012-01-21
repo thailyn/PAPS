@@ -750,6 +750,26 @@ TODO: Describe me
 sub graph_work :Chained('work') :PathPart('graph2') :Args(0) {
     my ($self, $c) = @_;
 
+    #my $work_id = $c->stash->{work_id};
+    my $work = $c->stash->{work};
+
+    my $output_file_name = create_work_graph($c, $work);
+
+    $c->stash(graph_file_name => $output_file_name);
+    $c->stash(template => 'works/graph.tt2');
+}
+
+=head2 create_work_graph
+
+Given the Catalyst object and a DB::Work object, create a graph of the work's
+references.  Save it to a file and return the file name.
+
+=cut
+
+sub create_work_graph {
+    my ($c, $work) = @_;
+    my $work_id = $work->id;
+
     my $g = GraphViz2->new(
         global => { directed => 1, format => 'png' },
         graph => {
@@ -763,10 +783,6 @@ sub graph_work :Chained('work') :PathPart('graph2') :Args(0) {
         #overlap => 'scalexy', # 'false' works well but makes a big graph
         #random_start => 'true'
         );
-
-    #my $works_rs = $c->stash->{works_rs};
-    my $work_id = $c->stash->{work_id};
-    my $work = $c->stash->{work};
 
     #$c->log->debug($work->display_name);
     my $work_node = create_node_from_work($c, $work);
@@ -852,8 +868,7 @@ sub graph_work :Chained('work') :PathPart('graph2') :Args(0) {
 
     system($g->global->{driver}, "-T$format", "-o$output_file", $input_file);
 
-    $c->stash(graph_file_name => $output_file_name);
-    $c->stash(template => 'works/graph.tt2');
+    return $output_file_name;
 }
 
 =head2 create_node_from_work_id
