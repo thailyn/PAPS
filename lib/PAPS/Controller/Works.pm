@@ -917,9 +917,9 @@ sub create_node_from_work_id {
     my ($c, $work_id) = @_;
 
     my $work = $c->stash->{works_rs}->find({ work_id => $work_id },
-                                            { key => 'primary' });
+                                           { key => 'primary' });
 
-    return undef if (!$work);
+    return undef unless ($work);
     return create_node_from_work($c, $work);
 }
 
