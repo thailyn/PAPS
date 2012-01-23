@@ -1,5 +1,24 @@
 This file documents the revision history for Perl extension PAPS.
 
+0.010  Sun Jan 22 21:34:17 2012 -0500
+  New features:
+    - Added a new field, "year" for works.  This should contain the year that
+      that work was released.  This field is optional.  A text field for this
+      datum is not present when creating a new work, but is available when
+      editing a work.
+    - Added a new "graph2" page at /works/graph2 that uses a newew module as
+      the GraphViz interface.  This module has more features, such as allowing
+      more complex node labels.  The labels on this page display the work
+      title and year (if defined) on the first row, authors on the second, and
+      categories and tags on the third and fourth lines.  The categories and
+      tags are truncated to 60 characters so longer lists do not make the node
+      wider.
+    - On a work's details page, display a graph showing that work, its
+      references, and what references it.  This graph uses the newer "graph2"
+      module.
+    - Updated to support schema changes in PAPS::Database::papsdb::Schema
+      version 0.004.
+
 0.009  Mon Dec 26 21:59:50 2011 -0500
   New features:
     - Added support for References and Work References.  The sidebar has links
