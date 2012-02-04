@@ -51,7 +51,7 @@ user does not exist, the method dies.
 
 =cut
 
-sub work :Chained('base'): PathPart('') :CaptureArgs(1) {
+sub user :Chained('base'): PathPart('') :CaptureArgs(1) {
     my ($self, $c, $user_id) = @_;
 
     my $user = $c->stash->{users_rs}->find({ id => $user_id },
