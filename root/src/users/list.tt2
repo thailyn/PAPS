@@ -42,8 +42,7 @@
     <td>[% user.email | html %]</td>
     <td>[% user.date_created | html %]</td>
     <td>[% user.is_active | html %]</td>
-    <td><a href="[% c.uri_for(c.controller('Users').action_for('details'),
-                 [ user.id ]) %]">View</a></td>
+    <td><a href="[% c.uri_for(user.id) %]">View</a></td>
   </tr>
 [% END -%]
 </table>
