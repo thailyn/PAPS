@@ -1,0 +1,89 @@
+[% # Provide a title -%]
+[% META title = 'User Details' -%]
+
+[% USE Dumper(Indent=1) -%]
+
+<h1>User Details</h1>
+
+<table>
+  <tr>
+    <th>User Name</th>
+    <td>[% requested_user.name | html %]</td>
+  </tr>
+  <tr>
+    <th>Password</th>
+    <td>[% requested_user.password_hash | html %]</td>
+  </tr>
+  <tr>
+    <th>First Name</th>
+    <td>[% requested_user.first_name | html %]</td>
+  </tr>
+  <tr>
+    <th>Middle Name</th>
+    <td>[% requested_user.middle_name | html %]</td>
+  </tr>
+  <tr>
+    <th>Last Name</th>
+    <td>[% requested_user.last_name | html %]</td>
+  </tr>
+  <tr>
+    <th>Email</th>
+    <td>[% requested_user.email | html %]</td>
+  </tr>
+  <tr>
+    <th>Date Created</th>
+    <td>[% requested_user.date_created | html %]</td>
+  </tr>
+  <tr>
+    <th>Is Active</th>
+    <td>[% requested_user.is_active | html %]</td>
+  </tr>
+  <tr>
+    <th>Details</th>
+  </tr>
+</table>
+
+<p />
+
+<div>Group Information</div>
+<table>
+  <tr>
+    <th>Id</th>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Details</th>
+  </tr>
+[% FOREACH group IN requested_user.groups %]
+  <tr>
+    <td>[% group.id | html %]</td>
+    <td>[% group.name | html %]</td>
+    <td>[% group.description | html %]</td>
+    <td></td>
+  </tr>
+[% END %]
+</table>
+
+<p />
+
+<div>Permission Information</div>
+<table>
+  <tr>
+    <th>Id</th>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Details</th>
+  </tr>
+[% FOREACH permission IN requested_user.permissions %]
+  <tr>
+    <td>[% permission.id | html %]</td>
+    <td>[% permission.name | html %]</td>
+    <td>[% permission.description | html %]</td>
+    <td></td>
+  </tr>
+[% END %]
+</table>
+
+<br />
+
+<a href="[% c.uri_for(c.controller('users').action_for('edit_form'),
+         [requested_user.id ]) %]">Edit</a>

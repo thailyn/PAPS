@@ -63,6 +63,25 @@ sub user :Chained('base'): PathPart('') :CaptureArgs(1) {
     $c->stash(user => $user);
 }
 
+=head2 details
+
+Show the details for a specific user.
+
+=cut
+
+sub details :Chained('user') :PathPart('') :Args(0) {
+    my ($self, $c) = @_;
+
+    my $user_id = $c->stash->{user_id};
+
+    my $matching_user = $c->model('DB::User')
+        ->find({id => {'=', $user_id}});
+
+    $c->stash(requested_user => $matching_user);
+
+    $c->stash(template => 'users/details.tt2');
+}
+
 =head2 list
 
 Fetch all user objects and pass to users/list.tt2 in stash to be displayed
