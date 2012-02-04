@@ -1,0 +1,49 @@
+[% # Provide a title -%]
+[% META title = 'Users List' -%]
+
+<table>
+<tr>
+  <th>
+    User Name
+  </th>
+  <th>
+    Password
+  </th>
+  <th>
+    First Name
+  </th>
+  <th>
+    Middle Name
+  </th>
+  <th>
+    Last Name
+  </th>
+  <th>
+    Email
+  </th>
+  <th>
+    Date Created
+  </th>
+  <th>
+    Is Active
+  </th>
+  <th>
+    Details
+  </th>
+</tr>
+[% # Display each work in a table row %]
+[% FOREACH user IN users -%]
+  <tr>
+    <td>[% user.name | html %]</td>
+    <td>[% user.password_hash | html %]</td>
+    <td>[% user.first_name | html %]</td>
+    <td>[% user.middle_name | html %]</td>
+    <td>[% user.last_name | html %]</td>
+    <td>[% user.email | html %]</td>
+    <td>[% user.date_created | html %]</td>
+    <td>[% user.is_active | html %]</td>
+    <td><a href="[% c.uri_for(c.controller('Users').action_for('details'),
+                 [ user.id ]) %]">View</a></td>
+  </tr>
+[% END -%]
+</table>
