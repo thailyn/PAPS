@@ -84,6 +84,58 @@ sub details :Chained('user') :PathPart('') :Args(0) {
 }
 
 
+=head2 edit_form
+
+=cut
+
+sub edit_form :Chained('user') :PathPart('edit') :Args(0) {
+    my ($self, $c) = @_;
+
+    my $user_id = $c->stash->{user_id};
+
+    my $matching_user = $c->model('DB::User')
+        ->find({id => {'=', $user_id}});
+
+    $c->stash(user => $matching_user);
+
+    # Set the TT template to use
+    $c->stash(template => 'users/edit.tt2');
+}
+
+
+=head2 do_edit
+
+Take information from form and update a work in the database.
+
+=cut
+
+sub do_edit :Chained('user') :PathPart('do_edit') :Args(0) {
+    my ($self, $c) = @_;
+
+    if (lc $c->request->method ne 'post') {
+        return;
+    }
+
+    my $params = $c->request->params;
+    my $user = $c->stash->{user};
+
+    if (lc $params->{Submit} eq 'submit') {
+        $user->update({
+            name => $params->{name},
+            #password_hash => $params->{password} || undef,
+            first_name => $params->{first_name} || undef,
+            middle_name => $params->{middle_name} || undef,
+            last_name => $params->{last_name} || undef,
+            email => $params->{email} || undef,
+                      });
+    }
+
+    return $c->res->redirect(
+        $c->uri_for($c->controller('Users')->action_for('details'),
+                    [ $user->id ]));
+}
+
+
 =head2 create_form
 
 =cut
