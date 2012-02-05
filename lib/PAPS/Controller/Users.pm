@@ -1,6 +1,7 @@
 package PAPS::Controller::Users;
 use Moose;
 use namespace::autoclean;
+use Data::Dumper;
 
 BEGIN {extends 'Catalyst::Controller'; }
 
@@ -81,6 +82,56 @@ sub details :Chained('user') :PathPart('') :Args(0) {
 
     $c->stash(template => 'users/details.tt2');
 }
+
+
+=head2 create_form
+
+=cut
+
+sub create_form :Chained('base') :PathPart('new') :Args(0) {
+    my ($self, $c) = @_;
+
+    # Set the TT template to use
+    $c->stash(template => 'users/new.tt2');
+}
+
+
+=head2 do_create
+
+Take information from form and add to database
+
+=cut
+
+sub do_create :Chained('base') :PathPart('do_create') :Args(0) {
+    my ($self, $c) = @_;
+
+    # Retrieve the values from the form
+    my $name = $c->request->params->{name};
+    my $password = $c->request->params->{password};
+    my $first_name = $c->request->params->{first_name} || undef;
+    my $middle_name = $c->request->params->{middle_name} || undef;
+    my $last_name = $c->request->params->{last_name} || undef;
+    my $email = $c->request->params->{email} || undef;
+
+    # Create the user
+    my $user = $c->model('DB::User')->create({
+            name => $name,
+            password_hash => $password,
+            first_name => $first_name,
+            middle_name => $middle_name,
+            last_name => $last_name,
+            email => $email,
+            is_active => 1,
+        });
+
+    #$c->log->debug("password_hash: " . Dumper($user->column_info('password_hash')));
+    #$c->log->debug("date_created: " . Dumper($user->column_info('date_created')));
+
+    # Store new model object in stash and set template
+    $c->stash(user => $user,
+              template => 'users/create_done.tt2');
+}
+
 
 =head2 list
 

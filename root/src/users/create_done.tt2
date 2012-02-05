@@ -1,0 +1,8 @@
+[% # Set the page title. -%]
+[% META title = 'User Created' %]
+
+[% # Output information about the record that was added. -%]
+<p>Created user '[% user.name | html %]' with date_created [% user.date_created | html %].
+
+[% # Provide a link back to the list page  -%]
+<p><a href="[% c.uri_for(c.controller('Users').action_for('list')) %]">Return to list.</a></p>
