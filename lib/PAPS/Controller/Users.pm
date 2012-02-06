@@ -202,6 +202,61 @@ sub list :Local {
     $c->stash(template => 'users/list.tt2');
 }
 
+=head2 login
+
+TODO: Describe me.
+
+=cut
+
+sub login :Chained('base') :PathPart('login') :Args(0) {
+    my ($self, $c) = @_;
+
+    # Set the TT template to use
+    $c->stash(template => 'users/login.tt2');
+}
+
+=head2 do_login
+
+TODO: Describe me.
+
+=cut
+
+sub do_login :Chained('base') :PathPart('do_login') :Args(0) {
+    my ($self, $c) = @_;
+
+    my $user = $c->req->params->{'name'};
+    my $password = $c->req->params->{'password'};
+
+    $c->log->debug("*** Starting login process.");
+
+    if (lc $c->req->params->{'Submit'} eq 'submit') {
+        if (defined $user) {
+            if ($c->authenticate(
+                    {
+                        name => $user,
+                        password_hash => $password
+                    })) {
+                $c->log->debug("*** User $user is now logged in with password $password.");
+            }
+            else {
+                $c->log->debug("*** User $user failed to login with password $password.");
+            }
+        }
+        else {
+            $c->log->debug("*** No supplied user name.");
+        }
+    }
+    else {
+        $c->log->debug("*** Login cancelled.");
+    }
+    #$c->response->redirect(
+    #    $c->uri_for($c->controller('Users')->action_for('list')));
+    #$c->detach();
+    #return;
+
+    $c->stash(template => 'users/do_login.tt2');
+}
+
 
 =head1 AUTHOR
 
