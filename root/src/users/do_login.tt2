@@ -1,0 +1,7 @@
+[% META title = 'Login Finished' -%]
+
+[% IF c.user_exists %]
+Hello, [% c.user.name | html %], you are logged in.
+[% ELSE %]
+You are not logged in.
+[% END %]
