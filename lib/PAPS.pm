@@ -16,6 +16,8 @@ use Catalyst qw/
     -Debug
     ConfigLoader
     Static::Simple
+
+    Authentication
 /;
 
 use lib "$ENV{HOME}/projects/PAPS-Database-papsdb-Schema/lib";
@@ -38,6 +40,23 @@ __PACKAGE__->config(
     name => 'PAPS',
     # Disable deprecated behavior needed by old applications
     disable_component_resolution_regex_fallback => 1,
+    'Plugin::Authentication' => {
+        default => {
+            credential => {
+                class => 'Password',
+                username_field => 'name',
+                password_type => 'self_check',
+                password_field => 'password_hash',
+            },
+            store => {
+                class => 'DBIx::Class',
+                user_model => 'DB::User',
+                #role_relation => 'roles',
+                #role_field => 'role',
+                use_userdata_from_session => '1',
+            }
+        }
+    },
 );
 
 # Start the application
