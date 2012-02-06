@@ -18,6 +18,9 @@ use Catalyst qw/
     Static::Simple
 
     Authentication
+    Session
+    Session::State::Cookie
+    Session::Store::FastMmap
 /;
 
 use lib "$ENV{HOME}/projects/PAPS-Database-papsdb-Schema/lib";
