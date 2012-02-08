@@ -257,6 +257,20 @@ sub do_login :Chained('base') :PathPart('do_login') :Args(0) {
     $c->stash(template => 'users/do_login.tt2');
 }
 
+=head2 logout
+
+TODO: Describe me.
+
+=cut
+
+sub logout :Chained('base') :PathPart('logout') :Args(0) {
+    my ($self, $c) = @_;
+
+    $c->logout;
+
+    $c->stash(template => 'users/logout.tt2');
+}
+
 
 =head1 AUTHOR
 
