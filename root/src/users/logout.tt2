@@ -1,0 +1,7 @@
+[% META title = 'Logout' -%]
+
+[% IF c.user_exists %]
+Unfortunately, [% c.user.name | html %], you are still logged in.
+[% ELSE %]
+You are now logged out.
+[% END %]
