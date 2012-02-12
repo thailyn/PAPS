@@ -485,6 +485,58 @@ sub do_add_source_tag :Chained('work') :PathPart('do_add_source_tag') :Args(0) {
 }
 
 
+=head2 do_edit_user_data
+
+TODO: Describe me.
+
+=cut
+
+sub do_edit_user_data :Chained('work') :PathPart('do_edit_user_data') :Args(0) {
+    my ($self, $c) = @_;
+
+    if (lc $c->request->method ne 'post') {
+        return;
+    }
+
+    my $params = $c->request->params;
+    my $work = $c->stash->{work};
+    my $user_work_data = $c->stash->{'user_work_data'};
+
+    my $read_timestamp = $params->{'read_timestamp'};
+    $c->log->debug("*** Initial read_timestamp value: " . ($read_timestamp or "undef"));
+    $read_timestamp = undef unless $params->{'read'};
+    if (!$params->{'read_timestamp'} && $params->{'read'}) {
+        $read_timestamp = "now";
+    }
+    $c->log->debug("*** Final read_timestamp value: " . ($read_timestamp or "undef"));
+
+    if (lc $params->{submit} eq 'save user info') {
+        $c->log->debug("*** In update block.");
+        if ($user_work_data) {
+            $c->log->debug("*** Going to update.");
+            $user_work_data->update({
+                read_timestamp => $read_timestamp || undef,
+                understood_rating => $params->{'understood_rating'} || undef,
+                approval_rating => $params->{'approval_rating'} || undef,
+                                    });
+        }
+        else {
+            $c->log->debug("*** Going to create.");
+            $user_work_data = $c->user->create_related('user_work_datas', {
+                work_id => $work->work_id,
+                read_timestamp => $read_timestamp || undef,
+                understood_rating => $params->{'understood_rating'} || undef,
+                approval_rating => $params->{'approval_rating'} || undef,
+                                                       });
+        }
+    }
+
+    $c->log->debug("*** Redirecting.");
+    return $c->res->redirect(
+        $c->uri_for($c->controller('works')->action_for('edit_form'),
+                    [ $work->id ]));
+}
+
 =head2 create_form
 
 =cut
