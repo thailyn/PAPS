@@ -189,7 +189,7 @@
   </tr>
   <tr>
     <th>Approval:</th>
-    <td>[% user_work_data.understood_rating | html %]</td>
+    <td>[% user_work_data.approval_rating | html %]</td>
   </tr>
 </table>
 [% ELSE %]
