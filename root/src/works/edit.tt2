@@ -298,3 +298,35 @@
     </tr>
   </form>
 </table>
+
+<br />
+<div>User Info</div>
+[% IF c.user_exists %]
+<form method="post" action="[% c.uri_for(c.controller('works').action_for('do_edit_user_data'),
+                            [ work.work_id ]) %]">
+  <table>
+    <tr>
+      <th>Read:</th>
+      <td><input type="checkbox" name="read" value="1" [% 'checked="1"' IF user_work_data.read_timestamp %]></td>
+    </tr>
+    <tr>
+      <th>Read Timestamp:</th>
+      <td><input type="text" name="read_timestamp" value="[% user_work_data.read_timestamp | html %]"> (leave blank to use the current timestamp)</td>
+    </tr>
+    <tr>
+      <th>Understood:</th>
+      <td><input type="text" name="understood_rating" value="[% user_work_data.understood_rating | html %]"></td>
+    </tr>
+    <tr>
+      <th>Approval:</th>
+      <td><input type="text" name="approval_rating" value="[% user_work_data.approval_rating | html %]"></td>
+    </tr>
+    <tr>
+      <th />
+      <td><input type="submit" name="submit" value="Save User Info" /></td>
+    </tr>
+  </table>
+</form>
+[% ELSE %]
+<a href="[% c.uri_for(c.controller('Users').action_for('login')) %]">Login</a> to edit your details for this work.
+[% END %]
