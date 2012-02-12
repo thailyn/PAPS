@@ -720,6 +720,22 @@ sub graph2 :Chained('base') :PathPart('graph2') :Args(0) {
         #random_start => 'true'
         );
     my $works_rs = $c->stash->{works_rs};
+    if ($c->user_exists) {
+      $works_rs = $works_rs->search(
+            {
+                -or => [
+                     'user_work_datas.user_id' => $c->user->id,
+                     'user_work_datas.user_id' => undef,
+                    ]
+            },
+            {
+                join => 'user_work_datas',
+                prefetch => 'user_work_datas',
+                '+select' => [ 'user_work_datas.read_timestamp', 'user_work_datas.understood_rating', 'user_work_datas.approval_rating' ],
+                '+as' => [ 'uwd_read_timestamp', 'uwd_understood_rating', 'uwd_approval_rating' ],
+            }
+            );
+    }
 
     while (my $work = $works_rs->next) {
         #$c->log->debug($work->display_name);
