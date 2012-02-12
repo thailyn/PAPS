@@ -1060,16 +1060,19 @@ sub create_node_from_work {
     if (!$work->num_references) {
         $work_node->{'outline_color'} = 'red';
         $work_node->{'node_style'} = 'filled';
-        $work_node->{'fill_color'} = 'gray';
     }
     elsif ($work->num_references != $c->model('DB::WorkReference')->search({ referencing_work_id => $work->work_id})->count) {
         $work_node->{'outline_color'} = 'yellow';
         $work_node->{'node_style'} = 'filled';
-        $work_node->{'fill_color'} = 'gray';
     }
     else {
         $work_node->{'outline_color'} = 'black';
         $work_node->{'node_style'} = 'filled';
+    }
+
+    if ($c->user_exists && $work->get_column('uwd_read_timestamp')) {
+        $work_node->{'fill_color'} = '#b3cde3';
+    } else {
         $work_node->{'fill_color'} = 'gray';
     }
 
