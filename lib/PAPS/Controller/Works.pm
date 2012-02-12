@@ -1093,6 +1093,17 @@ sub create_node_from_work {
         $tag_list = substr($tag_list, 0, 60) . "..." if length($tag_list) > 63;
     }
 
+    my $user_info = "";
+    if ($c->user_exists) {
+        $user_info .= "Date Read: " . ($work->get_column('uwd_read_timestamp') || "Never") . ", "
+            . "Understood: " . ($work->get_column('uwd_understood_rating') || "N/A") . ", "
+            . "Approval: " . ($work->get_column('uwd_approval_rating') || "N/A");
+        $user_info =
+qq(  <tr>
+    <td align="left">$user_info</td>
+  </tr>);
+    }
+
 
     $work_node->{'label'} = qq(<
 <table border="0" >
@@ -1108,6 +1119,7 @@ sub create_node_from_work {
   <tr>
     <td align="left">Tags: $tag_list</td>
   </tr>
+  $user_info
 </table>>);
     $work_node->{'label'} = join('', split(/\n/, $work_node->{'label'}));
 
