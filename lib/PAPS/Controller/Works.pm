@@ -59,6 +59,12 @@ sub work :Chained('base'): PathPart('') :CaptureArgs(1) {
 
     $c->stash(work_id => $work_id);
     $c->stash(work => $work);
+
+    if ($c->user_exists) {
+        my $user_work_data = $c->user->user_work_datas
+            ->find({work_id => {'=', $work_id}});
+        $c->stash(user_work_data => $user_work_data);
+    }
 }
 
 =head2 details
