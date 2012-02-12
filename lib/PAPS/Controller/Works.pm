@@ -1016,8 +1016,30 @@ TODO: Describe me
 sub create_node_from_work_id {
     my ($c, $work_id) = @_;
 
-    my $work = $c->stash->{works_rs}->find({ work_id => $work_id },
-                                           { key => 'primary' });
+    #my $work = $c->stash->{works_rs}->find({ work_id => $work_id },
+    #                                       { key => 'primary' });
+    my $work;
+    if (!$c->user_exists) {
+        $work = $c->model('DB::Work')
+            ->find({work_id => {'=', $work_id}});
+    }
+    else {
+        $work = $c->model('DB::Work')
+            ->find(
+            {
+                work_id => {'=', $work_id},
+                -or => [
+                     'user_work_datas.user_id' => $c->user->id,
+                     'user_work_datas.user_id' => undef,
+                    ],
+            },
+            {
+                join => 'user_work_datas',
+                prefetch => 'user_work_datas',
+                '+select' => [ 'user_work_datas.read_timestamp', 'user_work_datas.understood_rating', 'user_work_datas.approval_rating' ],
+                '+as' => [ 'uwd_read_timestamp', 'uwd_understood_rating', 'uwd_approval_rating' ],
+            });
+    }
 
     return undef unless ($work);
     return create_node_from_work($c, $work);
