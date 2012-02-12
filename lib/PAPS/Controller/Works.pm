@@ -846,6 +846,32 @@ sub create_work_graph {
     my ($c, $work) = @_;
     my $work_id = $work->id;
 
+    # If a user is logged in, replace the work with a new instance of the work
+    # that also has the user's data.  This search here can be optimized by
+    # only (always) having the work id passed in instead of a work.
+    if (!$c->user_exists) {
+        $work = $c->model('DB::Work')
+            ->find({work_id => {'=', $work_id}});
+    }
+    else {
+        $work = $c->model('DB::Work')
+            ->find(
+            {
+                work_id => {'=', $work_id},
+                -or => [
+                     'user_work_datas.user_id' => $c->user->id,
+                     'user_work_datas.user_id' => undef,
+                    ],
+            },
+            {
+                join => 'user_work_datas',
+                prefetch => 'user_work_datas',
+                '+select' => [ 'user_work_datas.read_timestamp', 'user_work_datas.understood_rating', 'user_work_datas.approval_rating' ],
+                '+as' => [ 'uwd_read_timestamp', 'uwd_understood_rating', 'uwd_approval_rating' ],
+            });
+    }
+    $work_id = $work->id;
+
     my $created_nodes = { };
 
     my $g = GraphViz2->new(
