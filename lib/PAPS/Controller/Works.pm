@@ -387,6 +387,7 @@ sub do_edit_source_category :Chained('work') :PathPart('do_edit_source_category'
     if (lc $params->{submit} eq 'edit') {
         $work_source_category->update({
             category_id => $params->{source_category_id} || undef,
+            rank => $params->{category_rank} || undef,
                                       });
     }
 
@@ -416,6 +417,7 @@ sub do_add_source_category :Chained('work') :PathPart('do_add_source_category') 
         $work->create_related('source_work_categories', {
             #work_id => $work->work_id,
             category_id => $params->{source_category_id} || undef,
+            rank => $params->{category_rank} || undef,
                               });
     }
 
