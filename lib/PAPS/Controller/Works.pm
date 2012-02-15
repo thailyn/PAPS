@@ -384,9 +384,7 @@ sub do_edit_source_category :Chained('work') :PathPart('do_edit_source_category'
     # relationship instead.
     my $work_source_category = $work->source_work_categories->find({category_id => {'=', $work_source_category_id}});
 
-    # This does not work, as source_category_id is part of the primary key, and,
-    # apparently, DBIx does not want to update those values.
-    if (lc $params->{submit} eq 'save') {
+    if (lc $params->{submit} eq 'edit') {
         $work_source_category->update({
             category_id => $params->{source_category_id} || undef,
                                       });
