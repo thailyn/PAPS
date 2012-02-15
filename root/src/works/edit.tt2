@@ -51,6 +51,8 @@
   <tr>
     <th>Rank</th>
     <th>Person</th>
+    <th>Name (Text)</th>
+    <th>Affiliation (Text)</th>
     <th /> <!-- for action buttons -->
     <th /> <!-- for action buttons -->
   </tr>
@@ -69,6 +71,8 @@
           <!-- [% people_rs.reset %] -->
         </select>
       </td>
+      <td><input type="text" name="author_name_text" value="[% work_author.author_name_text %]" /></td>
+      <td><textarea type="textarea" rows="3" cols="40" name="author_affiliation_text">[% work_author.author_affiliation_text | html %]</textarea></td>
       <td><input type="submit" name="submit" value="Save" /></td>
       <td><input type="submit" name="delete" value="Delete" disabled="disabled" /></td>
     </tr>
@@ -88,6 +92,8 @@
           <!-- [% people_rs.reset %] -->
         </select>
       </td>
+      <td><input type="text" name="author_name_text" value="" /></td>
+      <td><textarea type="textarea" rows="3" cols="40" name="author_affiliation_text"></textarea></td>
       <td><input type="submit" name="submit" value="Add" /></td>
     </tr>
   </form>
