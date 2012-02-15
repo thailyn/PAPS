@@ -223,6 +223,7 @@
 <table border=0 >
   <tr>
     <th>Name</th>
+    <th>Rank</th>
     <th /> <!-- for action buttons -->
     <th /> <!-- for action buttons -->
   </tr>
@@ -239,6 +240,7 @@
           [% END %]
           <!-- [% source_categories_rs.reset %] -->
       </td>
+      <td><input type="text" name="category_rank" value="[% source_category.rank %]" /></td>
       <td><input type="submit" name="submit" value="Edit" /></td>
       <td><input type="submit" name="delete" value="Delete" disabled="disabled" /></td>
     </tr>
@@ -256,6 +258,7 @@
           [% END %]
           <!-- [% source_categories_rs.reset %] -->
       </td>
+      <td><input type="text" name="category_rank" value="" /></td>
       <td><input type="submit" name="submit" value="Add" /></td>
     </tr>
   </form>
