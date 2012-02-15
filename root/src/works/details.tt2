@@ -47,6 +47,8 @@
   <tr>
     <th>Position</th>
     <th>Name</th>
+    <th>Name (Text)</th>
+    <th>Affiliation (Text)</th>
   </tr>
 [% FOREACH author IN requested_work.authors %]
 [%# FOREACH author IN requested_work.search_related("authors", { },
@@ -54,6 +56,8 @@
   <tr>
     <td>[% author.get_column('author_position') %]</td>
     <td><a href="[% c.uri_for("/people/$author.person_id") %]">[% author.full_name | html%]</a></td>
+    <td>[% author.get_column('author_name_text') | html%]</td>
+    <td>[% author.get_column('author_affiliation_text') | html%]</td>
   </tr>
 [% END %]
 </table>
