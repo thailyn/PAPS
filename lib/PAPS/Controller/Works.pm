@@ -190,6 +190,8 @@ sub do_edit_author :Chained('work') :PathPart('do_edit_author') :Args(1) {
         $work_author->update({
             person_id => $params->{person_id} || undef,
             author_position => $params->{author_position} || undef,
+            author_name_text => $params->{author_name_text} || undef,
+            author_affiliation_text => $params->{author_affiliation_text} || undef,
                              });
     }
 
@@ -220,6 +222,8 @@ sub do_add_author :Chained('work') :PathPart('do_add_author') :Args(0) {
             #work_id => $work->work_id,
             person_id => $params->{person_id} || undef,
             author_position => $params->{author_position} || undef,
+            author_name_text => $params->{author_name_text} || undef,
+            author_affiliation_text => $params->{author_affiliation_text} || undef,
                               });
     }
 
