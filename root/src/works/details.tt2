@@ -133,6 +133,7 @@
     <th>Name</th>
     <th>Parent Category</th>
     <th>Source</th>
+    <th>Rank</th>
   </tr>
   [% FOREACH source_category IN requested_work.source_categories %]
   <tr>
@@ -146,6 +147,7 @@
     [% END %]
     <td><a href="[% c.uri_for(c.controller('Sources').action_for('details'),
                  [ source_category.source.id ]) %]">[% source_category.source.display_name | html %]</a></td>
+    <td>[% source_category.get_column('category_rank') %]</td>
   </tr>
   [% END %]
 </table>
