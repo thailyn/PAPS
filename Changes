@@ -1,5 +1,44 @@
 This file documents the revision history for Perl extension PAPS.
 
+0.011  Sun Feb 26 14:08:42 2012 -0500
+  New features:
+    - Added new controller Users for the users table.  Functionality includes
+      viewing a list of users, creating a new user, and updating user
+      information (sans password)
+    - Added views for supported Users actions.
+    - Added support for logging in and logging out.  Corresponding actions in
+      the Users controller check the entered user name and password against
+      what is in the users table and, if successful, sets the user as logged
+      in.  After trying to log in, he is brought to a page that informs he
+      whether he has logged in successfully or not.
+    - Added dependencies for authentication modules, and added the
+      Authentication plugin in the list of plugins in PAPS.pm.
+    - Added support for sessions.  Included dependencies for the required
+      modules and the plugins to the Catalyst plugin list.
+    - Logged in users can add work metadata from the edit works page.  This
+      metadata includes whether the user has read the work, when the user read
+      the work, and ratings of how well the user understood and "approved" of
+      the work.  This metadata is displayed on a work's details page if he is
+      logged in.  If a user is not logged in, the works details page will
+      inform him he can modify his metadata on the work if he logs in, and a
+      link to the login page is provided.
+    - Display and make editable the rank for source categories (added in
+      PAPS::Database::papsdb::Schema 0.005).
+    - Display and make editable the new author metadata fields for work
+      authors, including the literal text used for an author's name and the
+      authors affiliation (new columns added in PAPS::Database::papsdb::Schema
+      0.005).
+    - A work's source categories can now be edited, meaning the name of the
+      source category can be changed after it has been added to a work.
+    - If a user is logged in, include his work metadata in the nodes in the
+      GraphViz2 graphs (on a work's details page and on the graph2 page).
+      Placeholder values are provided ("Never" or "N/A") if the user has not
+      entered information for that work.
+    - Color a work node blue in the GraphViz2 graphs if the current user has
+      read it.
+  Bug fixes:
+    - Added missing dependencies for GraphViz2 and File::Temp modules.
+
 0.010  Sun Jan 22 21:34:17 2012 -0500
   New features:
     - Added a new field, "year" for works.  This should contain the year that
