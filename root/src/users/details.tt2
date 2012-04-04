@@ -83,6 +83,30 @@
 [% END %]
 </table>
 
+<div>Collection Information</div>
+<table>
+  <tr>
+    <th>Id<th>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Created</th>
+    <th>Show with Works</th>
+    <th>Show with Work References</th>
+    <th>Show with Referenced Works</th>
+  </tr>
+[% FOREACH collection IN requested_user.collections %]
+  <tr>
+    <th>collection.id</th>
+    <th>collection.name</th>
+    <th>collection.description</th>
+    <th>collection.created_timestamp</th>
+    <th>collection.show_with_works</th>
+    <th>collection.show_with_work_references</th>
+    <th>collection.show_with_referenced_works</th>
+  </tr>
+[% END %]
+</table>
+
 <br />
 
 <a href="[% c.uri_for(c.controller('users').action_for('edit_form'),
