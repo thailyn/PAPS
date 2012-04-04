@@ -33,3 +33,49 @@
   <input type="submit" name="Submit" value="Submit" />
   <input type="submit" name="Cancel" value="Cancel" />
 </form>
+
+<div>Collection Information</div>
+<table border="1">
+  <tr>
+    <th>Id</th>
+    <th>Name</th>
+    <th>Description</th>
+    <th>Created</th>
+    <th>Show with Works</th>
+    <th>Show with Work References</th>
+    <th>Show with Referenced Works</th>
+    <th /> <!-- for action buttons -->
+    <th /> <!-- for action buttons -->
+  </tr>
+[% FOREACH collection IN requested_user.collections %]
+  <form method="post" action="[% c.uri_for(c.controller('users').action_for('do_edit_collection'),
+                              [ user.id ], ( collection.id )) %]">
+    <tr>
+      <td><input type="text" name="id" value="[% collection.id %]" disabled="disabled"/></td>
+      <td><input type="text" name="name" value="[% collection.name %]" /></td>
+      <td><input type="text" name="description" value="[% collection.description %]" /></td>
+      <td><input type="text" name="created_timestamp" value="[% collection.created_timestamp %]" disabled="disabled" /></td>
+      <td><input type="checkbox" name="show_with_works" value="1" [% 'checked="1"' IF collection.show_with_works %] /></td>
+      <td><input type="checkbox" name="show_with_work_references" value="1" [% 'checked="1"' IF collection.show_with_work_references %] /></td>
+      <td><input type="checkbox" name="show_with_referenced_works" value="1" [% 'checked="1"' IF collection.show_with_referenced_works %] /></td>
+      <td><input type="submit" name="submit" value="Edit" disabled="disabled" /></td>
+      <td><input type="submit" name="delete" value="Delete" disabled="disabled" /></td>
+    </tr>
+  </form>
+[% END %]
+  <!-- blank row to add a new tag -->
+  <form method="post" action="[% c.uri_for(c.controller('users').action_for('do_add_collection'),
+                              [ user.id ]) %]">
+    <tr>
+      <td><input type="text" name="id" value="" disabled="disabled" /></td>
+      <td><input type="text" name="name" value="" /></td>
+      <td><input type="text" name="description" value="" /></td>
+      <td><input type="text" name="created_timestamp" value="" disabled="disabled" /></td>
+      <td><input type="checkbox" name="show_with_works" value="1" checked="1" /></td>
+      <td><input type="checkbox" name="show_with_work_references" value="1" checked="1" /></td>
+      <td><input type="checkbox" name="show_with_referenced_works" value="1" checked="1" /></td>
+      <td><input type="submit" name="submit" value="Add" /></td>
+      <td />
+    </tr>
+  </form>
+</table>
