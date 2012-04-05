@@ -1,4 +1,4 @@
-[% META title = 'Edit Work' -%]
+[% META title = 'Edit User' -%]
 
 <form method="post" action="[% c.uri_for(c.controller('Users').action_for('do_edit'),
                             [ user.id ]) %] [%# c.uri_for('do_edit', [ work.work_id ]) %] ">
