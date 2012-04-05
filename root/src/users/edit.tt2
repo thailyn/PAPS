@@ -47,7 +47,7 @@
     <th /> <!-- for action buttons -->
     <th /> <!-- for action buttons -->
   </tr>
-[% FOREACH collection IN requested_user.collections %]
+[% FOREACH collection IN user.collections %]
   <form method="post" action="[% c.uri_for(c.controller('users').action_for('do_edit_collection'),
                               [ user.id ], ( collection.id )) %]">
     <tr>
