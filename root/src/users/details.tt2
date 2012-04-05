@@ -86,7 +86,7 @@
 <div>Collection Information</div>
 <table>
   <tr>
-    <th>Id<th>
+    <th>Id</th>
     <th>Name</th>
     <th>Description</th>
     <th>Created</th>
