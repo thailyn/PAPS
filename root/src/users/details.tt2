@@ -96,13 +96,13 @@
   </tr>
 [% FOREACH collection IN requested_user.collections %]
   <tr>
-    <th>collection.id</th>
-    <th>collection.name</th>
-    <th>collection.description</th>
-    <th>collection.created_timestamp</th>
-    <th>collection.show_with_works</th>
-    <th>collection.show_with_work_references</th>
-    <th>collection.show_with_referenced_works</th>
+    <th>[% collection.id | html %]</th>
+    <th>[% collection.name | html %]</th>
+    <th>[% collection.description | html %]</th>
+    <th>[% collection.created_timestamp | html %]</th>
+    <th>[% collection.show_with_works | html %]</th>
+    <th>[% collection.show_with_work_references | html %]</th>
+    <th>[% collection.show_with_referenced_works | html %]</th>
   </tr>
 [% END %]
 </table>
