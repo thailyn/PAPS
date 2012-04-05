@@ -185,6 +185,72 @@ sub do_create :Chained('base') :PathPart('do_create') :Args(0) {
 }
 
 
+=head2 do_edit_collection
+
+TODO: Describe me.
+
+=cut
+
+sub do_edit_collection :Chained('user') :PathPart('do_edit_collection') :Args(1) {
+    my ($self, $c, $collection_id) = @_;
+
+    if (lc $c->request->method ne 'post') {
+        return;
+    }
+
+    my $params = $c->request->params;
+    my $user = $c->stash->{user};
+    # Get the user's collections with the has-many relationship.
+    my $collection = $user->collections->find({id => {'=', $collection_id}});
+
+    if (lc $params->{submit} eq 'save') {
+        $collection->update({
+            name => $params->{name} || undef,
+            description => $params->{description} || undef,
+            #created_timestamp => $params->{created_timestamp} || undef,
+            show_with_works => $params->{show_with_works} || 0,
+            show_with_work_references => $params->{show_with_work_references} || 0,
+            show_with_referenced_works => $params->{show_with_referenced_works} || 0,
+                            });
+    }
+
+    return $c->res->redirect(
+        $c->uri_for($c->controller('users')->action_for('edit_form'),
+                    [ $user->id ]));
+}
+
+=head2 do_add_collection
+
+TODO: Describe me.
+
+=cut
+
+sub do_add_collection :Chained('user') :PathPart('do_add_collection') :Args(0) {
+    my ($self, $c) = @_;
+
+    if (lc $c->request->method ne 'post') {
+        return;
+    }
+
+    my $params = $c->request->params;
+    my $user = $c->stash->{user};
+
+    if (lc $params->{submit} eq 'add') {
+        $user->create_related('collections', {
+            name => $params->{name} || undef,
+            description => $params->{description} || undef,
+            #created_timestamp => $params->{created_timestamp} || undef,
+            show_with_works => $params->{show_with_works} || 0,
+            show_with_work_references => $params->{show_with_work_references} || 0,
+            show_with_referenced_works => $params->{show_with_referenced_works} || 0,
+                              });
+    }
+
+    return $c->res->redirect(
+        $c->uri_for($c->controller('users')->action_for('edit_form'),
+                    [ $user->id ]));
+}
+
 =head2 list
 
 Fetch all user objects and pass to users/list.tt2 in stash to be displayed
