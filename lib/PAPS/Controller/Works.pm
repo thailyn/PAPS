@@ -849,164 +849,60 @@ references.  Save it to a file and return the file name.
 sub create_work_graph {
     my ($c, $work) = @_;
     my $work_id = $work->id;
+    my $works_rs;
 
     # If a user is logged in, replace the work with a new instance of the work
     # that also has the user's data.  This search here can be optimized by
     # only (always) having the work id passed in instead of a work.
-    if (!$c->user_exists) {
-        $work = $c->model('DB::Work')
-            ->find({work_id => {'=', $work_id}});
-    }
-    else {
-        $work = $c->model('DB::Work')
-            ->find(
+    $work_id = $work->id;
+    if ($c->user_exists) {
+        $works_rs = $c->model('DB::Work')
+            ->search(
             {
-                work_id => {'=', $work_id},
-                -or => [
-                     'user_work_datas.user_id' => $c->user->id,
-                     'user_work_datas.user_id' => undef,
+                -and => [
+                     -or => [
+                          'me.work_id' => {'=', $work_id},
+                          'work_references_referencing_works.referencing_work_id' => {'=', $work_id},
+                          'work_references_referenced_works.referenced_work_id' => {'=', $work_id},
+                     ],
+                     -or => [
+                          'user_work_datas.user_id' => $c->user->id,
+                          'user_work_datas.user_id' => undef,
+                     ],
                     ],
             },
             {
-                join => 'user_work_datas',
-                prefetch => 'user_work_datas',
+                join => [qw/ user_work_datas work_references_referenced_works work_references_referencing_works /],
                 '+select' => [ 'user_work_datas.read_timestamp', 'user_work_datas.understood_rating', 'user_work_datas.approval_rating' ],
                 '+as' => [ 'uwd_read_timestamp', 'uwd_understood_rating', 'uwd_approval_rating' ],
             });
     }
-    $work_id = $work->id;
-
-    my $created_nodes = { };
-
-    my $g = GraphViz2->new(
-        global => { directed => 1, format => 'png' },
-        graph => {
-            start => 'random',
-            layout => 'sfdp',
-            overlap => 'scalexy',
-        },
-        #verbose => 1,
-
-        #layout => 'sfdp',
-        #overlap => 'scalexy', # 'false' works well but makes a big graph
-        #random_start => 'true'
-        );
-
-    #$c->log->debug($work->display_name);
-    my $work_node = create_node_from_work($c, $work);
-
-    #$c->log->debug("label: $label");
-    $g->add_node(name => $work_node->{'name'}, label => $work_node->{'label'},
-                 shape => $work_node->{'shape'}, style => $work_node->{'node_style'},
-                 color => $work_node->{'outline_color'},
-                 fillcolor => $work_node->{'fill_color'});
-    $created_nodes->{$work_node->{'name'}}++;
-
-    # get the list of references this work makes
-    my $ref_rs = $c->model('DB::WorkReference')->search({ referencing_work_id => $work_id },,
-                                                        { order_by => 'referencing_work_id'});
-
-    # Create edges for references, either by creating an  edge between two
-    # existing works, or creating a node for the referenced work that does not
-    # exist and creating an edge to that.
-    my $ref_work_id = -1;
-    my $ref_num = 0;
-    while (my $ref = $ref_rs->next) {
-        # keep track of what number reference this is for a work, so we can
-        # index each reference that does not have a referenced_work_id with a
-        # number.
-        if ($ref->referencing_work_id != $ref_work_id) {
-            $ref_work_id = $ref->referencing_work_id;
-            $ref_num = 0;
-        }
-
-        if ($ref->referenced_work_id && !$created_nodes->{$ref->referenced_work_id}) {
-            # if the referenced work exists, create a node for that work and
-            # then create an edige between them.
-            my $work_node = create_node_from_work_id($c, $ref->referenced_work_id);
-
-            #$c->log->debug("label: $label");
-            $g->add_node(name => $work_node->{'name'}, label => $work_node->{'label'},
-                         shape => $work_node->{'shape'}, style => $work_node->{'node_style'},
-                         color => $work_node->{'outline_color'},
-                         fillcolor => $work_node->{'fill_color'});
-            $created_nodes->{$work_node->{'name'}}++;
-            $g->add_edge(from => $ref->referencing_work_id, to => $ref->referenced_work_id);
-        }
-        else {
-            # if the referenced work does not exist, create a new node an an
-            # edge to it
-            my $node_name = $ref->referencing_work_id . "-" . $ref_num;
-
-            # some of the reference_text values throw an error when used as the
-            # node name or able, so leave that out until we can scrub the text
-            # properly
-            $g->add_node(name => $node_name, label => $node_name,
-                         shape => 'record', style => 'dotted'); # label => $ref->reference_text,
-            $g->add_edge(from => $ref->referencing_work_id, to => $node_name);
-        }
-        $ref_num++;
+    else {
+        $works_rs = $c->model('DB::Work')
+            ->search(
+            {
+                -or => [
+                     'me.work_id' => {'=', $work_id},
+                     'work_references_referencing_works.referencing_work_id' => {'=', $work_id},
+                     'work_references_referenced_works.referenced_work_id' => {'=', $work_id},
+                    ],
+            },
+            {
+                join => [qw/ work_references_referenced_works work_references_referencing_works /],
+            });
     }
 
-    # get the list of references made against this work
-    my $ref2_rs = $c->model('DB::WorkReference')->search({ referenced_work_id => $work_id },,
-                                                         { order_by => 'referencing_work_id'});
+    my $ref_rs = $c->model('DB::WorkReference')
+        ->search(
+        {
+            -or => [
+                 'referenced_work_id' => {'=', $work_id},
+                 'referencing_work_id' => {'=', $work_id},
+                ],
+        }, { });
 
-    # Now create edges (and nodes, as needed) for works referencing this work.
-    $ref_work_id = -1;
-    $ref_num = 0;
-    while (my $ref = $ref2_rs->next) {
-        # keep track of what number reference this is for a work, so we can
-        # index each reference that does not have a referenced_work_id with a
-        # number.
-        if ($ref->referencing_work_id != $ref_work_id) {
-            $ref_work_id = $ref->referencing_work_id;
-            $ref_num = 0;
-        }
-
-        if ($ref->referencing_work_id && !$created_nodes->{$ref->referencing_work_id}) {
-            # if the referenced work exists, create a node for that work and
-            # then create an edige between them.
-            my $work_node = create_node_from_work_id($c, $ref->referencing_work_id);
-
-            #$c->log->debug("label: $label");
-            $g->add_node(name => $work_node->{'name'}, label => $work_node->{'label'},
-                         shape => $work_node->{'shape'}, style => $work_node->{'node_style'},
-                         color => $work_node->{'outline_color'},
-                         fillcolor => $work_node->{'fill_color'});
-            $created_nodes->{$work_node->{'name'}}++;
-            $g->add_edge(from => $ref->referencing_work_id, to => $ref->referenced_work_id);
-        }
-        else {
-            # if the referenced work does not exist, create a new node an an
-            # edge to it
-            my $node_name = $ref->referencing_work_id . "-" . $ref_num;
-
-            # some of the reference_text values throw an error when used as the
-            # node name or able, so leave that out until we can scrub the text
-            # properly
-            $g->add_node(name => $node_name, label => $node_name,
-                         shape => 'record', style => 'dotted'); # label => $ref->reference_text,
-            $g->add_edge(from => $ref->referencing_work_id, to => $node_name);
-        }
-        $ref_num++;
-    }
-
-    # export the graph
-    my $format = "png";
-    my $output_file_name = 'work' . $work_id . '.png';
-    my $output_file = $c->path_to('root', 'static', 'images',
-                                  $output_file_name)->stringify;
-    my $gv_command = join('', @{$g->command->print}) . "}\n";
-
-    my $fh = File::Temp->new(EXLOCK => 0);
-    my $input_file = $fh->filename;
-
-    binmode $fh;
-    print $fh $gv_command;
-    close $fh;
-
-    system($g->global->{driver}, "-T$format", "-o$output_file", $input_file);
+    my $settings = { 'file_name' => 'work' . $work_id };
+    my $output_file_name = create_graph(undef, $c, $works_rs, $ref_rs, $settings);
 
     return $output_file_name;
 }
