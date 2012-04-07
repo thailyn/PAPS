@@ -907,6 +907,79 @@ sub create_work_graph {
     return $output_file_name;
 }
 
+=head2 create_work_reading_graph
+
+TODO: Describe me (similar to create_work_graph).
+
+=cut
+
+sub create_work_reading_graph {
+    my ($c, $work) = @_;
+    my $work_id = $work->id;
+    my $works_rs;
+
+    $c->log->debug("**** GOING TO CREATE READING GRAPH.");
+
+    # If a user is logged in, replace the work with a new instance of the work
+    # that also has the user's data.  This search here can be optimized by
+    # only (always) having the work id passed in instead of a work.
+    $work_id = $work->id;
+    if ($c->user_exists) {
+        $works_rs = $c->model('DB::WorkToRead')
+            ->search(
+            {
+                -or => [
+                     'user_work_datas.user_id' => $c->user->id,
+                     'user_work_datas.user_id' => undef,
+                    ],
+            },
+            {
+                bind => [ $work_id, $c->user->id ],
+                join => [qw/ user_work_datas /],
+                '+select' => [ 'user_work_datas.read_timestamp', 'user_work_datas.understood_rating', 'user_work_datas.approval_rating' ],
+                '+as' => [ 'uwd_read_timestamp', 'uwd_understood_rating', 'uwd_approval_rating' ],
+            });
+    }
+    else {
+        $works_rs = $c->model('DB::WorkToRead')
+            ->search(
+            {
+
+            },
+            {
+                bind => [ $work_id, undef ],
+                #join => [qw/ /],
+            });
+    }
+
+    my @work_ids;
+    while (my $work = $works_rs->next) {
+        $c->log->debug("***** " . $work->display_name);
+        push @work_ids, $work->work_id;
+        #my $work_node = create_node_from_work($c, $work);
+        #
+        ##$c->log->debug("label: $label");
+        #$g->add_node(name => $work_node->{'name'}, label => $work_node->{'label'},
+        #             shape => $work_node->{'shape'}, style => $work_node->{'node_style'},
+        #             color => $work_node->{'outline_color'},
+        #             fillcolor => $work_node->{'fill_color'});
+    }
+    $works_rs->reset;
+
+    my $ref_rs = $c->model('DB::WorkReference')
+        ->search(
+        {
+            referenced_work_id => { -in => \@work_ids },
+            referencing_work_id => { -in => \@work_ids },
+        },
+        { });
+
+    my $settings = { 'file_name' => 'work' . $work_id . '-reading' };
+    my $output_file_name = create_graph(undef, $c, $works_rs, $ref_rs, $settings);
+
+    return $output_file_name;
+}
+
 =head2 create_graph
 
 Creates a graph of work(s) and relationships and writes it to a file.
