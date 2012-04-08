@@ -719,6 +719,7 @@ sub graph2 :Chained('base') :PathPart('graph2') :Args(0) {
             start => 'random',
             layout => 'sfdp',
             overlap => 'scalexy',
+            rankdir => 'LR',
         },
         #verbose => 1,
 
@@ -1017,7 +1018,7 @@ sub create_graph {
             start => 'random',
             layout => 'sfdp',
             overlap => 'scalexy',
-            rankdir => 'LR',
+            #rankdir => 'LR',
         },
         #verbose => 1,
 
