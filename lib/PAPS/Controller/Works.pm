@@ -932,100 +932,33 @@ sub create_work_reading_graph {
     $work_id = $work->id;
     if ($c->user_exists) {
         $works_rs = $c->model('DB::WorkToRead')
-            ->search(
-            {
-            },
-            {
-                bind => [ $work_id, $c->user->id ],
-                # Do not need to join on the user_work_data table, as that
-                # is already included in this view's output.
-            });
+            ->search({ },
+                     {
+                         bind => [ $work_id, $c->user->id ],
+                     });
     }
     else {
         $works_rs = $c->model('DB::WorkToRead')
-            ->search(
-            {
-
-            },
-            {
-                bind => [ $work_id, undef ],
-                #join => [qw/ /],
-            });
+            ->search({ },
+                     {
+                         bind => [ $work_id, undef ],
+                     });
     }
+
+    my ($node_counts, $node_references_counts)
+        = determine_node_counts_and_reference_counts($c, $works_rs);
+    my @work_ids = keys %$node_counts;
 
     my $settings = { 'file_name' => 'work' . $work_id . '-reading' };
-    my ($node_references_counts, $node_counts) = ({ }, { });
-
-    my @work_ids;
-    while (my $work = $works_rs->next) {
-        $node_counts->{$work->work_id} = { } unless $node_counts->{$work->work_id};
-        $node_counts->{$work->work_id}->{'num'}++;
-        $node_counts->{$work->work_id}->{'understood_rating'} = $work->understood_rating;
-        $node_references_counts->{$work->referencing_work_id} = { }
-            unless $node_references_counts->{$work->referencing_work_id};
-
-        next if $work->referencing_work_id < 0;
-
-        $node_references_counts->{$work->referencing_work_id}->{'num'}++;
-        $node_references_counts->{$work->referencing_work_id}->{'has_unrated_references'} = 1
-            unless defined $work->understood_rating;
-
-        # Set this work's minimum understanding to the current reference's value, but only
-        # if the current reference has an understood rating and it is less than the work's
-        # current minimum understanding.
-        if (defined $work->understood_rating
-            && (!defined $node_references_counts->{$work->referencing_work_id}->{'min_understanding'}
-                || $node_references_counts->{$work->referencing_work_id}->{'min_understanding'}
-                    > $work->understood_rating)) {
-            $node_references_counts->{$work->referencing_work_id}->{'min_understanding'} =
-                $work->understood_rating;
-        }
-    }
-    $works_rs->reset;
-    @work_ids = keys %$node_counts;
-
     $settings->{'nodes'} = { };
-    foreach my $work_id (keys %$node_counts) {
-        my $work = $node_counts->{$work_id};
-        $settings->{'nodes'}->{$work_id} = { };
-
-        if (defined $work->{'understood_rating'} && $work->{'understood_rating'} > 7.5) {
-            # If we understand this work, color it green.
-            $settings->{'nodes'}->{$work_id}->{'fill_color'} = '#66FF66';
-        }
-        elsif(defined $work->{'understood_rating'} && $work->{'understood_rating'} <= 7.5
-              && !$node_references_counts->{$work_id}) {
-            # If we do not understand this work and we do not have any of its references,
-            # color it pink -- get more references!
-            $settings->{'nodes'}->{$work_id}->{'fill_color'} = '#FF7EBD'; #'#FF0099';
-        }
-        elsif(!$node_references_counts->{$work_id}) {
-            # If this work does not reference anything else, color it yellow.
-            $settings->{'nodes'}->{$work_id}->{'fill_color'} = '#FFFF99'; # #FFFF66 matches the border
-        }
-        elsif(defined $node_references_counts->{$work_id}->{'min_understanding'}
-              && $node_references_counts->{$work_id}->{'min_understanding'} <= 7.5) {
-            # If we do not understand some of this work's references, color it red.
-            $settings->{'nodes'}->{$work_id}->{'fill_color'} = '#FF3333';
-        }
-        elsif($node_references_counts->{$work_id}->{'has_unrated_references'}) {
-            # If we have not read some of this work's references, color it orange.
-            $settings->{'nodes'}->{$work_id}->{'fill_color'} = '#FF9966';
-        }
-        elsif(defined $node_references_counts->{$work_id}->{'min_understanding'}
-              && $node_references_counts->{$work_id}->{'min_understanding'} > 7.5) {
-            # If we understand all of this work's references, color it blue.
-            $settings->{'nodes'}->{$work_id}->{'fill_color'} = '#4851FF';
-        }
-    }
+    determine_work_custom_fill_colors($c, $settings, $node_counts, $node_references_counts);
 
     my $ref_rs = $c->model('DB::WorkReference')
         ->search(
         {
             referenced_work_id => { -in => \@work_ids },
             referencing_work_id => { -in => \@work_ids },
-        },
-        { });
+        }, { });
 
     my $output_file_name = create_graph(undef, $c, $works_rs, $ref_rs, $settings);
 
