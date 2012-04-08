@@ -932,16 +932,11 @@ sub create_work_reading_graph {
         $works_rs = $c->model('DB::WorkToRead')
             ->search(
             {
-                -or => [
-                     'user_work_datas.user_id' => $c->user->id,
-                     'user_work_datas.user_id' => undef,
-                    ],
             },
             {
                 bind => [ $work_id, $c->user->id ],
-                join => [qw/ user_work_datas /],
-                '+select' => [ 'user_work_datas.read_timestamp', 'user_work_datas.understood_rating', 'user_work_datas.approval_rating' ],
-                '+as' => [ 'uwd_read_timestamp', 'uwd_understood_rating', 'uwd_approval_rating' ],
+                # Do not need to join on the user_work_data table, as that
+                # is already included in this view's output.
             });
     }
     else {
