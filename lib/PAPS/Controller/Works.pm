@@ -926,8 +926,6 @@ sub create_work_reading_graph {
     my $work_id = $work->id;
     my $works_rs;
 
-    $c->log->debug("**** GOING TO CREATE READING GRAPH.");
-
     # If a user is logged in, replace the work with a new instance of the work
     # that also has the user's data.  This search here can be optimized by
     # only (always) having the work id passed in instead of a work.
