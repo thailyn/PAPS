@@ -1199,11 +1199,15 @@ sub create_node_from_work {
         $work_node->{'node_style'} = 'filled';
     }
 
-    if ($c->user_exists
-        && (($work->has_column_loaded('uwd_read_timestamp')
-             && $work->get_column('uwd_read_timestamp'))
-            || ($work->has_column_loaded('read_timestamp')
-                && $work->get_column('read_timestamp')))) {
+    if ($settings && $settings->{'nodes'} && $settings->{'nodes'}->{$work->work_id}
+        && $settings->{'nodes'}->{$work->work_id}->{'fill_color'}) {
+        $work_node->{'fill_color'} = $settings->{'nodes'}->{$work->work_id}->{'fill_color'};
+    }
+    elsif ($c->user_exists
+           && (($work->has_column_loaded('uwd_read_timestamp')
+                && $work->get_column('uwd_read_timestamp'))
+               || ($work->has_column_loaded('read_timestamp')
+                   && $work->get_column('read_timestamp')))) {
         $work_node->{'fill_color'} = '#b3cde3';
     } else {
         $work_node->{'fill_color'} = 'gray';
