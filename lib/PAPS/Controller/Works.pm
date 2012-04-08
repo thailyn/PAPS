@@ -959,9 +959,23 @@ sub create_work_reading_graph {
     while (my $work = $works_rs->next) {
         #$c->log->debug("***** " . $work->display_name);
         $c->log->debug("**** Iterating: " . $work->work_id . " / " . $work->referencing_work_id);
-        $node_counts->{$work->work_id}++;
-        $node_references_counts->{$work->referencing_work_id}++
-            unless $work->referencing_work_id < -1;
+        $node_counts->{$work->work_id} = { } unless $node_counts->{$work->work_id};
+        $node_counts->{$work->work_id}->{'num'}++;
+        $node_counts->{$work->work_id}->{'understood_rating'} = $work->understood_rating;
+        $node_references_counts->{$work->referencing_work_id} = { }
+            unless $node_references_counts->{$work->referencing_work_id};
+
+        next if $work->referencing_work_id < 0;
+
+        $node_references_counts->{$work->referencing_work_id}->{'num'}++;
+        $node_references_counts->{$work->referencing_work_id}->{'has_unrated_references'} = 1
+            unless defined $work->understood_rating;
+        if ($node_references_counts->{$work->referencing_work_id}->{'min_understanding'}
+            < $work->understood_rating) {
+            $node_references_counts->{$work->referencing_work_id}->{'min_understanding'} =
+                $work->understood_rating;
+        }
+
 
         #push @work_ids, $work->work_id;
         #my $work_node = create_node_from_work($c, $work);
