@@ -1016,7 +1016,7 @@ sub create_graph {
         global => { directed => 1, format => 'png' },
         graph => {
             start => 'random',
-            layout => 'sfdp',
+            #layout => 'sfdp',
             overlap => 'scalexy',
             #rankdir => 'LR',
         },
