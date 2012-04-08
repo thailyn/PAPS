@@ -1070,10 +1070,32 @@ sub create_work_connected_component_graph {
             });
     }
 
-    my $settings = { 'file_name' => 'work' . $work_id . '-connected-component' };
-    my ($node_references_counts, $node_counts) = ({ }, { });
+    my ($node_counts, $node_references_counts)
+        = determine_node_counts_and_reference_counts($c, $works_rs);
+    my @work_ids = keys %$node_counts;
 
-    my @work_ids;
+    my $settings = { 'file_name' => 'work' . $work_id . '-connected-component' };
+    $settings->{'nodes'} = { };
+    determine_work_custom_fill_colors($c, $settings, $node_counts, $node_references_counts);
+
+    my $ref_rs = $c->model('DB::WorkReference')
+        ->search(
+        {
+            referenced_work_id => { -in => \@work_ids },
+            referencing_work_id => { -in => \@work_ids },
+        },
+        { });
+
+    my $output_file_name = create_graph(undef, $c, $works_rs, $ref_rs, $settings);
+
+    return $output_file_name;
+}
+
+sub determine_node_counts_and_reference_counts {
+    my ($c, $works_rs) = @_;
+
+    my ($node_counts, $node_references_counts) = ({ }, { });
+
     while (my $work = $works_rs->next) {
         $node_counts->{$work->work_id} = { } unless $node_counts->{$work->work_id};
         $node_counts->{$work->work_id}->{'num'}++;
@@ -1099,9 +1121,15 @@ sub create_work_connected_component_graph {
         }
     }
     $works_rs->reset;
-    @work_ids = keys %$node_counts;
 
-    $settings->{'nodes'} = { };
+    return ($node_counts, $node_references_counts);
+}
+
+sub determine_work_custom_fill_colors {
+    my ($c, $settings, $node_counts, $node_references_counts) = @_;
+    $settings = { } unless $settings;
+    $settings->{'nodes'} = { } unless $settings->{'nodes'};
+
     foreach my $work_id (keys %$node_counts) {
         my $work = $node_counts->{$work_id};
         $settings->{'nodes'}->{$work_id} = { };
@@ -1135,18 +1163,6 @@ sub create_work_connected_component_graph {
             $settings->{'nodes'}->{$work_id}->{'fill_color'} = '#4851FF';
         }
     }
-
-    my $ref_rs = $c->model('DB::WorkReference')
-        ->search(
-        {
-            referenced_work_id => { -in => \@work_ids },
-            referencing_work_id => { -in => \@work_ids },
-        },
-        { });
-
-    my $output_file_name = create_graph(undef, $c, $works_rs, $ref_rs, $settings);
-
-    return $output_file_name;
 }
 
 =head2 create_graph
