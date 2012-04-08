@@ -955,10 +955,19 @@ sub create_work_reading_graph {
             });
     }
 
+    my $settings = { 'file_name' => 'work' . $work_id . '-reading' };
+    $settings->{'nodes'} = { };
+    my ($node_references_counts, $node_counts) = ({ }, { });
+
     my @work_ids;
     while (my $work = $works_rs->next) {
-        $c->log->debug("***** " . $work->display_name);
-        push @work_ids, $work->work_id;
+        #$c->log->debug("***** " . $work->display_name);
+        $c->log->debug("**** Iterating: " . $work->work_id . " / " . $work->referencing_work_id);
+        $node_counts->{$work->work_id}++;
+        $node_references_counts->{$work->referencing_work_id}++
+            unless $work->referencing_work_id < -1;
+
+        #push @work_ids, $work->work_id;
         #my $work_node = create_node_from_work($c, $work);
         #
         ##$c->log->debug("label: $label");
@@ -968,6 +977,7 @@ sub create_work_reading_graph {
         #             fillcolor => $work_node->{'fill_color'});
     }
     $works_rs->reset;
+    @work_ids = keys %$node_counts;
 
     my $ref_rs = $c->model('DB::WorkReference')
         ->search(
@@ -977,7 +987,6 @@ sub create_work_reading_graph {
         },
         { });
 
-    my $settings = { 'file_name' => 'work' . $work_id . '-reading' };
     my $output_file_name = create_graph(undef, $c, $works_rs, $ref_rs, $settings);
 
     return $output_file_name;
