@@ -982,7 +982,7 @@ sub create_work_reading_graph {
         my $work = $node_counts->{$work_id};
         $settings->{'nodes'}->{$work_id} = { };
 
-        if ($work->{'understood_rating'} > 7.5) {
+        if (defined $work->{'understood_rating'} && $work->{'understood_rating'} > 7.5) {
             # If we understand this work, color it green.
             $settings->{'nodes'}->{$work_id}->{'fill_color'} = '#66FF66';
         }
@@ -990,24 +990,25 @@ sub create_work_reading_graph {
               && !$node_references_counts->{$work_id}) {
             # If we do not understand this work and we do not have any of its references,
             # color it pink -- get more references!
-            $c->log->debug("**** Understood rating for $work_id: " . $work->{'understood_rating'});
             $settings->{'nodes'}->{$work_id}->{'fill_color'} = '#FF7EBD'; #'#FF0099';
         }
         elsif(!$node_references_counts->{$work_id}) {
             # If this work does not reference anything else, color it yellow.
             $settings->{'nodes'}->{$work_id}->{'fill_color'} = '#FFFF99'; # #FFFF66 matches the border
         }
+        elsif(defined $node_references_counts->{$work_id}->{'min_understanding'}
+              && $node_references_counts->{$work_id}->{'min_understanding'} <= 7.5) {
+            # If we do not understand some of this work's references, color it red.
+            $settings->{'nodes'}->{$work_id}->{'fill_color'} = '#FF3333';
+        }
         elsif($node_references_counts->{$work_id}->{'has_unrated_references'}) {
             # If we have not read some of this work's references, color it orange.
             $settings->{'nodes'}->{$work_id}->{'fill_color'} = '#FF9966';
         }
-        elsif($node_references_counts->{$work_id}->{'min_understanding'} > 7.5) {
+        elsif(defined $node_references_counts->{$work_id}->{'min_understanding'}
+              && $node_references_counts->{$work_id}->{'min_understanding'} > 7.5) {
             # If we understand all of this work's references, color it blue.
             $settings->{'nodes'}->{$work_id}->{'fill_color'} = '#4851FF';
-        }
-        elsif($node_references_counts->{$work_id}->{'min_understanding'} <= 7.5) {
-            # If we do not understand some of this work's references, color it red.
-            $settings->{'nodes'}->{$work_id}->{'fill_color'} = '#FF3333';
         }
     }
 
