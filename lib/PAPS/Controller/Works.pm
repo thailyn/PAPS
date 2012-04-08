@@ -1169,6 +1169,10 @@ sub create_node_from_work {
         $work_node->{'fill_color'} = 'gray';
     }
 
+    if ($work->has_column_loaded('depth')) {
+        $work_node->{'depth'} = $work->depth;
+    }
+
     my $node_label;
     $node_label = $work->display_name;
     $node_label .= " (" . $work->year . ")" if $work->year;
