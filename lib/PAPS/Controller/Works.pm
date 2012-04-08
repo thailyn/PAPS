@@ -986,6 +986,13 @@ sub create_work_reading_graph {
             # If we understand this work, color it green.
             $settings->{'nodes'}->{$work_id}->{'fill_color'} = '#66FF66';
         }
+        elsif(defined $work->{'understood_rating'} && $work->{'understood_rating'} <= 7.5
+              && !$node_references_counts->{$work_id}) {
+            # If we do not understand this work and we do not have any of its references,
+            # color it pink -- get more references!
+            $c->log->debug("**** Understood rating for $work_id: " . $work->{'understood_rating'});
+            $settings->{'nodes'}->{$work_id}->{'fill_color'} = '#FF7EBD'; #'#FF0099';
+        }
         elsif(!$node_references_counts->{$work_id}) {
             # If this work does not reference anything else, color it yellow.
             $settings->{'nodes'}->{$work_id}->{'fill_color'} = '#FFFF99'; # #FFFF66 matches the border
