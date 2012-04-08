@@ -956,7 +956,6 @@ sub create_work_reading_graph {
 
     my @work_ids;
     while (my $work = $works_rs->next) {
-        #$c->log->debug("***** " . $work->display_name);
         $c->log->debug("**** Iterating: " . $work->work_id . " / " . $work->referencing_work_id);
         $node_counts->{$work->work_id} = { } unless $node_counts->{$work->work_id};
         $node_counts->{$work->work_id}->{'num'}++;
@@ -974,16 +973,6 @@ sub create_work_reading_graph {
             $node_references_counts->{$work->referencing_work_id}->{'min_understanding'} =
                 $work->understood_rating;
         }
-
-
-        #push @work_ids, $work->work_id;
-        #my $work_node = create_node_from_work($c, $work);
-        #
-        ##$c->log->debug("label: $label");
-        #$g->add_node(name => $work_node->{'name'}, label => $work_node->{'label'},
-        #             shape => $work_node->{'shape'}, style => $work_node->{'node_style'},
-        #             color => $work_node->{'outline_color'},
-        #             fillcolor => $work_node->{'fill_color'});
     }
     $works_rs->reset;
     @work_ids = keys %$node_counts;
