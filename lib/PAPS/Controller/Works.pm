@@ -1049,25 +1049,17 @@ sub create_work_connected_component_graph {
     $work_id = $work->id;
     if ($c->user_exists) {
         $works_rs = $c->model('DB::WorkConnectedComponent')
-            ->search(
-            {
-            },
-            {
-                bind => [ $work_id, $c->user->id ],
-                # Do not need to join on the user_work_data table, as that
-                # is already included in this view's output.
-            });
+            ->search({ },
+                     {
+                         bind => [ $work_id, $c->user->id ],
+                     });
     }
     else {
         $works_rs = $c->model('DB::WorkConnectedComponent')
-            ->search(
-            {
-
-            },
-            {
-                bind => [ $work_id, undef ],
-                #join => [qw/ /],
-            });
+            ->search({ },
+                     {
+                         bind => [ $work_id, undef ],
+                     });
     }
 
     my ($node_counts, $node_references_counts)
@@ -1083,8 +1075,7 @@ sub create_work_connected_component_graph {
         {
             referenced_work_id => { -in => \@work_ids },
             referencing_work_id => { -in => \@work_ids },
-        },
-        { });
+        }, { });
 
     my $output_file_name = create_graph(undef, $c, $works_rs, $ref_rs, $settings);
 
