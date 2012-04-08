@@ -186,6 +186,11 @@
 <img src="[% c.uri_for("/static/images/$reading_graph_file_name") %]" alt="Work Reading Graph" />
 
 <br />
+<div>Work Connected Component</div>
+<img src="[% c.uri_for("/static/images/$work_connected_component_file_name") %]" alt="Work Connected Component" />
+
+
+<br />
 <div>User Info</div>
 [% IF c.user_exists %]
 <table>
