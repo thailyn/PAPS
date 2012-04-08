@@ -89,6 +89,10 @@ sub details :Chained('work') :PathPart('') :Args(0) {
     my $reading_graph_file_name = create_work_reading_graph($c, $c->stash->{work});
     $c->stash(reading_graph_file_name => $reading_graph_file_name);
 
+    my $work_connected_component_file_name =
+        create_work_connected_component_graph($c, $c->stash->{work});
+    $c->stash(work_connected_component_file_name => $work_connected_component_file_name);
+
     # Retrieve all of the work records as work model objects and store in the
     # stash where they can be accessed by the TT template
     #$c->stash(works => [$c->model('DB::Work')->all]);
