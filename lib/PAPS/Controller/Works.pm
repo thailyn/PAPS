@@ -968,8 +968,14 @@ sub create_work_reading_graph {
         $node_references_counts->{$work->referencing_work_id}->{'num'}++;
         $node_references_counts->{$work->referencing_work_id}->{'has_unrated_references'} = 1
             unless defined $work->understood_rating;
-        if ($node_references_counts->{$work->referencing_work_id}->{'min_understanding'}
-            < $work->understood_rating) {
+
+        # Set this work's minimum understanding to the current reference's value, but only
+        # if the current reference has an understood rating and it is less than the work's
+        # current minimum understanding.
+        if (defined $work->understood_rating
+            && (!defined $node_references_counts->{$work->referencing_work_id}->{'min_understanding'}
+                || $node_references_counts->{$work->referencing_work_id}->{'min_understanding'}
+                    > $work->understood_rating)) {
             $node_references_counts->{$work->referencing_work_id}->{'min_understanding'} =
                 $work->understood_rating;
         }
