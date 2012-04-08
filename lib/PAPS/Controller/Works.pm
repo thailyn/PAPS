@@ -1159,7 +1159,11 @@ sub create_node_from_work {
         $work_node->{'node_style'} = 'filled';
     }
 
-    if ($c->user_exists && $work->get_column('uwd_read_timestamp')) {
+    if ($c->user_exists
+        && (($work->has_column_loaded('uwd_read_timestamp')
+             && $work->get_column('uwd_read_timestamp'))
+            || ($work->has_column_loaded('read_timestamp')
+                && $work->get_column('read_timestamp')))) {
         $work_node->{'fill_color'} = '#b3cde3';
     } else {
         $work_node->{'fill_color'} = 'gray';
@@ -1212,10 +1216,25 @@ sub create_node_from_work {
     }
 
     my $user_info = "";
+    my $read_timestamp =
+        (($work->has_column_loaded('uwd_read_timestamp')
+          && $work->get_column('uwd_read_timestamp'))
+         || ($work->has_column_loaded('read_timestamp')
+             && $work->get_column('read_timestamp'))) || "Never";
+    my $understood_rating =
+        (($work->has_column_loaded('uwd_understood_rating')
+          && $work->get_column('uwd_understood_rating'))
+         || ($work->has_column_loaded('understood_rating')
+             && $work->get_column('understood_rating'))) || "N/A";
+    my $approval_rating =
+        (($work->has_column_loaded('uwd_approval_rating')
+          && $work->get_column('uwd_approval_rating'))
+         || ($work->has_column_loaded('approval_rating')
+             && $work->get_column('approval_rating'))) || "N/A";
     if ($c->user_exists) {
-        $user_info .= "Date Read: " . ($work->get_column('uwd_read_timestamp') || "Never") . ", "
-            . "Understood: " . ($work->get_column('uwd_understood_rating') || "N/A") . ", "
-            . "Approval: " . ($work->get_column('uwd_approval_rating') || "N/A");
+        $user_info .= "Date Read: " . $read_timestamp . ", "
+            . "Understood: " . $understood_rating . ", "
+            . "Approval: " . $approval_rating;
         $user_info =
 qq(  <tr>
     <td align="left">$user_info</td>
