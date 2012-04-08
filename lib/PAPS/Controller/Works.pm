@@ -1064,7 +1064,7 @@ sub create_graph {
 
     while (my $work = $works_rs->next) {
         #$c->log->debug($work->display_name);
-        my $work_node = create_node_from_work($c, $work);
+        my $work_node = create_node_from_work($c, $work, $settings);
 
         #$c->log->debug("label: $label");
         $g->add_node(name => $work_node->{'name'}, label => $work_node->{'label'},
@@ -1180,7 +1180,7 @@ TODO: Describe me
 
 =cut
 sub create_node_from_work {
-    my ($c, $work) = @_;
+    my ($c, $work, $settings) = @_;
     my $work_node = {};
 
     $work_node->{'name'} = $work->work_id;
