@@ -741,11 +741,19 @@ sub graph2 :Chained('base') :PathPart('graph2') :Args(0) {
             );
     }
 
+    my ($node_counts, $node_references_counts)
+        = determine_node_counts_and_reference_counts($c, $works_rs);
+    my @work_ids = keys %$node_counts;
+
+    my $settings = { 'file_name' => 'works' };
+    $settings->{'nodes'} = { };
+    determine_work_custom_fill_colors($c, $settings, $node_counts, $node_references_counts);
+
     # get the list of references
     my $ref_rs = $c->model('DB::WorkReference')->search(undef,
                                                         { order_by => 'referencing_work_id'});
 
-    my $graph_file_name = create_graph(undef, $c, $works_rs, $ref_rs, { 'file_name' => 'works' } );
+    my $graph_file_name = create_graph(undef, $c, $works_rs, $ref_rs, $settings);
 
     $c->stash(graph_file_name => $graph_file_name);
     $c->stash(template => 'works/graph.tt2');
