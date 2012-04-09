@@ -727,10 +727,16 @@ sub graph2 :Chained('base') :PathPart('graph2') :Args(0) {
                     ]
             },
             {
-                join => 'user_work_datas',
+                join => [ 'user_work_datas', 'work_references_referencing_works' ],
                 prefetch => 'user_work_datas',
-                '+select' => [ 'user_work_datas.read_timestamp', 'user_work_datas.understood_rating', 'user_work_datas.approval_rating' ],
-                '+as' => [ 'uwd_read_timestamp', 'uwd_understood_rating', 'uwd_approval_rating' ],
+                '+select' => [ 'user_work_datas.read_timestamp',
+                               'user_work_datas.understood_rating',
+                               'user_work_datas.approval_rating',
+                               'work_references_referencing_works.referencing_work_id' ],
+                '+as' => [ 'read_timestamp',
+                           'understood_rating',
+                           'approval_rating',
+                           'referencing_work_id' ],
             }
             );
     }
