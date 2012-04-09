@@ -728,7 +728,6 @@ sub graph2 :Chained('base') :PathPart('graph2') :Args(0) {
               },
               {
                   join => [ 'user_work_datas', 'work_references_referencing_works' ],
-                  prefetch => 'user_work_datas',
                   '+select' => [ 'user_work_datas.read_timestamp',
                                  'user_work_datas.understood_rating',
                                  'user_work_datas.approval_rating',
@@ -747,7 +746,6 @@ sub graph2 :Chained('base') :PathPart('graph2') :Args(0) {
               },
               {
                   join => [ 'user_work_datas', 'work_references_referencing_works' ],
-                  prefetch => 'user_work_datas',
                   '+select' => [ \"null",
                                  \"null",
                                  \"null",
