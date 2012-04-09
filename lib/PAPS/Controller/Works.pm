@@ -957,11 +957,12 @@ sub determine_node_counts_and_reference_counts {
         #$node_counts->{$work->work_id}->{'understood_rating'} = $work->understood_rating;
         $node_counts->{$work->work_id}->{'understood_rating'}
             = $work->get_column('understood_rating');
+
+        next unless defined $work->get_column('referencing_work_id')
+          && $work->get_column('referencing_work_id') >= 0;
+
         $node_references_counts->{$work->get_column('referencing_work_id')} = { }
             unless $node_references_counts->{$work->get_column('referencing_work_id')};
-
-        next if $work->get_column('referencing_work_id') < 0;
-
         $node_references_counts->{$work->get_column('referencing_work_id')}->{'num'}++;
         $node_references_counts->{$work->get_column('referencing_work_id')}->{'has_unrated_references'} = 1
             unless defined $work->get_column('understood_rating');
