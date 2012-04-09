@@ -717,20 +717,6 @@ TODO: Describe me
 sub graph2 :Chained('base') :PathPart('graph2') :Args(0) {
     my ($self, $c) = @_;
 
-    my $g = GraphViz2->new(
-        global => { directed => 1, format => 'png' },
-        graph => {
-            start => 'random',
-            layout => 'sfdp',
-            overlap => 'scalexy',
-            rankdir => 'LR',
-        },
-        #verbose => 1,
-
-        #layout => 'sfdp',
-        #overlap => 'scalexy', # 'false' works well but makes a big graph
-        #random_start => 'true'
-        );
     my $works_rs = $c->stash->{works_rs};
     if ($c->user_exists) {
       $works_rs = $works_rs->search(
@@ -749,84 +735,15 @@ sub graph2 :Chained('base') :PathPart('graph2') :Args(0) {
             );
     }
 
-    while (my $work = $works_rs->next) {
-        #$c->log->debug($work->display_name);
-        my $work_node = create_node_from_work($c, $work);
-
-        #$c->log->debug("label: $label");
-        $g->add_node(name => $work_node->{'name'}, label => $work_node->{'label'},
-                     shape => $work_node->{'shape'}, style => $work_node->{'node_style'},
-                     color => $work_node->{'outline_color'},
-                     fillcolor => $work_node->{'fill_color'});
-    }
-
     # get the list of references
     my $ref_rs = $c->model('DB::WorkReference')->search(undef,
                                                         { order_by => 'referencing_work_id'});
 
-    # Create edges for references, either by creating an  edge between two
-    # existing works, or creating a node for the referenced work that does not
-    # exist and creating an edge to that.
-    my $ref_work_id = -1;
-    my $ref_num = 0;
-    while (my $ref = $ref_rs->next) {
-        # keep track of what number reference this is for a work, so we can
-        # index each reference that does not have a referenced_work_id with a
-        # number.
-        if ($ref->referencing_work_id != $ref_work_id) {
-            $ref_work_id = $ref->referencing_work_id;
-            $ref_num = 0;
-        }
+    my $graph_file_name = create_graph(undef, $c, $works_rs, $ref_rs, { 'file_name' => 'works' } );
 
-        #$c->log->debug($ref->id . "\t" . $ref->referencing_work_id . "\t" .
-        #               ($ref->referenced_work_id || "NULL") . "\t" . $ref->reference_type_id . "\t" .
-        #               $ref->rank . "\t" . ($ref->chapter || "NULL") . "\t" . ($ref->reference_text || "NULL"));
-
-        if ($ref->referenced_work_id) {
-            # if the referenced work exists, simply create an edge between them
-            $g->add_edge(from => $ref->referencing_work_id, to => $ref->referenced_work_id);
-        }
-        else {
-            # if the referenced work does not exist, create a new node an an
-            # edge to it
-            my $node_name = $ref->referencing_work_id . "-" . $ref_num;
-
-            # some of the reference_text values throw an error when used as the
-            # node name or able, so leave that out until we can scrub the text
-            # properly
-            $g->add_node(name => $node_name, label => $node_name, shape => 'record', style => 'dotted'); # label => $ref->reference_text,
-            $g->add_edge(from => $ref->referencing_work_id, to => $node_name);
-        }
-        $ref_num++;
-    }
-
-    #$c->log->debug("*** DEBUG *** Home path: " . $c->config->{home});
-    #$c->log->debug("*** DEBUG *** Sample path: " . $c->path_to('root', 'static', 'images', 'works.png'));
-
-    # export the graph
-    my $format = "png";
-    my $output_file_name = 'works.png';
-    my $output_file = $c->path_to('root', 'static', 'images', $output_file_name)->stringify;
-    #$c->log->debug($output_file);
-    #$g->as_png($c->path_to('root', 'static', 'images', 'works.png')->stringify);
-    #$g->run(format => 'svg', output_file => $output_file);
-    my $gv_command = join('', @{$g->command->print}) . "}\n";
-
-    #$c->log->debug("graphviz command: " . $gv_command);
-    #$c->log->debug("diver: " . $g->global->{driver});
-    #$c->log->debug("dot_output: " . $g->dot_output());
-
-    my $fh = File::Temp->new(EXLOCK => 0);
-    my $input_file = $fh->filename;
-
-    binmode $fh;
-    print $fh $gv_command;
-    close $fh;
-
-    system($g->global->{driver}, "-T$format", "-o$output_file", $input_file);
-
-    $c->stash(graph_file_name => $output_file_name);
+    $c->stash(graph_file_name => $graph_file_name);
     $c->stash(template => 'works/graph.tt2');
+    return;
 }
 
 =head2 graph_work
