@@ -719,26 +719,45 @@ sub graph2 :Chained('base') :PathPart('graph2') :Args(0) {
 
     my $works_rs = $c->stash->{works_rs};
     if ($c->user_exists) {
-      $works_rs = $works_rs->search(
-            {
-                -or => [
-                     'user_work_datas.user_id' => $c->user->id,
-                     'user_work_datas.user_id' => undef,
-                    ]
-            },
-            {
-                join => [ 'user_work_datas', 'work_references_referencing_works' ],
-                prefetch => 'user_work_datas',
-                '+select' => [ 'user_work_datas.read_timestamp',
-                               'user_work_datas.understood_rating',
-                               'user_work_datas.approval_rating',
-                               'work_references_referencing_works.referencing_work_id' ],
-                '+as' => [ 'read_timestamp',
-                           'understood_rating',
-                           'approval_rating',
-                           'referencing_work_id' ],
-            }
-            );
+        $works_rs = $works_rs->search(
+              {
+                  -or => [
+                       'user_work_datas.user_id' => $c->user->id,
+                       'user_work_datas.user_id' => undef,
+                      ]
+              },
+              {
+                  join => [ 'user_work_datas', 'work_references_referencing_works' ],
+                  prefetch => 'user_work_datas',
+                  '+select' => [ 'user_work_datas.read_timestamp',
+                                 'user_work_datas.understood_rating',
+                                 'user_work_datas.approval_rating',
+                                 'work_references_referencing_works.referencing_work_id' ],
+                  '+as' => [ 'read_timestamp',
+                             'understood_rating',
+                             'approval_rating',
+                             'referencing_work_id' ],
+              }
+              );
+    }
+    else {
+        $works_rs = $works_rs->search(
+              {
+
+              },
+              {
+                  join => [ 'user_work_datas', 'work_references_referencing_works' ],
+                  prefetch => 'user_work_datas',
+                  '+select' => [ \"null",
+                                 \"null",
+                                 \"null",
+                                 'work_references_referencing_works.referencing_work_id' ],
+                  '+as' => [ 'read_timestamp',
+                             'understood_rating',
+                             'approval_rating',
+                             'referencing_work_id' ],
+              }
+              );
     }
 
     my ($node_counts, $node_references_counts)
