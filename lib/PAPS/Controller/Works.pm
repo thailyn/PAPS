@@ -940,25 +940,25 @@ sub determine_node_counts_and_reference_counts {
     while (my $work = $works_rs->next) {
         $node_counts->{$work->work_id} = { } unless $node_counts->{$work->work_id};
         $node_counts->{$work->work_id}->{'num'}++;
-        $node_counts->{$work->work_id}->{'understood_rating'} = $work->understood_rating;
-        $node_references_counts->{$work->referencing_work_id} = { }
-            unless $node_references_counts->{$work->referencing_work_id};
+        #$node_counts->{$work->work_id}->{'understood_rating'} = $work->understood_rating;
+        $node_counts->{$work->work_id}->{'understood_rating'}
+            = $work->get_column('understood_rating');
+        $node_references_counts->{$work->get_column('referencing_work_id')} = { }
+            unless $node_references_counts->{$work->get_column('referencing_work_id')};
 
-        next if $work->referencing_work_id < 0;
+        next if $work->get_column('referencing_work_id') < 0;
 
-        $node_references_counts->{$work->referencing_work_id}->{'num'}++;
-        $node_references_counts->{$work->referencing_work_id}->{'has_unrated_references'} = 1
-            unless defined $work->understood_rating;
+        $node_references_counts->{$work->get_column('referencing_work_id')}->{'num'}++;
+        $node_references_counts->{$work->get_column('referencing_work_id')}->{'has_unrated_references'} = 1
+            unless defined $work->get_column('understood_rating');
 
         # Set this work's minimum understanding to the current reference's value, but only
         # if the current reference has an understood rating and it is less than the work's
         # current minimum understanding.
-        if (defined $work->understood_rating
-            && (!defined $node_references_counts->{$work->referencing_work_id}->{'min_understanding'}
-                || $node_references_counts->{$work->referencing_work_id}->{'min_understanding'}
-                    > $work->understood_rating)) {
-            $node_references_counts->{$work->referencing_work_id}->{'min_understanding'} =
-                $work->understood_rating;
+        if (defined $work->get_column('understood_rating')
+            && (!defined $node_references_counts->{$work->get_column('referencing_work_id')}->{'min_understanding'}
+                || $node_references_counts->{$work->get_column('referencing_work_id')}->{'min_understanding'} > $work->get_column('understood_rating'))) {
+            $node_references_counts->{$work->get_column('referencing_work_id')}->{'min_understanding'} = $work->get_column('understood_rating');
         }
     }
     $works_rs->reset;
