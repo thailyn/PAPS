@@ -24,7 +24,7 @@ requires 'Config::General'; # This should reflect the config file format you've 
 requires 'GraphViz';
 requires 'GraphViz2';
 requires 'File::Temp';
-requires 'PAPS::Database::papsdb::Schema' => '0.005';
+requires 'PAPS::Database::papsdb::Schema' => '0.006';
 test_requires 'Test::More' => '0.88';
 catalyst;
 
