@@ -1,5 +1,48 @@
 This file documents the revision history for Perl extension PAPS.
 
+0.012  Sat May 5 17:15:46 2012 -0400
+  New features:
+    - Display a user's collections on his details page.
+    - Create and modify a user's collections on his edit page.  Columns that
+      can not be changed (such as the created date for a collection) are
+      marked as readonly, not disabled, so their contents can still be
+      selected and, for example, copied.
+    - Added a link in the sidebar to the graph2 page.
+    - Added links in the sidebar to the login and logout pages.
+    - On a work's details page, display its reading graph.  This graph
+      consists of all works which reference the work, as well as works that
+      reference those works, and so on, through the refererence relationship.
+      If the user is logged in, each node in the graph includes the user's
+      work data, such as when and if he read the work.  And, if the user is
+      logged in, each node is color-coded based on which works he has read and
+      which he has understood.
+
+      The colors currently used are described below.  A work is colored
+      according to the first condition in this list that is met.
+        green: The user understands the work.
+        purple: The user does not understand the work, and none of its
+                referencing works are in the system.
+        yellow: The work has no references (that are works in the system).
+        red: The user does not understand some of the works references.
+        orange: The user has not read one or more of the work's references.
+        blue: The user understands all of the work's references.
+    - On a work's details page, display its connected component graph.  This
+      includes all works that are related to the work through references.  The
+      work's reading graph is a subset of this graph.  This graph also
+      includes works that reference this work, as well as works which
+      reference any other work in the graph (recursively).  If the user is
+      logged in, this graph is colored the same way as the reading graph.
+    - Use the "default" layout engine when drawing graphs.  This makes nodes
+      organized more tightly in trees, with referenced nodes below referencing
+      nodes.  This layout is perhaps less visually "interesting," but helps
+      recognize how closely related two works are, in terms of references.
+    - Reorganized how graphs are created in an effort to generalize and
+      simplify the process, as well as optimize it (and make it faster).
+    - Updated dependency on PAPS::Database::papsdb::Schema to version 0.006.
+  Bug fixes:
+    - The title on the edit page for a user says "Edit Work" instead of "Edit
+      User".
+
 0.011  Sun Feb 26 14:08:42 2012 -0500
   New features:
     - Added new controller Users for the users table.  Functionality includes
