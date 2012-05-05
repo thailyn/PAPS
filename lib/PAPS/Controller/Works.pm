@@ -718,45 +718,13 @@ sub graph2 :Chained('base') :PathPart('graph2') :Args(0) {
     my ($self, $c) = @_;
 
     my $works_rs = $c->stash->{works_rs};
-    if ($c->user_exists) {
-        $works_rs = $works_rs->search(
-              {
-                  -or => [
-                       'user_work_datas.user_id' => $c->user->id,
-                       'user_work_datas.user_id' => undef,
-                      ]
-              },
-              {
-                  join => [ 'user_work_datas', 'work_references_referencing_works' ],
-                  '+select' => [ 'user_work_datas.read_timestamp',
-                                 'user_work_datas.understood_rating',
-                                 'user_work_datas.approval_rating',
-                                 'work_references_referencing_works.referencing_work_id' ],
-                  '+as' => [ 'read_timestamp',
-                             'understood_rating',
-                             'approval_rating',
-                             'referencing_work_id' ],
-              }
-              );
-    }
-    else {
-        $works_rs = $works_rs->search(
-              {
+    my $user_id = $c->user_exists ? $c->user->id : undef;
 
-              },
-              {
-                  join => [ 'user_work_datas', 'work_references_referencing_works' ],
-                  '+select' => [ \"null",
-                                 \"null",
-                                 \"null",
-                                 'work_references_referencing_works.referencing_work_id' ],
-                  '+as' => [ 'read_timestamp',
-                             'understood_rating',
-                             'approval_rating',
-                             'referencing_work_id' ],
-              }
-              );
-    }
+    $works_rs = $c->model('DB::ViewWorksWithUserData')
+      ->search({ },
+               {
+                bind => [ $user_id ],
+               });
 
     my ($node_counts, $node_references_counts)
         = determine_node_counts_and_reference_counts($c, $works_rs);
