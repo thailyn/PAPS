@@ -27,7 +27,7 @@ use lib "$ENV{HOME}/projects/PAPS-Database-papsdb-Schema/lib";
 
 extends 'Catalyst';
 
-our $VERSION = '0.011';
+our $VERSION = '0.012';
 $VERSION = eval $VERSION;
 
 # Configure the application.
