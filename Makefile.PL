@@ -10,6 +10,7 @@ name 'PAPS';
 all_from 'lib/PAPS.pm';
 
 requires 'Catalyst::Runtime' => '5.80030';
+requires 'Catalyst::Model::DBIC::Schema';
 requires 'Catalyst::Plugin::ConfigLoader';
 requires 'Catalyst::Plugin::Static::Simple';
 requires 'Catalyst::Action::RenderView';
@@ -17,6 +18,8 @@ requires 'Catalyst::Plugin::Authentication';
 requires 'Catalyst::Authentication::Store::DBIx::Class';
 requires 'Catalyst::Plugin::Session::State::Cookie';
 requires 'Catalyst::Plugin::Session::Store::FastMmap';
+requires 'Catalyst::View::TT';
+requires 'DBD::Pg';
 requires 'Moose';
 requires 'namespace::autoclean';
 requires 'Config::General'; # This should reflect the config file format you've chosen
